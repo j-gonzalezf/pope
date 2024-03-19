@@ -1,0 +1,10 @@
+**/build/
+**/node_modules/
+**/coverage
+
+.classpath
+.idea
+.project
+.settings
+target
+.vscode

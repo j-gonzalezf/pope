@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pope-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /pope
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /pope
+            pathType: Prefix
+            backend:
+              service:
+                name: pope
+                port:
+                  number: 8080
