@@ -8,3 +8,6 @@
 .settings
 target
 .vscode
+
+src/main/resources/db.mv.db
+src/main/resources/db.lock.db
