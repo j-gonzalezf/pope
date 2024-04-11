@@ -19,11 +19,12 @@ public class UserConversor {
 	 * @param user the user
 	 * @return the user dto
 	 */
+/*
 	public static final UserDto toUserDto(Users user) {
-		return new UserDto(user.getId(), user.getUserName(), user.getFirstName(), user.getLastName(), user.getEmail(),
+		return new UserDto(user.getId(), user.getUserName(), user.getFullName(), user.getPhone(), user.getEmail(),
 				user.getRole().toString());
 	}
-
+*/
 	/**
 	 * To user.
 	 *
@@ -43,11 +44,12 @@ public class UserConversor {
 	 * @param user         the user
 	 * @return the authenticated user dto
 	 */
+/*
 	public static final AuthenticatedUserDto toAuthenticatedUserDto(String serviceToken, Users user) {
 
 		return new AuthenticatedUserDto(serviceToken, toUserDto(user));
 
 	}
-
+*/
 }
 

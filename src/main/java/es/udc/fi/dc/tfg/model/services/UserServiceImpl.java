@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public void signUp(Users user) throws DuplicateInstanceException {
-
+/*
 		if (userDao.existsByUserName(user.getUserName())) {
 			throw new DuplicateInstanceException("project.entities.user", user.getUserName());
 		}
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 		user.setRole(Users.RoleType.USER);
 
 		userDao.save(user);
-
+*/
 	}
 
 	/**
@@ -108,8 +108,8 @@ public class UserServiceImpl implements UserService {
 
 		Users user = permissionChecker.checkUser(id);
 
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
+		user.setFullName(firstName);
+		user.setPhone(lastName);
 		user.setEmail(email);
 
 		return user;

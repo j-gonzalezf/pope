@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS Feedback;
+DROP TABLE IF EXISTS Feedbacks;
 DROP TABLE IF EXISTS Sensations;
 DROP TABLE IF EXISTS Coments;
 DROP TABLE IF EXISTS Templates;
@@ -7,9 +7,6 @@ DROP TABLE IF EXISTS ClientServices;
 DROP TABLE IF EXISTS Services;
 DROP TABLE IF EXISTS PersonalBests;
 DROP TABLE IF EXISTS Weights;
-DROP TABLE IF EXISTS Heights;
-DROP TABLE IF EXISTS Clients;
-DROP TABLE IF EXISTS Trainers;
 DROP TABLE IF EXISTS Users;
 
 CREATE TABLE Users (
@@ -18,39 +15,30 @@ CREATE TABLE Users (
     password VARCHAR(255) NOT NULL, 
     fullName VARCHAR(60) NOT NULL,
     phone VARCHAR(15),
-    icon VARCHAR(255)
-);
-
-CREATE TABLE Trainers (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    rrss VARCHAR(1000),
-    userId BIGINT NOT NULL,
-    CONSTRAINT userTrainersIdFK FOREIGN KEY(userId) REFERENCES Users(id) ON DELETE CASCADE
-);
-
-CREATE TABLE Clients (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    icon VARCHAR(255),
+    userRole TINYINT NOT NULL,
+    socialLinks VARCHAR(1000),
     birthdate DATE,
     injuries VARCHAR(500),
     goals VARCHAR(500),
-    userId BIGINT NOT NULL,
+    cm NUMERIC(5,2),
     trainerId BIGINT NOT NULL,
-    CONSTRAINT userClientsIdFK FOREIGN KEY(userId) REFERENCES Users(id) ON DELETE CASCADE,
-    CONSTRAINT trainerClientsIdFK FOREIGN KEY(trainerId) REFERENCES Trainers(id) ON DELETE CASCADE
+    CONSTRAINT trainerClientsIdFK FOREIGN KEY(trainerId) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Services (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     service VARCHAR(255) NOT NULL,
+    price NUMERIC(5,2),
     trainerId BIGINT NOT NULL,
-    CONSTRAINT trainerServicesIdFK FOREIGN KEY(trainerId) REFERENCES Trainers(id) ON DELETE CASCADE
+    CONSTRAINT trainerServicesIdFK FOREIGN KEY(trainerId) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE ClientServices (
     clientId BIGINT NOT NULL,
     serviceId BIGINT NOT NULL,
     PRIMARY KEY (clientId, serviceId),
-    CONSTRAINT clientServicesIdFK FOREIGN KEY(clientId) REFERENCES Clients(id) ON DELETE CASCADE,
+    CONSTRAINT clientServicesIdFK FOREIGN KEY(clientId) REFERENCES Users(id) ON DELETE CASCADE,
     CONSTRAINT serviceClientsIdFK FOREIGN KEY(serviceId) REFERENCES Services(id) ON DELETE CASCADE
 );
 
@@ -62,14 +50,14 @@ CREATE TABLE TrainingCycles (
     toDate DATE NOT NULL,
     trainerId BIGINT NOT NULL,
     clientId BIGINT NOT NULL,
-    CONSTRAINT trainerCyclesIdFK FOREIGN KEY(trainerId) REFERENCES Trainers(id) ON DELETE CASCADE,
-    CONSTRAINT clientCyclesIdFK FOREIGN KEY(clientId) REFERENCES Clients(id) ON DELETE CASCADE
+    CONSTRAINT trainerCyclesIdFK FOREIGN KEY(trainerId) REFERENCES Users(id) ON DELETE CASCADE,
+    CONSTRAINT clientCyclesIdFK FOREIGN KEY(clientId) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Templates (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     templateName VARCHAR(255) NOT NULL,
-    templateDate DATETIME NOT NULL,
+    templateDate TIMESTAMP NOT NULL,
     templateFile VARCHAR(255) NOT NULL,
     cycleId BIGINT NOT NULL,
     CONSTRAINT cycleTemplatesIdFK FOREIGN KEY(cycleId) REFERENCES TrainingCycles(id) ON DELETE CASCADE
@@ -78,7 +66,7 @@ CREATE TABLE Templates (
 CREATE TABLE Coments (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     text VARCHAR(1000) NOT NULL,
-    comentDate DATETIME NOT NULL,
+    comentDate TIMESTAMP NOT NULL,
     templateId BIGINT,
     userId BIGINT NOT NULL,
     CONSTRAINT templateComentsIdFK FOREIGN KEY(templateId) REFERENCES Templates(id) ON DELETE CASCADE,
@@ -87,48 +75,40 @@ CREATE TABLE Coments (
 
 CREATE TABLE Sensations (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    fatigue INTEGER,
-    soreness INTEGER,
-    motivation INTEGER,
-    sleep INTEGER,
-    sensationDate DATETIME NOT NULL,
+    fatigue TINYINT,
+    soreness TINYINT,
+    motivation TINYINT,
+    sleep TINYINT,
+    sensationDate TIMESTAMP NOT NULL,
     templateId BIGINT NOT NULL,
     userId BIGINT NOT NULL,
     CONSTRAINT templateSensationsIdFK FOREIGN KEY(templateId) REFERENCES Templates(id) ON DELETE CASCADE,
     CONSTRAINT userSensationsIdFK FOREIGN KEY(userId) REFERENCES Users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE Heights (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    cm FLOAT NOT NULL,
-    heightDate DATETIME NOT NULL,
-    clientId BIGINT NOT NULL,
-    CONSTRAINT clientHeightsIdFK FOREIGN KEY(clientId) REFERENCES Clients(id) ON DELETE CASCADE
-);
-
 CREATE TABLE Weights (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    kg FLOAT NOT NULL,
-    weightDate DATETIME NOT NULL,
+    kg NUMERIC(5,2) NOT NULL,
+    weightDate TIMESTAMP NOT NULL,
     clientId BIGINT NOT NULL,
-    CONSTRAINT clientWeightsIdFK FOREIGN KEY(clientId) REFERENCES Clients(id) ON DELETE CASCADE
+    CONSTRAINT clientWeightsIdFK FOREIGN KEY(clientId) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE PersonalBests (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     exercise VARCHAR(255) NOT NULL,
-    weight FLOAT NOT NULL,
-    bestDate DATETIME NOT NULL,
+    weight NUMERIC(5,2) NOT NULL,
+    bestDate TIMESTAMP NOT NULL,
     clientId BIGINT NOT NULL,
-    CONSTRAINT clientBestsIdFK FOREIGN KEY(clientId) REFERENCES Clients(id) ON DELETE CASCADE
+    CONSTRAINT clientBestsIdFK FOREIGN KEY(clientId) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Feedbacks (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     feedbackFile VARCHAR(255) NOT NULL,
-    feedbackDate DATETIME NOT NULL,
+    feedbackDate TIMESTAMP NOT NULL,
     templateId BIGINT NOT NULL,
     clientId BIGINT NOT NULL,
     CONSTRAINT templateFeedbacksIdFK FOREIGN KEY(templateId) REFERENCES Templates(id) ON DELETE CASCADE,
-    CONSTRAINT clientFeedbacksIdFK FOREIGN KEY(clientId) REFERENCES Clients(id) ON DELETE CASCADE
+    CONSTRAINT clientFeedbacksIdFK FOREIGN KEY(clientId) REFERENCES Users(id) ON DELETE CASCADE
 );

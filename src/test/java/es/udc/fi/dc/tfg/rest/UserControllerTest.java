@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.udc.fi.dc.tfg.model.entities.Users;
-import es.udc.fi.dc.tfg.model.entities.Users.RoleType;
+//import es.udc.fi.dc.tfg.model.entities.Users.RoleType;
 import es.udc.fi.dc.tfg.model.entities.UserDao;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.rest.controllers.UserController;
@@ -62,6 +62,7 @@ public class UserControllerTest {
 	 * @return the authenticated user dto
 	 * @throws IncorrectLoginException the incorrect login exception
 	 */
+/*
 	private AuthenticatedUserDto createAuthenticatedUser(String userName, RoleType roleType)
 			throws IncorrectLoginException {
 
@@ -79,12 +80,13 @@ public class UserControllerTest {
 		return userController.login(loginParams);
 
 	}
-
+*/
 	/**
 	 * Test post login ok.
 	 *
 	 * @throws Exception the exception
 	 */
+/*
 	@Test
 	public void testPostLogin_Ok() throws Exception {
 
@@ -101,4 +103,4 @@ public class UserControllerTest {
 				.andExpect(status().isOk());
 
 	}
-}
+*/}

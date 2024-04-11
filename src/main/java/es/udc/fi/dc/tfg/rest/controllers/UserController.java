@@ -1,8 +1,8 @@
 package es.udc.fi.dc.tfg.rest.controllers;
 
-import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toAuthenticatedUserDto;
+//import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toAuthenticatedUserDto;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUser;
-import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUserDto;
+//import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUserDto;
 
 import java.net.URI;
 import java.util.Locale;
@@ -109,6 +109,7 @@ public class UserController {
 	 * @return the response entity
 	 * @throws DuplicateInstanceException the duplicate instance exception
 	 */
+/*
 	@PostMapping("/signUp")
 	public ResponseEntity<AuthenticatedUserDto> signUp(
 			@Validated({ UserDto.AllValidations.class }) @RequestBody UserDto userDto)
@@ -122,7 +123,7 @@ public class UserController {
 				.toUri();
 
 		return ResponseEntity.created(location).body(toAuthenticatedUserDto(generateServiceToken(user), user));
-
+*/
 	}
 
 	/**
@@ -132,6 +133,7 @@ public class UserController {
 	 * @return the authenticated user dto
 	 * @throws IncorrectLoginException the incorrect login exception
 	 */
+/*
 	@PostMapping("/login")
 	public AuthenticatedUserDto login(@Validated @RequestBody LoginParamsDto params) throws IncorrectLoginException {
 
@@ -140,7 +142,7 @@ public class UserController {
 		return toAuthenticatedUserDto(generateServiceToken(user), user);
 
 	}
-
+*/
 	/**
 	 * Login from service token.
 	 *
@@ -149,6 +151,7 @@ public class UserController {
 	 * @return the authenticated user dto
 	 * @throws InstanceNotFoundException the instance not found exception
 	 */
+/*
 	@PostMapping("/loginFromServiceToken")
 	public AuthenticatedUserDto loginFromServiceToken(@RequestAttribute Long userId,
 			@RequestAttribute String serviceToken) throws InstanceNotFoundException {
@@ -158,7 +161,7 @@ public class UserController {
 		return toAuthenticatedUserDto(serviceToken, user);
 
 	}
-
+*/
 	/**
 	 * Update profile.
 	 *
@@ -169,6 +172,7 @@ public class UserController {
 	 * @throws InstanceNotFoundException the instance not found exception
 	 * @throws PermissionException       the permission exception
 	 */
+/*
 	@PutMapping("/{id}")
 	public UserDto updateProfile(@RequestAttribute Long userId, @PathVariable("id") Long id,
 			@Validated({ UserDto.UpdateValidations.class }) @RequestBody UserDto userDto)
@@ -182,7 +186,7 @@ public class UserController {
 				userService.updateProfile(id, userDto.getFirstName(), userDto.getLastName(), userDto.getEmail()));
 
 	}
-
+*/
 	/**
 	 * Change password.
 	 *
@@ -193,6 +197,7 @@ public class UserController {
 	 * @throws InstanceNotFoundException  the instance not found exception
 	 * @throws IncorrectPasswordException the incorrect password exception
 	 */
+/*
 	@PostMapping("/{id}/changePassword")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void changePassword(@RequestAttribute Long userId, @PathVariable Long id,
@@ -206,13 +211,14 @@ public class UserController {
 		userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
 
 	}
-	
+*/	
 	/**
 	 * Generate service token.
 	 *
 	 * @param user the user
 	 * @return the string
 	 */
+/*
 	private String generateServiceToken(Users user) {
 
 		JwtInfo jwtInfo = new JwtInfo(user.getId(), user.getUserName(), user.getRole().toString());
@@ -222,3 +228,4 @@ public class UserController {
 	}
 
 }
+*/
