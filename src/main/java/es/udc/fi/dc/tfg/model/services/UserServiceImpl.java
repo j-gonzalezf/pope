@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
 	 * @return the user
 	 * @throws IncorrectLoginException the incorrect login exception
 	 */
+/*
 	@Override
 	@Transactional(readOnly = true)
 	public Users login(String userName, String password) throws IncorrectLoginException {
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService {
 		return user.get();
 
 	}
-
+*/
 	/**
 	 * Login from id.
 	 *

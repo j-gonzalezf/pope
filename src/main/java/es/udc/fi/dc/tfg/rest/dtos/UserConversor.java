@@ -31,12 +31,13 @@ public class UserConversor {
 	 * @param userDto the user dto
 	 * @return the user
 	 */
+/*
 	public static final Users toUser(UserDto userDto) {
 
 		return new Users(userDto.getUserName(), userDto.getPassword(), userDto.getFirstName(), userDto.getLastName(),
 				userDto.getEmail());
 	}
-
+*/
 	/**
 	 * To authenticated user dto.
 	 *

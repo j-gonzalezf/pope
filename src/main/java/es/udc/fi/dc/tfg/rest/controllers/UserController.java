@@ -1,7 +1,7 @@
 package es.udc.fi.dc.tfg.rest.controllers;
 
 //import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toAuthenticatedUserDto;
-import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUser;
+//import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUser;
 //import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUserDto;
 
 import java.net.URI;

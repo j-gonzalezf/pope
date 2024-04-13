@@ -4,193 +4,358 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
- * The Class User.
+ * Clase User que representa a los usuarios de la aplicación.
  */
 @Entity
 public class Users {
 
-	/**
-	 * The Enum RoleType.
-	 */
-	public enum RoleType {
-		/** The user. */
-		USER
-	}
+    /**
+     * Enumeración RoleType que representa los roles de los usuarios.
+     */
+    public enum RoleType {
+        TRAINER,
+        CLIENT
+    }
 
-	/** The id. */
-	private Long id;
+    /**
+     * Identificador único autogenerado del usuario.
+     */
+    private Long id;
 
-	/** The user name. */
-	private String userName;
+    /**
+     * Email del usuario para el inicio de sesión.
+     */
+    private String email;
 
-	/** The password. */
-	private String password;
+    /**
+     * Clave de acceso del usuario para el inicio de sesión.
+     */
+    private String password;
 
-	/** The first name. */
-	private String firstName;
+    /**
+     * Nombre completo del usuario.
+     */
+    private String fullName;
 
-	/** The last name. */
-	private String lastName;
+    /**
+     * Teléfono del usuario, puede ser nulo.
+     */
+    private String phone;
 
-	/** The email. */
-	private String email;
+    /**
+     * Foto de perfil del usuario, puede ser nulo.
+     */
+    private String icon;
 
-	/** The role. */
-	private RoleType role;
+    /**
+     * Rol del usuario. Puede ser TRAINER (entrenador) o CLIENT (cliente).
+     */
+    private RoleType role;
 
-	/**
-	 * Instantiates a new user.
-	 */
-	public Users() {
-	}
+    /**
+     * Enlace a las redes sociales del entrenador, puede ser nulo.
+     */
+    private String socialLinks;
 
-	/**
-	 * Instantiates a new user.
-	 *
-	 * @param userName  the user name
-	 * @param password  the password
-	 * @param firstName the first name
-	 * @param lastName  the last name
-	 * @param email     the email
-	 */
-	public Users(String userName, String password, String firstName, String lastName, String email) {
+    /**
+     * Fecha de nacimiento del cliente, puede ser nulo.
+     */
+    private LocalDateTime birthdate;
 
-		this.userName = userName;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
+    /**
+     * Descripción sobre las lesiones o impedimentos del cliente, puede ser
+     * nulo.
+     */
+    private String injuries;
 
-	}
+    /**
+     * Descripción sobre los objetivos del cliente, puede ser nulo.
+     */
+    private String goals;
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Long getId() {
-		return id;
-	}
+    /**
+     * Altura del cliente en cm, puede ser nulo.
+     */
+    private BigDecimal height;
 
-	/**
-	 * Sets the id.
-	 *
-	 * @param id the new id
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
+    /**
+     * Constructor vacío de la clase Users.
+     */
+    public Users() {
+    }
 
-	/**
-	 * Gets the user name.
-	 *
-	 * @return the user name
-	 */
-	public String getUserName() {
-		return userName;
-	}
+    /**
+     * Constructor para entrenadores de la clase Users.
+     *
+     * @param email El email del usuario.
+     * @param password La contraseña del usuario.
+     * @param fullName El nombre completo del usuario.
+     * @param phone El teléfono del usuario.
+     * @param icon La foto de perfil del usuario.
+     * @param role El rol del usuario.
+     * @param socialLinks El enlace a las redes sociales del usuario.
+     */
+    public Users(String email, String password, String fullName,
+            String phone, String icon, RoleType role, String socialLinks) {
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.icon = icon;
+        this.role = role;
+        this.socialLinks = socialLinks;
+    }
 
-	/**
-	 * Sets the user name.
-	 *
-	 * @param userName the new user name
-	 */
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    /**
+     * Constructor para clientes de la clase Users.
+     *
+     * @param email El email del usuario.
+     * @param password La contraseña del usuario.
+     * @param fullName El nombre completo del usuario.
+     * @param phone El teléfono del usuario.
+     * @param icon La foto de perfil del usuario.
+     * @param role El rol del usuario.
+     * @param birthdate La fecha de nacimiento del usuario.
+     * @param injuries Las lesiones del usuario.
+     * @param goals Los objetivos del usuario.
+     * @param height La altura del usuario en cm.
+     */
+    public Users(String email, String password, String fullName,
+            String phone, String icon, RoleType role, LocalDateTime birthdate,
+            String injuries, String goals, BigDecimal height) {
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.icon = icon;
+        this.role = role;
+        this.birthdate = birthdate;
+        this.injuries = injuries;
+        this.goals = goals;
+        this.height = height;
+    }
 
-	/**
-	 * Gets the password.
-	 *
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long getId() {
+        return id;
+    }
 
-	/**
-	 * Sets the password.
-	 *
-	 * @param password the new password
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    /**
+     * Sets the id.
+     *
+     * @param id the new id
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	/**
-	 * Gets the first name.
-	 *
-	 * @return the first name
-	 */
-	public String getFirstName() {
-		return firstName;
-	}
+    /**
+     * Gets the email.
+     *
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
 
-	/**
-	 * Sets the first name.
-	 *
-	 * @param firstName the new first name
-	 */
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    /**
+     * Sets the email.
+     *
+     * @param email the new email
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	/**
-	 * Gets the last name.
-	 *
-	 * @return the last name
-	 */
-	public String getLastName() {
-		return lastName;
-	}
+    /**
+     * Gets the password.
+     *
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
 
-	/**
-	 * Sets the last name.
-	 *
-	 * @param lastName the new last name
-	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    /**
+     * Sets the password.
+     *
+     * @param password the new password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	/**
-	 * Gets the email.
-	 *
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
+    /**
+     * Gets the full name.
+     *
+     * @return the full name
+     */
+    public String getFullName() {
+        return fullName;
+    }
 
-	/**
-	 * Sets the email.
-	 *
-	 * @param email the new email
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    /**
+     * Sets the full name.
+     *
+     * @param fullName the new full name
+     */
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-	/**
-	 * Gets the role.
-	 *
-	 * @return the role
-	 */
-	public RoleType getRole() {
-		return role;
-	}
+    /**
+     * Gets the phone.
+     *
+     * @return the phone
+     */
+    public String getPhone() {
+        return phone;
+    }
 
-	/**
-	 * Sets the role.
-	 *
-	 * @param role the new role
-	 */
-	public void setRole(RoleType role) {
-		this.role = role;
-	}
+    /**
+     * Sets the phone.
+     *
+     * @param phone the new phone
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    /**
+     * Gets the icon.
+     *
+     * @return the icon
+     */
+    public String getIcon() {
+        return icon;
+    }
+
+    /**
+     * Sets the icon.
+     *
+     * @param icon the new icon
+     */
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    /**
+     * Gets the role.
+     *
+     * @return the role
+     */
+    public RoleType getRole() {
+        return role;
+    }
+
+    /**
+     * Sets the role.
+     *
+     * @param role the new role
+     */
+    private void setRole(RoleType role) {
+        this.role = role;
+    }
+
+    // No existe setRoleType pq no puedes cambiar de cliente a entrenador o viceversa
+    /**
+     * Gets the social links.
+     *
+     * @return the social links
+     */
+    public String getSocialLinks() {
+        return socialLinks;
+    }
+
+    /**
+     * Sets the social links.
+     *
+     * @param socialLinks the new social links
+     */
+    public void setSocialLinks(String socialLinks) {
+        this.socialLinks = socialLinks;
+    }
+
+    /**
+     * Gets the birthdate.
+     *
+     * @return the birthdate
+     */
+    public LocalDateTime getBirthdate() {
+        return birthdate;
+    }
+
+    /**
+     * Sets the birthdate.
+     *
+     * @param birthdate the new birthdate
+     */
+    public void setBirthdate(LocalDateTime birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    /**
+     * Gets the injuries.
+     *
+     * @return the injuries
+     */
+    public String getInjuries() {
+        return injuries;
+    }
+
+    /**
+     * Sets the injuries.
+     *
+     * @param injuries the new injuries
+     */
+    public void setInjuries(String injuries) {
+        this.injuries = injuries;
+    }
+
+    /**
+     * Gets the goals.
+     *
+     * @return the goals
+     */
+    public String getGoals() {
+        return goals;
+    }
+
+    /**
+     * Sets the goals.
+     *
+     * @param goals the new goals
+     */
+    public void setGoals(String goals) {
+        this.goals = goals;
+    }
+
+    /**
+     * Gets the height.
+     *
+     * @return the height
+     */
+    public BigDecimal getHeight() {
+        return height;
+    }
+
+    /**
+     * Sets the height.
+     *
+     * @param height the new height
+     */
+    public void setHeight(BigDecimal height) {
+        this.height = height;
+    }
 
 }

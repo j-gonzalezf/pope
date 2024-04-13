@@ -27,7 +27,7 @@ public interface UserService {
 	 * @return the user
 	 * @throws IncorrectLoginException the incorrect login exception
 	 */
-	Users login(String userName, String password) throws IncorrectLoginException;
+	//Users login(String userName, String password) throws IncorrectLoginException;
 	
 	/**
 	 * Login from id.
