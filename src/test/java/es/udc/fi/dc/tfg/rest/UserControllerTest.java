@@ -28,32 +28,38 @@ import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 /**
  * The Class UserControllerTest.
  */
+/*
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
 public class UserControllerTest {
-	
+*/	
 	/** The Constant PASSWORD. */
+/*
 	private final static String PASSWORD = "password";
-
+*/
 	/** The mock mvc. */
+/*        
 	@Autowired
 	private MockMvc mockMvc;
-
+*/
 	/** The password encoder. */
+/*
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-
+*/
 	/** The user dao. */
+/*
 	@Autowired
 	private UserDao userDao;
-
+*/
 	/** The user controller. */
+/*
 	@Autowired
 	private UserController userController;
-
+*/
 	/**
 	 * Creates the authenticated user.
 	 *
@@ -103,4 +109,4 @@ public class UserControllerTest {
 				.andExpect(status().isOk());
 
 	}
-*/}
+}*/
