@@ -10,6 +10,7 @@ import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.entities.UserDao;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
+import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
 import java.util.Optional;
 
 /**
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService {
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
      */
+    @Override
     public void signUp(Users user) throws DuplicateInstanceException {
 
         if (userDao.existsByEmail(user.getEmail())) {
@@ -96,6 +98,31 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Users loginFromId(Long id) throws InstanceNotFoundException {
         return permissionChecker.checkUser(id);
+    }
+
+    /**
+     * Cambia la contraseña de un usuario.
+     *
+     * @param id El ID del usuario.
+     * @param oldPassword La contraseña antigua del usuario.
+     * @param newPassword La nueva contraseña del usuario.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     * @throws IncorrectPasswordException si la contraseña antigua proporcionada
+     * no coincide con la contraseña actual del usuario.
+     */
+    @Override
+    public void changePassword(Long id, String oldPassword, String newPassword)
+            throws InstanceNotFoundException, IncorrectPasswordException {
+
+        Users user = permissionChecker.checkUser(id);
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IncorrectPasswordException();
+        } else {
+            user.setPassword(passwordEncoder.encode(newPassword));
+        }
+
     }
 
 }

@@ -4,6 +4,7 @@ import es.udc.fi.dc.tfg.model.common.exceptions.DuplicateInstanceException;
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
+import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
 
 /**
  * Interfaz UserService.
@@ -40,5 +41,19 @@ public interface UserService {
      * proporcionado.
      */
     Users loginFromId(Long id) throws InstanceNotFoundException;
+
+    /**
+     * Cambia la contraseña de un usuario.
+     *
+     * @param id El ID del usuario.
+     * @param oldPassword La contraseña antigua del usuario.
+     * @param newPassword La nueva contraseña del usuario.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     * @throws IncorrectPasswordException si la contraseña antigua proporcionada
+     * no coincide con la contraseña actual del usuario.
+     */
+    void changePassword(Long id, String oldPassword, String newPassword)
+            throws InstanceNotFoundException, IncorrectPasswordException;
 
 }
