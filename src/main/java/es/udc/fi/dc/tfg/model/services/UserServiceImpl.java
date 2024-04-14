@@ -6,8 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.udc.fi.dc.tfg.model.common.exceptions.DuplicateInstanceException;
+import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.entities.UserDao;
+import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
+import java.util.Optional;
 
 /**
  * Clase UserServiceImpl.
@@ -15,6 +18,12 @@ import es.udc.fi.dc.tfg.model.entities.UserDao;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
+
+    /**
+     * El permission checker.
+     */
+    @Autowired
+    private PermissionChecker permissionChecker;
 
     /**
      * El password encoder.
@@ -45,6 +54,48 @@ public class UserServiceImpl implements UserService {
 
         userDao.save(user);
 
+    }
+
+    /**
+     * Inicia sesión con el email y la contraseña proporcionados.
+     *
+     * @param email El correo electrónico del usuario.
+     * @param password La contraseña del usuario.
+     * @return El objeto Users que representa al usuario que inició sesión.
+     * @throws IncorrectLoginException si el email o la contraseña son
+     * incorrectos.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Users login(String email, String password) throws IncorrectLoginException {
+
+        Optional<Users> user = userDao.findByEmail(email);
+
+        if (!user.isPresent()) {
+            throw new IncorrectLoginException(email, password);
+        }
+
+        if (!passwordEncoder.matches(password, user.get().getPassword())) {
+            throw new IncorrectLoginException(email, password);
+        }
+
+        return user.get();
+
+    }
+
+    /**
+     * Inicia sesión a partir del id del usuario.
+     *
+     * @param id El ID del usuario.
+     * @return El objeto Users que representa al usuario con el perfil
+     * actualizado.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Users loginFromId(Long id) throws InstanceNotFoundException {
+        return permissionChecker.checkUser(id);
     }
 
 }

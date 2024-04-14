@@ -1,7 +1,9 @@
 package es.udc.fi.dc.tfg.model.services;
 
 import es.udc.fi.dc.tfg.model.common.exceptions.DuplicateInstanceException;
+import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Users;
+import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 
 /**
  * Interfaz UserService.
@@ -16,5 +18,27 @@ public interface UserService {
      * email.
      */
     void signUp(Users user) throws DuplicateInstanceException;
+
+    /**
+     * Inicia sesión con el email y la contraseña proporcionados.
+     *
+     * @param email El correo electrónico del usuario.
+     * @param password La contraseña del usuario.
+     * @return El objeto Users que representa al usuario que inició sesión.
+     * @throws IncorrectLoginException si el email o la contraseña son
+     * incorrectos.
+     */
+    Users login(String email, String password) throws IncorrectLoginException;
+
+    /**
+     * Inicia sesión a partir del id del usuario.
+     *
+     * @param id El ID del usuario.
+     * @return El objeto Users que representa al usuario con el perfil
+     * actualizado.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    Users loginFromId(Long id) throws InstanceNotFoundException;
 
 }
