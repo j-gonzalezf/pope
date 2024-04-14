@@ -29,10 +29,9 @@ public class UsersTest {
     public void setUp() {
         user = new Users();
         trainer = new Users("trainer@example.com", "password", "Test Trainer",
-                "1234567890", null, Users.RoleType.TRAINER, null);
+                "1234567890", null, null);
         client = new Users("client@example.com", "password", "Test Client",
-                "1234567890", null, Users.RoleType.CLIENT, null,
-                null, null, null);
+                "1234567890", null, null, null, null, null);
     }
 
     @Test

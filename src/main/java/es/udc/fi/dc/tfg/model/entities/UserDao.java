@@ -10,19 +10,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserDao extends JpaRepository<Users, Long> {
 
 	/**
-	 * Exists by user name.
+	 * Exists by email.
 	 *
-	 * @param userName the user name
+	 * @param email the email
 	 * @return true, if successful
 	 */
-	//boolean existsByUserName(String userName);
+	boolean existsByEmail(String email);
 
 	/**
-	 * Find by user name.
+	 * Find by email.
 	 *
-	 * @param userName the user name
+	 * @param email the email
 	 * @return the optional
 	 */
-	//Optional<Users> findByUserName(String userName);
+	Optional<Users> findByEmail(String email);
 
 }

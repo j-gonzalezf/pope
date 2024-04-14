@@ -1,8 +1,5 @@
 package es.udc.fi.dc.tfg.model.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 import jakarta.transaction.Transactional;
 
 import org.junit.Test;
@@ -13,54 +10,63 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import es.udc.fi.dc.tfg.model.common.exceptions.DuplicateInstanceException;
-import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Users;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import static org.junit.Assert.assertThrows;
 
 /**
- * The Class UserServiceTest.
+ * Clase UserServiceTest.
  */
-/*
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
 public class UserServiceTest {
-*/
-	/** The user service. */
-/*
-	@Autowired
-	private UserService userService;
-*/
-	/**
-	 * Creates the user.
-	 *
-	 * @param userName the user name
-	 * @return the user
-	 */
-/*
-	private Users createUser(String userName) {
-		return new Users(userName, "password", "firstName", "lastName", userName + "@" + userName + ".com");
-	}
-*/
-	/**
-	 * Test sign up and login from id.
-	 *
-	 * @throws DuplicateInstanceException the duplicate instance exception
-	 * @throws InstanceNotFoundException  the instance not found exception
-	 */
-/*
-	@Test
-	public void testSignUpAndLoginFromId() throws DuplicateInstanceException, InstanceNotFoundException {
 
-		Users user = createUser("user");
+    private final Long NON_EXISTENT_ID = Long.valueOf(-1);
 
-		userService.signUp(user);
+    /**
+     * El trainer service.
+     */
+    @Autowired
+    private UserService userService;
 
-		Users loggedInUser = userService.loginFromId(user.getId());
+    /**
+     * Crea un entrenador.
+     *
+     * @param email El email del entrenador.
+     * @return El objeto Users que representa al entrenador con el perfil
+     * actualizado.
+     */
+    private Users createTrainer(String email) {
+        return new Users(email, "password1", "fullName1", "987654321", "", "");
+    }
 
-		assertEquals(user, loggedInUser);
-		//assertEquals(Users.RoleType.USER, user.getRole());
+    /**
+     * Crea un cliente.
+     *
+     * @param email El email del cliente.
+     * @return El objeto Users que representa al cliente con el perfil
+     * actualizado.
+     */
+    private Users createClient(String email) {
+        return new Users(email, "password2", "fullName2", "123456789", "",
+                LocalDateTime.of(2000, 1, 1, 0, 0), "No", "Ninguno", new BigDecimal("170"));
+    }
 
-	}
+    @Test
+    public void testSignUpDuplicatedEmail() throws DuplicateInstanceException {
+
+        Users trainer = createTrainer("trainer@trainer.com");
+        Users client = createClient("client@client.com");
+
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        assertThrows(DuplicateInstanceException.class, () -> userService.signUp(trainer));
+        assertThrows(DuplicateInstanceException.class, () -> userService.signUp(client));
+
+    }
+
 }
-*/
