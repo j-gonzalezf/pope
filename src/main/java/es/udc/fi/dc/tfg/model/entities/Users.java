@@ -96,17 +96,16 @@ public class Users {
      * @param fullName El nombre completo del usuario.
      * @param phone El teléfono del usuario.
      * @param icon La foto de perfil del usuario.
-     * @param role El rol del usuario.
      * @param socialLinks El enlace a las redes sociales del usuario.
      */
     public Users(String email, String password, String fullName,
-            String phone, String icon, RoleType role, String socialLinks) {
+            String phone, String icon, String socialLinks) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
         this.phone = phone;
         this.icon = icon;
-        this.role = role;
+        this.role = Users.RoleType.TRAINER;
         this.socialLinks = socialLinks;
     }
 
@@ -118,21 +117,20 @@ public class Users {
      * @param fullName El nombre completo del usuario.
      * @param phone El teléfono del usuario.
      * @param icon La foto de perfil del usuario.
-     * @param role El rol del usuario.
      * @param birthdate La fecha de nacimiento del usuario.
      * @param injuries Las lesiones del usuario.
      * @param goals Los objetivos del usuario.
      * @param height La altura del usuario en cm.
      */
     public Users(String email, String password, String fullName,
-            String phone, String icon, RoleType role, LocalDateTime birthdate,
+            String phone, String icon, LocalDateTime birthdate,
             String injuries, String goals, BigDecimal height) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
         this.phone = phone;
         this.icon = icon;
-        this.role = role;
+        this.role = Users.RoleType.CLIENT;
         this.birthdate = birthdate;
         this.injuries = injuries;
         this.goals = goals;
@@ -263,11 +261,12 @@ public class Users {
      *
      * @param role the new role
      */
-    private void setRole(RoleType role) {
-        this.role = role;
+    public void setRole(RoleType role) {
+        if (this.role == null) {
+            this.role = role;
+        }
     }
 
-    // No existe setRoleType pq no puedes cambiar de cliente a entrenador o viceversa
     /**
      * Gets the social links.
      *
