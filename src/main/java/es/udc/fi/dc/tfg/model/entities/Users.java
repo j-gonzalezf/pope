@@ -15,6 +15,7 @@ public class Users {
 
     /**
      * Enumeración RoleType que representa los roles de los usuarios.
+     * Trainer = 0 y Client = 1
      */
     public enum RoleType {
         TRAINER,

@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS PersonalBests;
 DROP TABLE IF EXISTS Weights;
 DROP TABLE IF EXISTS Users;
 
+-- El campo userRole guarda un 0 si es TRAINER y un 1 si es CLIENT.
 CREATE TABLE Users (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(60) NOT NULL UNIQUE,

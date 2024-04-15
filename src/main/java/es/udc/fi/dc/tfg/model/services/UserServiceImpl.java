@@ -11,6 +11,8 @@ import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.entities.UserDao;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -98,6 +100,73 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Users loginFromId(Long id) throws InstanceNotFoundException {
         return permissionChecker.checkUser(id);
+    }
+
+    /**
+     * Actualiza el perfil de un entrenador.
+     *
+     * @param id El ID del entrenador.
+     * @param email El nuevo correo electrónico del entrenador.
+     * @param fullName El nuevo nombre completo del entrenador.
+     * @param phone El nuevo número de teléfono del entrenador.
+     * @param icon La foto de perfil del entrenador.
+     * @param socialLinks El enlace a las redes sociales del entrenador.
+     * @return El objeto Users que representa al usuario con el perfil
+     * actualizado.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Override
+    public Users updateProfile(Long id, String email, String fullName, String phone,
+            String icon, String socialLinks) throws InstanceNotFoundException {
+
+        Users user = permissionChecker.checkUser(id);
+
+        user.setEmail(email);
+        user.setFullName(fullName);
+        user.setPhone(phone);
+        user.setIcon(icon);
+        user.setSocialLinks(socialLinks);
+
+        return user;
+
+    }
+
+    /**
+     * Actualiza el perfil de un cliente.
+     *
+     * @param id El ID del cliente.
+     * @param email El nuevo correo electrónico del cliente.
+     * @param fullName El nuevo nombre completo del cliente.
+     * @param phone El nuevo número de teléfono del cliente.
+     * @param icon La foto de perfil del cliente.
+     * @param birthdate La fecha de nacimiento del cliente.
+     * @param injuries Las lesiones del cliente.
+     * @param goals Los objetivos del cliente.
+     * @param height La altura del cliente en cm.
+     * @return El objeto Users que representa al usuario con el perfil
+     * actualizado.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Override
+    public Users updateClient(Long id, String email, String fullName, String phone, String icon,
+            LocalDateTime birthdate, String injuries, String goals, BigDecimal height)
+            throws InstanceNotFoundException {
+
+        Users user = permissionChecker.checkUser(id);
+
+        user.setEmail(email);
+        user.setFullName(fullName);
+        user.setPhone(phone);
+        user.setIcon(icon);
+        user.setBirthdate(birthdate);
+        user.setInjuries(injuries);
+        user.setGoals(goals);
+        user.setHeight(height);
+
+        return user;
+
     }
 
     /**

@@ -17,6 +17,7 @@ import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -164,7 +165,7 @@ public class UserServiceTest {
      */
     @Test
     public void testLoginWithNonExistentEmail() throws IncorrectLoginException {
-        assertThrows(IncorrectLoginException.class, 
+        assertThrows(IncorrectLoginException.class,
                 () -> userService.login("X", "Y"));
     }
 
@@ -274,6 +275,95 @@ public class UserServiceTest {
         assertThrows(IncorrectPasswordException.class,
                 () -> userService.changePassword(client.getId(), 'Y' + clearClientPassword, "newPassword2"));
 
+    }
+
+    /**
+     * Test para actualizar perfil de entrenador.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testUpdateProfile() throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Users trainer = createTrainer("trainer@trainer.com");
+
+        userService.signUp(trainer);
+
+        Users updatedTrainer = userService.updateProfile(trainer.getId(), "new@new.com",
+                "newFullName1", "192837465", null, "https://linktr.ee");
+
+        assertEquals("new@new.com", updatedTrainer.getEmail());
+        assertEquals("newFullName1", updatedTrainer.getFullName());
+        assertEquals("192837465", updatedTrainer.getPhone());
+        assertNull(updatedTrainer.getIcon());
+        assertEquals("https://linktr.ee", updatedTrainer.getSocialLinks());
+
+    }
+
+    /**
+     * Test para actualizar perfil de entrenador con un ID inexistente.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testUpdateProfileWithNonExistentId()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> userService.updateProfile(NON_EXISTENT_ID, "new@new.com",
+                        "newFullName1", "192837465", null, "https://linktr.ee"));
+    }
+
+    /**
+     * Test para actualizar perfil de cliente.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testUpdateClient() throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Users client = createClient("client@client.com");
+
+        userService.signUp(client);
+
+        Users updatedClient = userService.updateClient(client.getId(),
+                "new@new.es", "newFullName2", "192837460", null,
+                LocalDateTime.of(2001, 1, 1, 0, 0), "Asma", "No", new BigDecimal("180"));
+
+        assertEquals("new@new.es", updatedClient.getEmail());
+        assertEquals("newFullName2", updatedClient.getFullName());
+        assertEquals("192837460", updatedClient.getPhone());
+        assertNull(updatedClient.getIcon());
+        assertEquals(LocalDateTime.of(2001, 1, 1, 0, 0), updatedClient.getBirthdate());
+        assertEquals("Asma", updatedClient.getInjuries());
+        assertEquals("No", updatedClient.getGoals());
+        assertEquals(new BigDecimal("180"), updatedClient.getHeight());
+
+    }
+
+    /**
+     * Test para actualizar perfil de cliente con un ID inexistente.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testUpdateClientWithNonExistentId()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> userService.updateClient(NON_EXISTENT_ID, "new@new.es",
+                        "newFullName2", "192837460", null, LocalDateTime.of(2001, 1, 1, 0, 0),
+                        "Asma", "No", new BigDecimal("180")));
     }
 
 }
