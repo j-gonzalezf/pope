@@ -5,24 +5,26 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * The Interface UserDao.
+ * Interfaz UserDao.
  */
 public interface UserDao extends JpaRepository<Users, Long> {
 
-	/**
-	 * Exists by email.
-	 *
-	 * @param email the email
-	 * @return true, if successful
-	 */
-	boolean existsByEmail(String email);
+    /**
+     * Comprueba si existe un usuario con el email proporcionado.
+     *
+     * @param email El email del usuario a comprobar
+     * @return true si existe un usuario con el email proporcionado, false en
+     * caso contrario
+     */
+    boolean existsByEmail(String email);
 
-	/**
-	 * Find by email.
-	 *
-	 * @param email the email
-	 * @return the optional
-	 */
-	Optional<Users> findByEmail(String email);
+    /**
+     * Comprueba si existe un usuario con el email proporcionado.
+     *
+     * @param email El email del usuario a comprobar
+     * @return true si existe un usuario con el email proporcionado, false en
+     * caso contrario
+     */
+    Optional<Users> findByEmail(String email);
 
 }
