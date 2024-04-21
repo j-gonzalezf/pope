@@ -1,7 +1,7 @@
 package es.udc.fi.dc.tfg.model.entities;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -36,7 +36,7 @@ public class UsersTest {
 
     @Test
     public void testConstructors() {
-        
+
         // Test user constructor
         assertNotNull(user);
         assertNull(user.getId());
@@ -45,18 +45,18 @@ public class UsersTest {
         assertNotNull(trainer);
         assertEquals("trainer@example.com", trainer.getEmail());
         assertEquals("Test Trainer", trainer.getFullName());
-        assertEquals(Users.RoleType.TRAINER, trainer.getRole());
+        assertEquals(Users.RoleType.TRAINER, trainer.getUserRole());
 
         // Test client constructor
         assertNotNull(client);
         assertEquals("client@example.com", client.getEmail());
         assertEquals("Test Client", client.getFullName());
-        assertEquals(Users.RoleType.CLIENT, client.getRole());
+        assertEquals(Users.RoleType.CLIENT, client.getUserRole());
     }
 
     @Test
     public void testGettersAndSetters() {
-        
+
         // Test setters
         trainer.setId(3L);
         trainer.setEmail("new@example.com");
@@ -65,8 +65,8 @@ public class UsersTest {
         trainer.setPhone("123456789");
         trainer.setIcon("user.jpg");
         trainer.setSocialLinks("https://linktr.ee/");
-        
-        client.setBirthdate(LocalDateTime.of(2000, 1, 1, 0, 0));
+
+        client.setBirthdate(LocalDate.of(2000, 1, 1));
         client.setInjuries("None");
         client.setGoals("Fitness");
         client.setHeight(new BigDecimal("170"));
@@ -79,12 +79,12 @@ public class UsersTest {
         assertEquals("123456789", trainer.getPhone());
         assertEquals("user.jpg", trainer.getIcon());
         assertEquals("https://linktr.ee/", trainer.getSocialLinks());
-        
-        assertEquals(LocalDateTime.of(2000, 1, 1, 0, 0), client.getBirthdate());
+
+        assertEquals(LocalDate.of(2000, 1, 1), client.getBirthdate());
         assertEquals("None", client.getInjuries());
         assertEquals("Fitness", client.getGoals());
         assertEquals(new BigDecimal("170"), client.getHeight());
-        
+
     }
 
 }

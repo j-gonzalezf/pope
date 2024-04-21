@@ -1,16 +1,19 @@
 package es.udc.fi.dc.tfg.model.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * Clase User que representa a los usuarios de la aplicación.
  */
 @Entity
+@Table(name = "Users")
 public class Users {
 
     /**
@@ -55,7 +58,7 @@ public class Users {
     /**
      * Rol del usuario. Puede ser TRAINER (entrenador) o CLIENT (cliente).
      */
-    private RoleType role;
+    private RoleType userRole;
 
     /**
      * Enlace a las redes sociales del entrenador, puede ser nulo.
@@ -65,7 +68,7 @@ public class Users {
     /**
      * Fecha de nacimiento del cliente, puede ser nulo.
      */
-    private LocalDateTime birthdate;
+    private LocalDate birthdate;
 
     /**
      * Descripción sobre las lesiones o impedimentos del cliente, puede ser
@@ -79,7 +82,7 @@ public class Users {
     private String goals;
 
     /**
-     * Altura del cliente en cm, puede ser nulo.
+     * Altura del cliente en height, puede ser nulo.
      */
     private BigDecimal height;
 
@@ -106,7 +109,7 @@ public class Users {
         this.fullName = fullName;
         this.phone = phone;
         this.icon = icon;
-        this.role = Users.RoleType.TRAINER;
+        this.userRole = Users.RoleType.TRAINER;
         this.socialLinks = socialLinks;
     }
 
@@ -121,17 +124,17 @@ public class Users {
      * @param birthdate La fecha de nacimiento del usuario.
      * @param injuries Las lesiones del usuario.
      * @param goals Los objetivos del usuario.
-     * @param height La altura del usuario en cm.
+     * @param height La altura del usuario en height.
      */
     public Users(String email, String password, String fullName,
-            String phone, String icon, LocalDateTime birthdate,
+            String phone, String icon, LocalDate birthdate,
             String injuries, String goals, BigDecimal height) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
         this.phone = phone;
         this.icon = icon;
-        this.role = Users.RoleType.CLIENT;
+        this.userRole = Users.RoleType.CLIENT;
         this.birthdate = birthdate;
         this.injuries = injuries;
         this.goals = goals;
@@ -253,18 +256,18 @@ public class Users {
      *
      * @return the role
      */
-    public RoleType getRole() {
-        return role;
+    public RoleType getUserRole() {
+        return userRole;
     }
 
     /**
      * Sets the role.
      *
-     * @param role the new role
+     * @param userRole the new role
      */
-    public void setRole(RoleType role) {
-        if (this.role == null) {
-            this.role = role;
+    public void setUserRole(RoleType userRole) {
+        if (this.userRole == null) {
+            this.userRole = userRole;
         }
     }
 
@@ -291,7 +294,7 @@ public class Users {
      *
      * @return the birthdate
      */
-    public LocalDateTime getBirthdate() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 
@@ -300,7 +303,7 @@ public class Users {
      *
      * @param birthdate the new birthdate
      */
-    public void setBirthdate(LocalDateTime birthdate) {
+    public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 

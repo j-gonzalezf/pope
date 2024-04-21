@@ -4,6 +4,9 @@ logging:
       hibernate:
         SQL: debug
 spring:
+  sql:
+    init:
+      mode: always
   datasource:
     url: @dataSource.url@
     username: @dataSource.user@
@@ -37,4 +40,3 @@ project:
   jwt:
     signKey: WzROun12eUiDvko3UrJ74gNeJz2TWEWPMTh6DxyE8HWXIf4hETUrkM4IUGqqHq66PuVS
     expirationMinutes: 1440
-

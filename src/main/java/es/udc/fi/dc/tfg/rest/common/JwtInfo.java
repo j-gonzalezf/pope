@@ -1,86 +1,92 @@
 package es.udc.fi.dc.tfg.rest.common;
 
 /**
- * The Class JwtInfo.
+ * Clase JwtInfo.
  */
 public class JwtInfo {
 
-	/** The user id. */
-	private Long userId;
+    /**
+     * El user id.
+     */
+    private Long userId;
 
-	/** The user name. */
-	private String userName;
+    /**
+     * El email.
+     */
+    private String email;
 
-	/** The role. */
-	private String role;
+    /**
+     * El role.
+     */
+    private String role;
 
-	/**
-	 * Instantiates a new jwt info.
-	 *
-	 * @param userId   the user id
-	 * @param userName the user name
-	 * @param role     the role
-	 */
-	public JwtInfo(Long userId, String userName, String role) {
+    /**
+     * Instancia un nuevo jwt info.
+     *
+     * @param userId el user id del usuario
+     * @param email el email del usuario
+     * @param role el role del usuario
+     */
+    public JwtInfo(Long userId, String email, String role) {
 
-		this.userId = userId;
-		this.userName = userName;
-		this.role = role;
+        this.userId = userId;
+        this.email = email;
+        this.role = role;
 
-	}
+    }
 
-	/**
-	 * Gets the user id.
-	 *
-	 * @return the user id
-	 */
-	public Long getUserId() {
-		return userId;
-	}
+    /**
+     * Gets the user id.
+     *
+     * @return the user id
+     */
+    public Long getUserId() {
+        return userId;
+    }
 
-	/**
-	 * Sets the user id.
-	 *
-	 * @param userId the new user id
-	 */
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    /**
+     * Sets the user id.
+     *
+     * @param userId the new user id
+     */
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-	/**
-	 * Gets the user name.
-	 *
-	 * @return the user name
-	 */
-	public String getUserName() {
-		return userName;
-	}
+    /**
+     * Gets the email.
+     *
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
 
-	/**
-	 * Sets the user name.
-	 *
-	 * @param userName the new user name
-	 */
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    /**
+     * Sets the email.
+     *
+     * @param email the new email
+     */
+    public void setUserName(String email) {
+        this.email = email;
+    }
 
-	/**
-	 * Gets the role.
-	 *
-	 * @return the role
-	 */
-	public String getRole() {
-		return role;
-	}
+    /**
+     * Gets the role.
+     *
+     * @return the role
+     */
+    public String getRole() {
+        return role;
+    }
 
-	/**
-	 * Sets the role.
-	 *
-	 * @param role the new role
-	 */
-	public void setRole(String role) {
-		this.role = role;
-	}
+    /**
+     * Sets the role.
+     *
+     * @param role the new role
+     */
+    public void setRole(String role) {
+        this.role = role;
+    }
 
 }

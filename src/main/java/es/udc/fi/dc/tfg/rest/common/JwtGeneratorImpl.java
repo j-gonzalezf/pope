@@ -11,31 +11,31 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 /**
- * The Class JwtGeneratorImpl.
+ * Clase JwtGeneratorImpl.
  */
 @Component
 public class JwtGeneratorImpl implements JwtGenerator {
 
-    /** The sign key. */
+    /** La sign key. */
     @Value("${project.jwt.signKey}")
     private String signKey;
 
-    /** The expiration minutes. */
+    /** La expiration minutes. */
     @Value("${project.jwt.expirationMinutes}")
     private long expirationMinutes;
 
     /**
-     * Generate.
+     * Genera un token JWT a partir de la información proporcionada.
      *
-     * @param info the info
-     * @return the string
+     * @param info Información del usuario para generar el token
+     * @return Un string con el token JWT generado
      */
     @Override
     public String generate(JwtInfo info) {
 
         Claims claims = Jwts.claims();
 
-        claims.setSubject(info.getUserName())
+        claims.setSubject(info.getEmail())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMinutes * 60 * 1000));
         claims.put("userId", info.getUserId());
         claims.put("role", info.getRole());
@@ -45,10 +45,10 @@ public class JwtGeneratorImpl implements JwtGenerator {
     }
 
     /**
-     * Gets the info.
+     * Obtiene la información del usuario a partir de un token JWT.
      *
-     * @param token the token
-     * @return the info
+     * @param token El token JWT del que se extraerá la información
+     * @return La información del usuario extraída del token
      */
     @Override
     public JwtInfo getInfo(String token) {

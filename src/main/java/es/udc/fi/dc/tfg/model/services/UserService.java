@@ -6,7 +6,7 @@ import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * Interfaz UserService.
@@ -79,7 +79,7 @@ public interface UserService {
      * proporcionado.
      */
     public Users updateClient(Long id, String email, String fullName, String phone, String icon,
-            LocalDateTime birthdate, String injuries, String goals, BigDecimal height)
+            LocalDate birthdate, String injuries, String goals, BigDecimal height)
             throws InstanceNotFoundException;
 
     /**

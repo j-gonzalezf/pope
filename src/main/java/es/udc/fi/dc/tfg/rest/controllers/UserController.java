@@ -1,9 +1,8 @@
 package es.udc.fi.dc.tfg.rest.controllers;
 
-//import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toAuthenticatedUserDto;
-//import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUser;
-//import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUserDto;
-
+import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toAuthenticatedUserDto;
+import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUser;
+import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUserDto;
 import java.net.URI;
 import java.util.Locale;
 
@@ -40,100 +39,135 @@ import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
 
 /**
- * The Class UserController.
+ * Clase UserController.
  */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-	/** The Constant INCORRECT_LOGIN_EXCEPTION_CODE. */
-	private static final String INCORRECT_LOGIN_EXCEPTION_CODE = "project.exceptions.IncorrectLoginException";
+    /**
+     * La constante INCORRECT_LOGIN_EXCEPTION_CODE.
+     */
+    private static final String INCORRECT_LOGIN_EXCEPTION_CODE = "project.exceptions.IncorrectLoginException";
 
-	/** The Constant INCORRECT_PASSWORD_EXCEPTION_CODE. */
-	private static final String INCORRECT_PASS_EXCEPTION_CODE = "project.exceptions.IncorrectPasswordException";
+    /**
+     * La constante INCORRECT_PASSWORD_EXCEPTION_CODE.
+     */
+    private static final String INCORRECT_PASS_EXCEPTION_CODE = "project.exceptions.IncorrectPasswordException";
 
-	/** The message source. */
-	@Autowired
-	private MessageSource messageSource;
+    /**
+     * La constante ILLEGAL_ARGUMENT_EXCEPTION
+     */
+    private static final String ILLEGAL_ARGUMENT_EXCEPTION = "project.exceptions.IllegalArgumentException";
 
-	/** The jwt generator. */
-	@Autowired
-	private JwtGenerator jwtGenerator;
+    /**
+     * El message source.
+     */
+    @Autowired
+    private MessageSource messageSource;
 
-	/** The user service. */
-	@Autowired
-	private UserService userService;
+    /**
+     * El jwt generator.
+     */
+    @Autowired
+    private JwtGenerator jwtGenerator;
 
-	/**
-	 * Handle incorrect login exception.
-	 *
-	 * @param exception the exception
-	 * @param locale    the locale
-	 * @return the errors dto
-	 */
-	@ExceptionHandler(IncorrectLoginException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ResponseBody
-	public ErrorsDto handleIncorrectLoginException(IncorrectLoginException exception, Locale locale) {
+    /**
+     * El user service.
+     */
+    @Autowired
+    private UserService userService;
 
-		String errorMessage = messageSource.getMessage(INCORRECT_LOGIN_EXCEPTION_CODE, null,
-				INCORRECT_LOGIN_EXCEPTION_CODE, locale);
+    /**
+     * Maneja la excepción de inicio de sesión incorrecto.
+     *
+     * @param exception la excepción de inicio de sesión incorrecto
+     * @param locale la ubicación geográfica del usuario
+     * @return un objeto ErrorsDto con el mensaje de error
+     */
+    @ExceptionHandler(IncorrectLoginException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorsDto handleIncorrectLoginException(IncorrectLoginException exception, Locale locale) {
 
-		return new ErrorsDto(errorMessage);
+        String errorMessage = messageSource.getMessage(INCORRECT_LOGIN_EXCEPTION_CODE, null,
+                INCORRECT_LOGIN_EXCEPTION_CODE, locale);
 
-	}
+        return new ErrorsDto(errorMessage);
 
-	/**
-	 * Handle incorrect password exception.
-	 *
-	 * @param exception the exception
-	 * @param locale    the locale
-	 * @return the errors dto
-	 */
-	@ExceptionHandler(IncorrectPasswordException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ResponseBody
-	public ErrorsDto handleIncorrectPasswordException(IncorrectPasswordException exception, Locale locale) {
+    }
 
-		String errorMessage = messageSource.getMessage(INCORRECT_PASS_EXCEPTION_CODE, null,
-				INCORRECT_PASS_EXCEPTION_CODE, locale);
+    /**
+     * Maneja la excepción de contraseña incorrecta.
+     *
+     * @param exception la excepción de contraseña incorrecta
+     * @param locale la ubicación geográfica del usuario
+     * @return un objeto ErrorsDto con el mensaje de error
+     */
+    @ExceptionHandler(IncorrectPasswordException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorsDto handleIncorrectPasswordException(IncorrectPasswordException exception, Locale locale) {
 
-		return new ErrorsDto(errorMessage);
+        String errorMessage = messageSource.getMessage(INCORRECT_PASS_EXCEPTION_CODE, null,
+                INCORRECT_PASS_EXCEPTION_CODE, locale);
 
-	}
+        return new ErrorsDto(errorMessage);
 
-	/**
-	 * Sign up.
-	 *
-	 * @param userDto the user dto
-	 * @return the response entity
-	 * @throws DuplicateInstanceException the duplicate instance exception
-	 */
-/*
-	@PostMapping("/signUp")
-	public ResponseEntity<AuthenticatedUserDto> signUp(
-			@Validated({ UserDto.AllValidations.class }) @RequestBody UserDto userDto)
-			throws DuplicateInstanceException {
+    }
 
-		Users user = toUser(userDto);
+    /**
+     * Maneja la excepción de rol inválido.
+     *
+     * @param exception la excepción de rol inválido
+     * @param locale la ubicación geográfica del usuario
+     * @return un objeto ErrorsDto con el mensaje de error
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorsDto handleIllegalArgumentException(IllegalArgumentException exception, Locale locale) {
 
-		userService.signUp(user);
+        String errorMessage = messageSource.getMessage(ILLEGAL_ARGUMENT_EXCEPTION, null,
+                ILLEGAL_ARGUMENT_EXCEPTION, locale);
 
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId())
-				.toUri();
+        return new ErrorsDto(errorMessage);
 
-		return ResponseEntity.created(location).body(toAuthenticatedUserDto(generateServiceToken(user), user));
-*/
-	}
+    }
+    
 
-	/**
-	 * Login.
-	 *
-	 * @param params the params
-	 * @return the authenticated user dto
-	 * @throws IncorrectLoginException the incorrect login exception
-	 */
-/*
+    /**
+     * Registrar un nuevo usuario.
+     *
+     * @param userDto el DTO del usuario
+     * @return una ResponseEntity que contiene un AuthenticatedUserDto
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     */
+    @PostMapping("/signUp")
+    public ResponseEntity<AuthenticatedUserDto> signUp(
+            @Validated({UserDto.AllValidations.class}) @RequestBody UserDto userDto)
+            throws DuplicateInstanceException, IllegalArgumentException {
+
+        Users user = toUser(userDto);
+
+        userService.signUp(user);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(toAuthenticatedUserDto(generateServiceToken(user), user));
+
+    }
+
+    /**
+     * Login.
+     *
+     * @param params the params
+     * @return the authenticated user dto
+     * @throws IncorrectLoginException the incorrect login exception
+     */
+    /*
 	@PostMapping("/login")
 	public AuthenticatedUserDto login(@Validated @RequestBody LoginParamsDto params) throws IncorrectLoginException {
 
@@ -142,16 +176,16 @@ public class UserController {
 		return toAuthenticatedUserDto(generateServiceToken(user), user);
 
 	}
-*/
-	/**
-	 * Login from service token.
-	 *
-	 * @param userId       the user id
-	 * @param serviceToken the service token
-	 * @return the authenticated user dto
-	 * @throws InstanceNotFoundException the instance not found exception
-	 */
-/*
+     */
+    /**
+     * Login from service token.
+     *
+     * @param userId the user id
+     * @param serviceToken the service token
+     * @return the authenticated user dto
+     * @throws InstanceNotFoundException the instance not found exception
+     */
+    /*
 	@PostMapping("/loginFromServiceToken")
 	public AuthenticatedUserDto loginFromServiceToken(@RequestAttribute Long userId,
 			@RequestAttribute String serviceToken) throws InstanceNotFoundException {
@@ -161,18 +195,18 @@ public class UserController {
 		return toAuthenticatedUserDto(serviceToken, user);
 
 	}
-*/
-	/**
-	 * Update profile.
-	 *
-	 * @param userId  the user id
-	 * @param id      the id
-	 * @param userDto the user dto
-	 * @return the user dto
-	 * @throws InstanceNotFoundException the instance not found exception
-	 * @throws PermissionException       the permission exception
-	 */
-/*
+     */
+    /**
+     * Update profile.
+     *
+     * @param userId the user id
+     * @param id the id
+     * @param userDto the user dto
+     * @return the user dto
+     * @throws InstanceNotFoundException the instance not found exception
+     * @throws PermissionException the permission exception
+     */
+    /*
 	@PutMapping("/{id}")
 	public UserDto updateProfile(@RequestAttribute Long userId, @PathVariable("id") Long id,
 			@Validated({ UserDto.UpdateValidations.class }) @RequestBody UserDto userDto)
@@ -186,18 +220,18 @@ public class UserController {
 				userService.updateProfile(id, userDto.getFirstName(), userDto.getLastName(), userDto.getEmail()));
 
 	}
-*/
-	/**
-	 * Change password.
-	 *
-	 * @param userId the user id
-	 * @param id     the id
-	 * @param params the params
-	 * @throws PermissionException        the permission exception
-	 * @throws InstanceNotFoundException  the instance not found exception
-	 * @throws IncorrectPasswordException the incorrect password exception
-	 */
-/*
+     */
+    /**
+     * Change password.
+     *
+     * @param userId the user id
+     * @param id the id
+     * @param params the params
+     * @throws PermissionException the permission exception
+     * @throws InstanceNotFoundException the instance not found exception
+     * @throws IncorrectPasswordException the incorrect password exception
+     */
+    /*
 	@PostMapping("/{id}/changePassword")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void changePassword(@RequestAttribute Long userId, @PathVariable Long id,
@@ -211,21 +245,19 @@ public class UserController {
 		userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
 
 	}
-*/	
-	/**
-	 * Generate service token.
-	 *
-	 * @param user the user
-	 * @return the string
-	 */
-/*
-	private String generateServiceToken(Users user) {
+     */
+    /**
+     * Genera un service token para el usuario.
+     *
+     * @param user el usuario para el que se va a generar el token
+     * @return el service token generado
+     */
+    private String generateServiceToken(Users user) {
 
-		JwtInfo jwtInfo = new JwtInfo(user.getId(), user.getUserName(), user.getRole().toString());
+        JwtInfo jwtInfo = new JwtInfo(user.getId(), user.getEmail(), user.getUserRole().toString());
 
-		return jwtGenerator.generate(jwtInfo);
+        return jwtGenerator.generate(jwtInfo);
 
-	}
+    }
 
 }
-*/

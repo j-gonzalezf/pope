@@ -15,7 +15,7 @@ import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
@@ -65,8 +65,7 @@ public class UserServiceTest {
      */
     private Users createClient(String email) {
         return new Users(email, "password2", "fullName2", "123456789", "",
-                LocalDateTime.of(2000, 1, 1, 0, 0), "No",
-                "Ninguno", new BigDecimal("170"));
+                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"));
     }
 
     /**
@@ -92,8 +91,8 @@ public class UserServiceTest {
 
         assertEquals(trainer, loggedInTrainer);
         assertEquals(client, loggedInClient);
-        assertEquals(Users.RoleType.TRAINER, trainer.getRole());
-        assertEquals(Users.RoleType.CLIENT, client.getRole());
+        assertEquals(Users.RoleType.TRAINER, trainer.getUserRole());
+        assertEquals(Users.RoleType.CLIENT, client.getUserRole());
 
     }
 
@@ -336,13 +335,13 @@ public class UserServiceTest {
 
         Users updatedClient = userService.updateClient(client.getId(),
                 "new@new.es", "newFullName2", "192837460", null,
-                LocalDateTime.of(2001, 1, 1, 0, 0), "Asma", "No", new BigDecimal("180"));
+                LocalDate.of(2001, 1, 1), "Asma", "No", new BigDecimal("180"));
 
         assertEquals("new@new.es", updatedClient.getEmail());
         assertEquals("newFullName2", updatedClient.getFullName());
         assertEquals("192837460", updatedClient.getPhone());
         assertNull(updatedClient.getIcon());
-        assertEquals(LocalDateTime.of(2001, 1, 1, 0, 0), updatedClient.getBirthdate());
+        assertEquals(LocalDate.of(2001, 1, 1), updatedClient.getBirthdate());
         assertEquals("Asma", updatedClient.getInjuries());
         assertEquals("No", updatedClient.getGoals());
         assertEquals(new BigDecimal("180"), updatedClient.getHeight());
@@ -362,7 +361,7 @@ public class UserServiceTest {
             throws DuplicateInstanceException, InstanceNotFoundException {
         assertThrows(InstanceNotFoundException.class,
                 () -> userService.updateClient(NON_EXISTENT_ID, "new@new.es",
-                        "newFullName2", "192837460", null, LocalDateTime.of(2001, 1, 1, 0, 0),
+                        "newFullName2", "192837460", null, LocalDate.of(2001, 1, 1),
                         "Asma", "No", new BigDecimal("180")));
     }
 

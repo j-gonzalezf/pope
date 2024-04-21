@@ -24,75 +24,144 @@ import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.rest.controllers.UserController;
 import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
+import es.udc.fi.dc.tfg.rest.dtos.UserDto;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
- * The Class UserControllerTest.
+ * Clase UserControllerTest.
  */
-/*
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
 public class UserControllerTest {
-*/	
-	/** The Constant PASSWORD. */
-/*
-	private final static String PASSWORD = "password";
-*/
-	/** The mock mvc. */
-/*        
-	@Autowired
-	private MockMvc mockMvc;
-*/
-	/** The password encoder. */
-/*
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
-*/
-	/** The user dao. */
-/*
-	@Autowired
-	private UserDao userDao;
-*/
-	/** The user controller. */
-/*
-	@Autowired
-	private UserController userController;
-*/
-	/**
-	 * Creates the authenticated user.
-	 *
-	 * @param userName the user name
-	 * @param roleType the role type
-	 * @return the authenticated user dto
-	 * @throws IncorrectLoginException the incorrect login exception
-	 */
-/*
-	private AuthenticatedUserDto createAuthenticatedUser(String userName, RoleType roleType)
-			throws IncorrectLoginException {
 
-		Users user = new Users(userName, PASSWORD, "newUser", "user", "user@test.com");
+    /**
+     * La Constante PASSWORD.
+     */
+    private final static String PASSWORD = "password";
 
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRole(roleType);
+    /**
+     * El mock mvc.
+     */
+    @Autowired
+    private MockMvc mockMvc;
 
-		userDao.save(user);
+    /**
+     * El password encoder.
+     */
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
-		LoginParamsDto loginParams = new LoginParamsDto();
-		loginParams.setUserName(user.getUserName());
-		loginParams.setPassword(PASSWORD);
+    /**
+     * El user dao.
+     */
+    @Autowired
+    private UserDao userDao;
 
-		return userController.login(loginParams);
+    /**
+     * El user controller.
+     */
+    @Autowired
+    private UserController userController;
 
-	}
-*/
-	/**
-	 * Test post login ok.
-	 *
-	 * @throws Exception the exception
-	 */
+    /**
+     * Creates the authenticated user.
+     *
+     * @param userName the user name
+     * @param roleType the role type
+     * @return the authenticated user dto
+     * @throws IncorrectLoginException the incorrect login exception
+     */
+/*    
+    private AuthenticatedUserDto createAuthenticatedUser(String userName, RoleType roleType)
+            throws IncorrectLoginException {
+
+        Users user = new Users(userName, PASSWORD, "newUser", "user", "user@test.com");
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(roleType);
+
+        userDao.save(user);
+
+        LoginParamsDto loginParams = new LoginParamsDto();
+        loginParams.setUserName(user.getUserName());
+        loginParams.setPassword(PASSWORD);
+
+        return userController.login(loginParams);
+
+    }
+*/    
+
+    @Test
+    public void testSignUp() throws Exception {
+        
+        UserDto trainerDto = new UserDto(null, "trainer@trainer.com", "trainer", 
+                "123456789", "", "TRAINER", "", null, null, null, null);
+        
+        UserDto clientDto = new UserDto(null, "client@client.com", "client", 
+                "987654321", "", "CLIENT", null, LocalDate.of(2000,1,2), 
+                "Sin lesiones", "Objetivo", new BigDecimal("170"));
+        
+        trainerDto.setPassword(PASSWORD);
+        clientDto.setPassword(PASSWORD);
 /*
+        mockMvc.perform(post("/api/users/signUp").contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(trainerDto))).andExpect(status().isCreated());
+        
+        mockMvc.perform(post("/api/users/signUp").contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(clientDto))).andExpect(status().isCreated());
+*/       
+    }
+
+    @Test
+    public void testSignUp_DuplicatedUser() throws Exception {
+        
+        UserDto trainerDto = new UserDto(null, "trainer@trainer.com", "trainer", 
+                "123456789", "", "TRAINER", "", null, null, null, null);
+        
+        trainerDto.setPassword(PASSWORD);
+/*
+        mockMvc.perform(post("/api/users/signUp").contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(trainerDto))).andExpect(status().isCreated());
+*/
+        mockMvc.perform(post("/api/users/signUp").contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(trainerDto))).andExpect(status().isBadRequest());
+        
+    }
+
+    @Test
+    public void testSignUp_NotPassword() throws Exception {
+            
+        UserDto trainerDto = new UserDto(null, "trainer@trainer.com", "trainer", 
+                "123456789", "", "TRAINER", "", null, null, null, null);
+
+        mockMvc.perform(post("/api/users/signUp").contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(trainerDto))).andExpect(status().isBadRequest());
+        
+    }
+    
+    @Test
+    public void testSignUp_InvalidRole() throws Exception {
+    
+        UserDto trainerDto = new UserDto(null, "trainer@trainer.com", "trainer", 
+                "123456789", "", null, "", null, null, null, null);
+        
+        trainerDto.setPassword(PASSWORD);
+        
+        mockMvc.perform(post("/api/users/signUp").contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(trainerDto))).andExpect(status().isBadRequest());
+        
+    }
+    
+    /**
+     * Test post login ok.
+     *
+     * @throws Exception the exception
+     */
+    /*
 	@Test
 	public void testPostLogin_Ok() throws Exception {
 
@@ -109,4 +178,5 @@ public class UserControllerTest {
 				.andExpect(status().isOk());
 
 	}
-}*/
+     */
+}
