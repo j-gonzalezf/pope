@@ -65,7 +65,7 @@ public class UserServiceTest {
      */
     private Users createClient(String email) {
         return new Users(email, "password2", "fullName2", "123456789", "",
-                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"));
+                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), null);
     }
 
     /**

@@ -22,10 +22,16 @@ public class UserConversor {
      */
     public static final UserDto toUserDto(Users user) {
 
+        Long trainerId = null;
+
+        if (user.getTrainer() != null) {
+            trainerId = user.getTrainer().getId();
+        }
+
         return new UserDto(user.getId(), user.getEmail(), user.getFullName(),
                 user.getPhone(), user.getIcon(), user.getUserRole().toString(),
                 user.getSocialLinks(), user.getBirthdate(), user.getInjuries(),
-                user.getGoals(), user.getHeight());
+                user.getGoals(), user.getHeight(), trainerId);
 
     }
 
@@ -33,10 +39,11 @@ public class UserConversor {
      * Convierte un objeto UserDto a un objeto Users.
      *
      * @param userDto el objeto UserDto a convertir
+     * @param trainer el entrenador del UserDto
      * @return un nuevo objeto Users que contiene los mismos datos que el objeto
      * UserDto proporcionado
      */
-    public static final Users toUser(UserDto userDto) throws IllegalArgumentException {
+    public static final Users toUser(UserDto userDto, Users trainer) throws IllegalArgumentException {
 
         if (userDto.getRole().equals(Users.RoleType.TRAINER.toString())) {
 
@@ -49,7 +56,7 @@ public class UserConversor {
             return new Users(userDto.getEmail(), userDto.getPassword(),
                     userDto.getFullName(), userDto.getPhone(), userDto.getIcon(),
                     userDto.getBirthdate(), userDto.getInjuries(),
-                    userDto.getGoals(), userDto.getHeight());
+                    userDto.getGoals(), userDto.getHeight(), trainer);
 
         } else {
             throw new IllegalArgumentException("Invalid role: " + userDto.getRole());

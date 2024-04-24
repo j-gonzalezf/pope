@@ -134,7 +134,6 @@ public class UserController {
         return new ErrorsDto(errorMessage);
 
     }
-    
 
     /**
      * Registrar un nuevo usuario.
@@ -143,18 +142,26 @@ public class UserController {
      * @return una ResponseEntity que contiene un AuthenticatedUserDto
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
      */
     @PostMapping("/signUp")
     public ResponseEntity<AuthenticatedUserDto> signUp(
             @Validated({UserDto.AllValidations.class}) @RequestBody UserDto userDto)
-            throws DuplicateInstanceException, IllegalArgumentException {
+            throws DuplicateInstanceException, IllegalArgumentException, InstanceNotFoundException {
 
-        Users user = toUser(userDto);
+        Users trainer = null;
+
+        if (userDto.getTrainerId() != null) {
+            trainer = userService.loginFromId(userDto.getTrainerId());
+        }
+
+        Users user = toUser(userDto, trainer);
 
         userService.signUp(user);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId())
-                .toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(user.getId()).toUri();
 
         return ResponseEntity.created(location).body(toAuthenticatedUserDto(generateServiceToken(user), user));
 
@@ -167,16 +174,15 @@ public class UserController {
      * @return the authenticated user dto
      * @throws IncorrectLoginException the incorrect login exception
      */
-    /*
-	@PostMapping("/login")
-	public AuthenticatedUserDto login(@Validated @RequestBody LoginParamsDto params) throws IncorrectLoginException {
+    @PostMapping("/login")
+    public AuthenticatedUserDto login(@Validated @RequestBody LoginParamsDto params) throws IncorrectLoginException {
 
-		Users user = userService.login(params.getUserName(), params.getPassword());
+        Users user = userService.login(params.getEmail(), params.getPassword());
 
-		return toAuthenticatedUserDto(generateServiceToken(user), user);
+        return toAuthenticatedUserDto(generateServiceToken(user), user);
 
-	}
-     */
+    }
+
     /**
      * Login from service token.
      *
@@ -185,17 +191,16 @@ public class UserController {
      * @return the authenticated user dto
      * @throws InstanceNotFoundException the instance not found exception
      */
-    /*
-	@PostMapping("/loginFromServiceToken")
-	public AuthenticatedUserDto loginFromServiceToken(@RequestAttribute Long userId,
-			@RequestAttribute String serviceToken) throws InstanceNotFoundException {
+    @PostMapping("/loginFromServiceToken")
+    public AuthenticatedUserDto loginFromServiceToken(@RequestAttribute Long userId,
+            @RequestAttribute String serviceToken) throws InstanceNotFoundException {
 
-		Users user = userService.loginFromId(userId);
+        Users user = userService.loginFromId(userId);
 
-		return toAuthenticatedUserDto(serviceToken, user);
+        return toAuthenticatedUserDto(serviceToken, user);
 
-	}
-     */
+    }
+
     /**
      * Update profile.
      *

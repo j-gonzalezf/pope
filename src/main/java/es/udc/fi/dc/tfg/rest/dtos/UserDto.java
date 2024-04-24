@@ -89,6 +89,11 @@ public class UserDto {
     private BigDecimal height;
 
     /**
+     * Identificador del entrenador que creó al cliente.
+     */
+    private Long trainerId;
+
+    /**
      * Instantiates a new user dto.
      */
     public UserDto() {
@@ -108,10 +113,11 @@ public class UserDto {
      * @param injuries Las lesiones del usuario.
      * @param goals Los objetivos del usuario.
      * @param height La altura del usuario en cm.
+     * @param trainerId El ID del entrenador del usuario.
      */
-    public UserDto(Long id, String email, String fullName, String phone, 
-            String icon, String role, String socialLinks, LocalDate birthdate, 
-            String injuries, String goals, BigDecimal height) {
+    public UserDto(Long id, String email, String fullName, String phone,
+            String icon, String role, String socialLinks, LocalDate birthdate,
+            String injuries, String goals, BigDecimal height, Long trainerId) {
 
         this.id = id;
         this.email = email != null ? email.trim() : null;
@@ -124,6 +130,7 @@ public class UserDto {
         this.injuries = injuries != null ? injuries.trim() : null;
         this.goals = goals != null ? goals.trim() : null;
         this.height = height;
+        this.trainerId = trainerId;
 
     }
 
@@ -242,7 +249,25 @@ public class UserDto {
     public void setIcon(String icon) {
         this.icon = icon;
     }
-    
+
+    /**
+     * Gets the role.
+     *
+     * @return the role
+     */
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * Sets the role.
+     *
+     * @param role the new role
+     */
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     /**
      * Gets the social links.
      *
@@ -261,7 +286,7 @@ public class UserDto {
     public void setSocialLinks(String socialLinks) {
         this.socialLinks = socialLinks.trim();
     }
-    
+
     /**
      * Gets the birthdate.
      *
@@ -280,7 +305,7 @@ public class UserDto {
     public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
-    
+
     /**
      * Gets the injuries.
      *
@@ -316,7 +341,7 @@ public class UserDto {
     public void setGoals(String goals) {
         this.goals = goals.trim();
     }
-    
+
     /**
      * Gets the height.
      *
@@ -336,23 +361,23 @@ public class UserDto {
     public void setHeight(BigDecimal height) {
         this.height = height;
     }
-    
+
     /**
-     * Gets the role.
+     * Gets the trainerId.
      *
-     * @return the role
+     * @return the trainerId
      */
-    public String getRole() {
-        return role;
+    public Long getTrainerId() {
+        return trainerId;
     }
 
     /**
-     * Sets the role.
+     * Sets the trainerId.
      *
-     * @param role the new role
+     * @param trainerId the new trainerId
      */
-    public void setRole(String role) {
-        this.role = role;
+    public void setTrainerId(Long trainerId) {
+        this.trainerId = trainerId;
     }
 
 }

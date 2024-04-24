@@ -1,10 +1,12 @@
 package es.udc.fi.dc.tfg.model.entities;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,8 +19,8 @@ import java.time.LocalDate;
 public class Users {
 
     /**
-     * Enumeración RoleType que representa los roles de los usuarios.
-     * Trainer = 0 y Client = 1
+     * Enumeración RoleType que representa los roles de los usuarios. Trainer =
+     * 0 y Client = 1
      */
     public enum RoleType {
         TRAINER,
@@ -87,6 +89,11 @@ public class Users {
     private BigDecimal height;
 
     /**
+     * Entrenador que creó al cliente.
+     */
+    private Users trainer;
+
+    /**
      * Constructor vacío de la clase Users.
      */
     public Users() {
@@ -124,11 +131,12 @@ public class Users {
      * @param birthdate La fecha de nacimiento del usuario.
      * @param injuries Las lesiones del usuario.
      * @param goals Los objetivos del usuario.
-     * @param height La altura del usuario en height.
+     * @param height La altura del usuario en cm.
+     * @param trainer El entrenador del usuario.
      */
     public Users(String email, String password, String fullName,
             String phone, String icon, LocalDate birthdate,
-            String injuries, String goals, BigDecimal height) {
+            String injuries, String goals, BigDecimal height, Users trainer) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
@@ -139,6 +147,7 @@ public class Users {
         this.injuries = injuries;
         this.goals = goals;
         this.height = height;
+        this.trainer = trainer;
     }
 
     /**
@@ -359,6 +368,26 @@ public class Users {
      */
     public void setHeight(BigDecimal height) {
         this.height = height;
+    }
+
+    /**
+     * Gets the trainer.
+     *
+     * @return the trainer
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trainerId")
+    public Users getTrainer() {
+        return trainer;
+    }
+
+    /**
+     * Sets the trainer.
+     *
+     * @param trainer the new trainer
+     */
+    public void setTrainer(Users trainer) {
+        this.trainer = trainer;
     }
 
 }

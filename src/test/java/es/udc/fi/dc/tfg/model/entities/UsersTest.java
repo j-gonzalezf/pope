@@ -31,7 +31,7 @@ public class UsersTest {
         trainer = new Users("trainer@example.com", "password", "Test Trainer",
                 "1234567890", null, null);
         client = new Users("client@example.com", "password", "Test Client",
-                "1234567890", null, null, null, null, null);
+                "1234567890", null, null, null, null, null, null);
     }
 
     @Test
@@ -52,6 +52,7 @@ public class UsersTest {
         assertEquals("client@example.com", client.getEmail());
         assertEquals("Test Client", client.getFullName());
         assertEquals(Users.RoleType.CLIENT, client.getUserRole());
+        
     }
 
     @Test
@@ -70,6 +71,7 @@ public class UsersTest {
         client.setInjuries("None");
         client.setGoals("Fitness");
         client.setHeight(new BigDecimal("170"));
+        client.setTrainer(trainer);
 
         // Test getters
         assertEquals(3L, trainer.getId().longValue());
@@ -84,6 +86,7 @@ public class UsersTest {
         assertEquals("None", client.getInjuries());
         assertEquals("Fitness", client.getGoals());
         assertEquals(new BigDecimal("170"), client.getHeight());
+        assertEquals(trainer, client.getTrainer());
 
     }
 
