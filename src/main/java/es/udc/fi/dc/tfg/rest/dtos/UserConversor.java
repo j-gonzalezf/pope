@@ -1,6 +1,7 @@
 package es.udc.fi.dc.tfg.rest.dtos;
 
 import es.udc.fi.dc.tfg.model.entities.Users;
+import java.time.LocalDate;
 
 /**
  * Clase UserConversor.
@@ -23,14 +24,19 @@ public class UserConversor {
     public static final UserDto toUserDto(Users user) {
 
         Long trainerId = null;
+        String birthdate = null;
 
         if (user.getTrainer() != null) {
             trainerId = user.getTrainer().getId();
         }
 
+        if (user.getBirthdate() != null) {
+            birthdate = user.getBirthdate().toString();
+        }
+
         return new UserDto(user.getId(), user.getEmail(), user.getFullName(),
                 user.getPhone(), user.getIcon(), user.getUserRole().toString(),
-                user.getSocialLinks(), user.getBirthdate(), user.getInjuries(),
+                user.getSocialLinks(), birthdate, user.getInjuries(),
                 user.getGoals(), user.getHeight(), trainerId);
 
     }
@@ -45,19 +51,17 @@ public class UserConversor {
      */
     public static final Users toUser(UserDto userDto, Users trainer) throws IllegalArgumentException {
 
-        if (userDto.getRole().equals(Users.RoleType.TRAINER.toString())) {
+        String role = userDto.getRole();
 
+        if (Users.RoleType.TRAINER.toString().equals(role)) {
             return new Users(userDto.getEmail(), userDto.getPassword(),
                     userDto.getFullName(), userDto.getPhone(), userDto.getIcon(),
                     userDto.getSocialLinks());
-
-        } else if (userDto.getRole().equals(Users.RoleType.CLIENT.toString())) {
-
+        } else if (Users.RoleType.CLIENT.toString().equals(role)) {
             return new Users(userDto.getEmail(), userDto.getPassword(),
                     userDto.getFullName(), userDto.getPhone(), userDto.getIcon(),
-                    userDto.getBirthdate(), userDto.getInjuries(),
+                    LocalDate.parse(userDto.getBirthdate()), userDto.getInjuries(),
                     userDto.getGoals(), userDto.getHeight(), trainer);
-
         } else {
             throw new IllegalArgumentException("Invalid role: " + userDto.getRole());
         }

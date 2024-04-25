@@ -186,10 +186,11 @@ public class UserController {
     /**
      * Login from service token.
      *
-     * @param userId the user id
-     * @param serviceToken the service token
-     * @return the authenticated user dto
-     * @throws InstanceNotFoundException the instance not found exception
+     * @param userId el ID del usuario
+     * @param serviceToken el service token
+     * @return el authenticated user dto
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
      */
     @PostMapping("/loginFromServiceToken")
     public AuthenticatedUserDto loginFromServiceToken(@RequestAttribute Long userId,
@@ -227,30 +228,33 @@ public class UserController {
 	}
      */
     /**
-     * Change password.
+     * Cambia la contraseña de un usuario.
      *
-     * @param userId the user id
-     * @param id the id
-     * @param params the params
-     * @throws PermissionException the permission exception
-     * @throws InstanceNotFoundException the instance not found exception
-     * @throws IncorrectPasswordException the incorrect password exception
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID del usuario al que se le va a cambiar la contraseña
+     * @param params los parámetros de cambio de contraseña, que incluyen la
+     * contraseña antigua y la nueva
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del usuario al que se le va a cambiar la contraseña
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado
+     * @throws IncorrectPasswordException si la contraseña antigua proporcionada
+     * no coincide con la contraseña actual del usuario
      */
-    /*
-	@PostMapping("/{id}/changePassword")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void changePassword(@RequestAttribute Long userId, @PathVariable Long id,
-			@Validated @RequestBody ChangePasswordParamsDto params)
-			throws PermissionException, InstanceNotFoundException, IncorrectPasswordException {
+    @PostMapping("/{id}/changePassword")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changePassword(@RequestAttribute Long userId, @PathVariable Long id,
+            @Validated @RequestBody ChangePasswordParamsDto params)
+            throws PermissionException, InstanceNotFoundException, IncorrectPasswordException {
 
-		if (!id.equals(userId)) {
-			throw new PermissionException();
-		}
+        if (!id.equals(userId)) {
+            throw new PermissionException();
+        }
 
-		userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
+        userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
 
-	}
-     */
+    }
+
     /**
      * Genera un service token para el usuario.
      *

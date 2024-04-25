@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import org.hibernate.validator.constraints.URL;
 
 /**
@@ -70,7 +69,7 @@ public class UserDto {
     /**
      * Fecha de nacimiento del cliente, puede ser nulo.
      */
-    private LocalDate birthdate;
+    private String birthdate;
 
     /**
      * Descripción sobre las lesiones o impedimentos del cliente, puede ser
@@ -116,7 +115,7 @@ public class UserDto {
      * @param trainerId El ID del entrenador del usuario.
      */
     public UserDto(Long id, String email, String fullName, String phone,
-            String icon, String role, String socialLinks, LocalDate birthdate,
+            String icon, String role, String socialLinks, String birthdate,
             String injuries, String goals, BigDecimal height, Long trainerId) {
 
         this.id = id;
@@ -170,7 +169,13 @@ public class UserDto {
      * @param email the new email
      */
     public void setEmail(String email) {
-        this.email = email.trim();
+
+        if (email != null) {
+            this.email = email.trim();
+        } else {
+            this.email = null;
+        }
+
     }
 
     /**
@@ -210,7 +215,13 @@ public class UserDto {
      * @param fullName the new full name
      */
     public void setFullName(String fullName) {
-        this.fullName = fullName.trim();
+
+        if (fullName != null) {
+            this.fullName = fullName.trim();
+        } else {
+            this.fullName = null;
+        }
+
     }
 
     /**
@@ -229,7 +240,13 @@ public class UserDto {
      * @param phone the new phone
      */
     public void setPhone(String phone) {
-        this.phone = phone.trim();
+
+        if (phone != null) {
+            this.phone = phone.trim();
+        } else {
+            this.phone = null;
+        }
+
     }
 
     /**
@@ -284,7 +301,13 @@ public class UserDto {
      * @param socialLinks the new social links
      */
     public void setSocialLinks(String socialLinks) {
-        this.socialLinks = socialLinks.trim();
+
+        if (socialLinks != null) {
+            this.socialLinks = socialLinks.trim();
+        } else {
+            this.socialLinks = null;
+        }
+
     }
 
     /**
@@ -292,8 +315,8 @@ public class UserDto {
      *
      * @return the birthdate
      */
-    @Past(groups = {AllValidations.class, UpdateValidations.class})
-    public LocalDate getBirthdate() {
+    //@Past(groups = {AllValidations.class, UpdateValidations.class})
+    public String getBirthdate() {
         return birthdate;
     }
 
@@ -302,7 +325,7 @@ public class UserDto {
      *
      * @param birthdate the new birthdate
      */
-    public void setBirthdate(LocalDate birthdate) {
+    public void setBirthdate(String birthdate) {
         this.birthdate = birthdate;
     }
 
@@ -321,7 +344,13 @@ public class UserDto {
      * @param injuries the new injuries
      */
     public void setInjuries(String injuries) {
-        this.injuries = injuries.trim();
+
+        if (injuries != null) {
+            this.injuries = injuries.trim();
+        } else {
+            this.injuries = null;
+        }
+
     }
 
     /**
@@ -339,7 +368,13 @@ public class UserDto {
      * @param goals the new goals
      */
     public void setGoals(String goals) {
-        this.goals = goals.trim();
+
+        if (goals != null) {
+            this.goals = goals.trim();
+        } else {
+            this.goals = null;
+        }
+
     }
 
     /**
