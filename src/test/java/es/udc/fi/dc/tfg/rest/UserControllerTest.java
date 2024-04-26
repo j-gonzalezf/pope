@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.entities.UserDao;
+import es.udc.fi.dc.tfg.model.entities.Users.RoleType;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.rest.controllers.UserController;
 import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
@@ -27,6 +28,7 @@ import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import org.junit.Before;
 
 /**
@@ -71,20 +73,20 @@ public class UserControllerTest {
     /**
      * El authenticated user dto.
      */
-    private AuthenticatedUserDto authUser;
+    private AuthenticatedUserDto authTrainer;
 
     @Before
     public void createEntities() throws IncorrectLoginException {
-        authUser = createAuthenticatedUser("user@user.com");
+        authTrainer = createAuthenticatedUser("user@user.com");
     }
 
     /**
-     * Creates the authenticated user.
+     * Crea el authenticated user.
      *
-     * @param userName the user name
-     * @param roleType the role type
-     * @return the authenticated user dto
-     * @throws IncorrectLoginException the incorrect login exception
+     * @param email el email
+     * @return el authenticated user dto
+     * @throws IncorrectLoginException si el email o la contraseña son
+     * incorrectos.
      */
     private AuthenticatedUserDto createAuthenticatedUser(String email)
             throws IncorrectLoginException {
@@ -198,42 +200,52 @@ public class UserControllerTest {
     /**
      * Test para login.
      *
-     * @throws Exception the exception
+     * @throws Exception la excepción
      */
     @Test
     public void testLogin() throws Exception {
 
         LoginParamsDto loginParams = new LoginParamsDto();
-        loginParams.setEmail(authUser.getUserDto().getEmail());
+        loginParams.setEmail(authTrainer.getUserDto().getEmail());
         loginParams.setPassword(PASSWORD);
 
         ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(post("/api/users/login")
-                .header("Authorization", "Bearer " + authUser.getServiceToken())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(loginParams)))
                 .andExpect(status().isOk());
 
     }
 
+    /**
+     * Test para login con service token incorrecto.
+     *
+     * @throws Exception la excepción
+     */
     @Test
-    public void testLoginIncorrectServiceToken() throws Exception {
+    public void testLogin_IncorrectServiceToken() throws Exception {
 
         LoginParamsDto loginParams = new LoginParamsDto();
-        loginParams.setEmail(authUser.getUserDto().getEmail());
+        loginParams.setEmail(authTrainer.getUserDto().getEmail());
         loginParams.setPassword(PASSWORD);
 
         ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(post("/api/users/login")
-                .header("Authorization", "Bearer " + authUser.getServiceToken() + "Incorrect")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken() + "Incorrect")
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(loginParams)))
                 .andExpect(status().isUnauthorized());
 
     }
 
+    /**
+     * Test para login con email incorrecto.
+     *
+     * @throws Exception la excepción
+     */
     @Test
-    public void testLoginIncorrectEmail() throws Exception {
+    public void testLogin_IncorrectEmail() throws Exception {
 
         LoginParamsDto loginParams = new LoginParamsDto();
         loginParams.setEmail("client@trainer.com");
@@ -241,48 +253,101 @@ public class UserControllerTest {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        mockMvc.perform(post("/api/users/login").header("Authorization", "Bearer " + authUser.getServiceToken())
+        mockMvc.perform(post("/api/users/login").header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(loginParams)))
                 .andExpect(status().isNotFound());
 
     }
 
+    /**
+     * Test para login con service token.
+     *
+     * @throws Exception la excepción
+     */
     @Test
     public void testLoginFromServiceToken() throws Exception {
 
         LoginParamsDto loginParams = new LoginParamsDto();
-        loginParams.setEmail(authUser.getUserDto().getEmail());
+        loginParams.setEmail(authTrainer.getUserDto().getEmail());
         loginParams.setPassword(PASSWORD);
 
         ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(post("/api/users/loginFromServiceToken")
-                .header("Authorization", "Bearer " + authUser.getServiceToken())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(loginParams)))
                 .andExpect(status().isOk());
 
     }
 
+    /**
+     * Test para login con service token con token incorrecto.
+     *
+     * @throws Exception la excepción
+     */
     @Test
-    public void testLoginFromServiceTokenIncorrectToken() throws Exception {
+    public void testLoginFromServiceToken_IncorrectToken() throws Exception {
 
         LoginParamsDto loginParams = new LoginParamsDto();
-        loginParams.setEmail(authUser.getUserDto().getEmail());
+        loginParams.setEmail(authTrainer.getUserDto().getEmail());
         loginParams.setPassword(PASSWORD);
 
         ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(post("/api/users/loginFromServiceToken")
-                .header("Authorization", "Bearer " + authUser.getServiceToken() + "Incorrect")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken() + "Incorrect")
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(loginParams)))
                 .andExpect(status().isUnauthorized());
 
     }
 
+    /**
+     * Test para actualizar perfil.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateProfile() throws Exception {
+
+        UserDto userDto = authTrainer.getUserDto();
+
+        mockMvc.perform(put("/api/users/" + userDto.getId(), userDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(userDto))
+                .header("userId", userDto.getId().toString()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para actualizar perfil con usuario inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateProfile_Incorrect() throws Exception {
+
+        Long incorrectUserId = -1L;
+
+        UserDto updatedUserDto = authTrainer.getUserDto();
+        updatedUserDto.setFullName("JohnTest");
+
+        mockMvc.perform(put("/api/users/" + incorrectUserId, updatedUserDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedUserDto))
+                .header("userId", updatedUserDto.getId().toString())).andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para cambiar contraseña.
+     *
+     * @throws Exception la excepción
+     */
     @Test
     public void testChangePassword() throws Exception {
 
-        UserDto userDto = authUser.getUserDto();
+        UserDto userDto = authTrainer.getUserDto();
         userDto.setPassword(PASSWORD);
 
         ChangePasswordParamsDto changePasswordParamsDto = new ChangePasswordParamsDto();
@@ -290,31 +355,41 @@ public class UserControllerTest {
         changePasswordParamsDto.setNewPassword("nueva");
 
         mockMvc.perform(post("/api/users/" + userDto.getId() + "/changePassword", userDto.getId())
-                .header("Authorization", "Bearer " + authUser.getServiceToken()).contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()).contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(changePasswordParamsDto))
                 .header("userId", userDto.getId().toString())).andExpect(status().isNoContent());
 
     }
 
+    /**
+     * Test para cambiar la contraseña con un usuario inexistente.
+     *
+     * @throws Exception la excepción
+     */
     @Test
-    public void testChangePasswordIncorrect() throws Exception {
+    public void testChangePassword_Incorrect() throws Exception {
 
         Long incorrectUserId = -1L;
 
-        UserDto updatedUserDto = authUser.getUserDto();
+        UserDto updatedUserDto = authTrainer.getUserDto();
         updatedUserDto.setFullName("JohnTest");
 
         mockMvc.perform(put("/api/users/" + updatedUserDto.getId() + "/changePassword", incorrectUserId)
-                .header("Authorization", "Bearer " + authUser.getServiceToken()).contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()).contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(updatedUserDto))
                 .header("userId", incorrectUserId.toString())).andExpect(status().isMethodNotAllowed());
 
     }
 
+    /**
+     * Test para cambiar la contraseña con una contraseña incorrecta.
+     *
+     * @throws Exception la excepción
+     */
     @Test
-    public void testChangePasswordIncorrectPasswordException() throws Exception {
+    public void testChangePassword_IncorrectPasswordException() throws Exception {
 
-        UserDto userDto = authUser.getUserDto();
+        UserDto userDto = authTrainer.getUserDto();
         userDto.setPassword(PASSWORD);
 
         ChangePasswordParamsDto changePasswordParamsDto = new ChangePasswordParamsDto();
@@ -322,7 +397,7 @@ public class UserControllerTest {
         changePasswordParamsDto.setNewPassword("nueva");
 
         mockMvc.perform(post("/api/users/" + userDto.getId() + "/changePassword", userDto.getId())
-                .header("Authorization", "Bearer " + authUser.getServiceToken()).contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()).contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(changePasswordParamsDto))
                 .header("userId", userDto.getId().toString())).andExpect(status().isNotFound());
 

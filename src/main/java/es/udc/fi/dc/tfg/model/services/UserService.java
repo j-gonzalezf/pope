@@ -55,11 +55,13 @@ public interface UserService {
      * @param socialLinks El enlace a las redes sociales del entrenador.
      * @return El objeto Users que representa al usuario con el perfil
      * actualizado.
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
      */
     Users updateProfile(Long id, String email, String fullName, String phone,
-            String icon, String socialLinks) throws InstanceNotFoundException;
+            String icon, String socialLinks) throws DuplicateInstanceException, InstanceNotFoundException;
 
     /**
      * Actualiza el perfil de un cliente.
@@ -75,12 +77,14 @@ public interface UserService {
      * @param height La altura del cliente en cm.
      * @return El objeto Users que representa al usuario con el perfil
      * actualizado.
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
      */
     public Users updateClient(Long id, String email, String fullName, String phone, String icon,
             LocalDate birthdate, String injuries, String goals, BigDecimal height)
-            throws InstanceNotFoundException;
+            throws DuplicateInstanceException, InstanceNotFoundException;
 
     /**
      * Cambia la contraseña de un usuario.

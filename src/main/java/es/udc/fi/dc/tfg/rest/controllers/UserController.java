@@ -37,6 +37,8 @@ import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
 import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
+import java.time.LocalDate;
+import org.springframework.dao.DataIntegrityViolationException;
 
 /**
  * Clase UserController.
@@ -203,30 +205,46 @@ public class UserController {
     }
 
     /**
-     * Update profile.
+     * Actualizar perfil.
      *
-     * @param userId the user id
-     * @param id the id
-     * @param userDto the user dto
-     * @return the user dto
-     * @throws InstanceNotFoundException the instance not found exception
-     * @throws PermissionException the permission exception
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID del usuario al que se le va a actualizar el perfil
+     * @param userDto el user dto
+     * @return el user dto
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del usuario al que se le va a actualizar el perfil
      */
-    /*
-	@PutMapping("/{id}")
-	public UserDto updateProfile(@RequestAttribute Long userId, @PathVariable("id") Long id,
-			@Validated({ UserDto.UpdateValidations.class }) @RequestBody UserDto userDto)
-			throws InstanceNotFoundException, PermissionException {
+    @PutMapping("/{id}")
+    public UserDto updateProfile(@RequestAttribute Long userId, @PathVariable("id") Long id,
+            @Validated({UserDto.UpdateValidations.class}) @RequestBody UserDto userDto)
+            throws DuplicateInstanceException, InstanceNotFoundException, PermissionException {
 
-		if (!id.equals(userId)) {
-			throw new PermissionException();
-		}
+        if (!id.equals(userId)) {
+            throw new PermissionException();
+        }
 
-		return toUserDto(
-				userService.updateProfile(id, userDto.getFirstName(), userDto.getLastName(), userDto.getEmail()));
+        Users user = userService.loginFromId(userId);
+        String role = user.getUserRole().toString();
 
-	}
-     */
+        if (Users.RoleType.TRAINER.toString().equals(role)) {
+            return toUserDto(userService.updateProfile(id, userDto.getEmail(),
+                    userDto.getFullName(), userDto.getPhone(),
+                    userDto.getIcon(), userDto.getSocialLinks()));
+        } else if (Users.RoleType.CLIENT.toString().equals(role)) {
+            return toUserDto(userService.updateClient(id, userDto.getEmail(),
+                    userDto.getFullName(), userDto.getPhone(), userDto.getIcon(),
+                    LocalDate.parse(userDto.getBirthdate()), userDto.getInjuries(),
+                    userDto.getGoals(), userDto.getHeight()));
+        } else {
+            throw new IllegalArgumentException("Invalid role: " + userDto.getRole());
+        }
+
+    }
+
     /**
      * Cambia la contraseña de un usuario.
      *

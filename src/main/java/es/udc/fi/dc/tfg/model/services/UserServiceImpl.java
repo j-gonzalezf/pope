@@ -113,14 +113,20 @@ public class UserServiceImpl implements UserService {
      * @param socialLinks El enlace a las redes sociales del entrenador.
      * @return El objeto Users que representa al usuario con el perfil
      * actualizado.
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
      */
     @Override
     public Users updateProfile(Long id, String email, String fullName, String phone,
-            String icon, String socialLinks) throws InstanceNotFoundException {
+            String icon, String socialLinks) throws DuplicateInstanceException, InstanceNotFoundException {
 
         Users user = permissionChecker.checkUser(id);
+
+        if (!user.getEmail().equals(email) && userDao.existsByEmail(email)) {
+            throw new DuplicateInstanceException("project.entities.user", email);
+        }
 
         user.setEmail(email);
         user.setFullName(fullName);
@@ -146,15 +152,21 @@ public class UserServiceImpl implements UserService {
      * @param height La altura del cliente en cm.
      * @return El objeto Users que representa al usuario con el perfil
      * actualizado.
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
      */
     @Override
     public Users updateClient(Long id, String email, String fullName, String phone, String icon,
             LocalDate birthdate, String injuries, String goals, BigDecimal height)
-            throws InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException {
 
         Users user = permissionChecker.checkUser(id);
+
+        if (!user.getEmail().equals(email) && userDao.existsByEmail(email)) {
+            throw new DuplicateInstanceException("project.entities.user", email);
+        }
 
         user.setEmail(email);
         user.setFullName(fullName);
