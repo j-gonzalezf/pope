@@ -1,0 +1,45 @@
+.container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+}
+
+.Login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    min-width: 100vw;
+    margin: 0 auto;
+}
+
+.card.bg-light.border-dark {
+    width: 50%;
+}
+
+.card-header {
+    background-color: #296084;
+    color: white;
+}
+
+.mb-3 {
+    padding-top: 2%;
+    font-weight: bold;
+    color: #404040;
+}
+
+.text-center {
+    padding: 1%;
+}
+
+.primary {
+    background-color: #296084;
+    border-color: #296084;
+    align-items: center;
+}
+
+.signUp-link {
+    padding-left: 3%;
+}
