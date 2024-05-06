@@ -5,11 +5,24 @@ export default {
 
     'project.users.trainer': 'Trainer',
     'project.users.client': 'Client',
+    'project.users.fullName': 'Full name',
+    'project.users.fullNameRequired': 'Full name is required',
     'project.users.email': 'Email address',
-    'project.users.emailPlaceholder': 'Enter your email',
+    'project.users.emailRequired': 'Email is required',
+    //'project.users.email.placeholder': 'Enter your email',
     'project.users.password': 'Password',
-    'project.users.passwordPlaceholder': 'Enter your password',
+    'project.users.passwordRequired': 'Password is required',
+    //'project.users.password.placeholder': 'Enter your password',
+    'project.users.confirmPassword': 'Confirm password',
+    'project.users.confirmPasswordPattern': 'Passwords do not match',
+    'project.users.phone': 'Phone number',
+    'project.users.phonePattern': 'Invalid phone number',
+    'project.users.icon': 'Profile picture',
+    'project.users.socialLinks': 'Social links',
     'project.users.login': 'Login',
-    'project.users.signUp': 'Create account'
+    'project.users.login.button': 'Enter',
+    'project.users.signUp': 'Create trainer account',
+    'project.users.signUp.button': 'Register',
+    'project.users.signUp.question': "Still don't have an account?",
     
 }

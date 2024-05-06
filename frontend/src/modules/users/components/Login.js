@@ -50,8 +50,6 @@ const Login = () => {
 
         <Container fluid className="Login">
 
-            <Errors errors={error} onClose={() => setError(null)} />
-
             <Card className="card bg-light border-dark">
 
                 <Card.Header as="h3" className="card-header">
@@ -65,53 +63,62 @@ const Login = () => {
                         noValidate
                         onSubmit={handleSubmit}
                     >
-                        <Form.Group className="form-group">
+                        <Form.Group className="mb-3">
                             <Form.Label data-testid="email" htmlFor="email" className="mb-3">
                                 <FormattedMessage id="project.users.email" />
                             </Form.Label>
                             <Form.Control
                                 type="email"
                                 className="form-control"
-                                placeholder="Introuzca su correo"
                                 id="email"
+                                name="email"
+                                placeholder="Introuzca su correo"
                                 value={email}
                                 onChange={event => setEmail(event.target.value)}
                                 autoFocus
                                 required
                             />
+                            <Form.Control.Feedback type="invalid">
+                                <FormattedMessage id="project.users.emailRequired" />
+                            </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group className="form-group">
-                            <br />
-                        </Form.Group>
-                        <Form.Group className="form-group">
+                        <Form.Group className="mb-3">
                             <Form.Label data-testid="password" htmlFor="password" className="mb-3">
                                 <FormattedMessage id="project.users.password" />
                             </Form.Label>
                             <Form.Control
                                 type="password"
                                 className="form-control"
-                                placeholder="Introduzca su contraseña"
                                 id="password"
+                                name="password"
+                                placeholder="Introduzca su contraseña"
                                 value={password}
                                 onChange={event => setPassword(event.target.value)}
                                 required
                             />
+                            <Form.Control.Feedback type="invalid">
+                                <FormattedMessage id="project.users.passwordRequired" />
+                            </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group className="form-group">
-                            <br />
-                        </Form.Group>
+
+                        <Errors errors={error} onClose={() => setError(null)} />
+
                         <Form.Group className="text-center">
-                            <Button data-testid="submit" type="submit" className="primary" >
-                                <FormattedMessage id="project.users.login" />
+                            <Button type="submit" data-testid="submit" className="primary" >
+                                <FormattedMessage id="project.users.login.button" />
                             </Button>
                         </Form.Group>
                     </Form>
                 </Card.Body>
+
                 <p className="signUp-link">
+                    <FormattedMessage id="project.users.signUp.question" />
+                    <br />
                     <Link to="/users/signup">
                         <FormattedMessage id="project.users.signUp" />
                     </Link>
                 </p>
+
             </Card>
 
         </Container>

@@ -8,55 +8,64 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import { initReactIntl } from "../../../i18n";
-import { Login } from "../../../modules/users";
+import { SignUp } from "../../../modules/users";
 import { userMock } from "./User.mock";
 
 const { locale, messages } = initReactIntl();
 
-describe("Profile Login", () => {
-
-	/*
+describe("Profile Sign Up", () => {
+/*
 	const middlewares = [thunk];
 	const mockStore = configureMockStore(middlewares);
-	let store= mockStore(userMock);
-	*/
-
-	it("renders correctly", () => {
-		/*
+	let store;
+	
+    store = mockStore(userMock);
+*/	
+    it("renders correctly", () => {
+        /*
 		const tree = renderer.create(
 			<Provider store={store}>
 				<IntlProvider locale={locale} messages={messages}>
 					<HashRouter>
-						<Login />
+						<SignUp />
 					</HashRouter>
 				</IntlProvider>
 			</Provider>
+
 		).toJSON();
 		expect(tree).toMatchSnapshot();
-		*/
+        */
 	});
-
-	/*
-	it("Get Login components", () => {
+/*
+	it("Get UpdateProfile components ", () => {
 		render(
 			<Provider store={store}>
 				<IntlProvider locale={locale} messages={messages}>
 					<HashRouter>
-						<Login />
+						<SignUp />
 					</HashRouter>
 				</IntlProvider>
 			</Provider>
 		)
 
-		const userName = screen.getByTestId('email');
+		const email = screen.getByTestId('email');
 		const password = screen.getByTestId('password');
+		const confirmPassword = screen.getByTestId('confirmPassword');
+		const fullName = screen.getByTestId('fullName');
+		const phone = screen.getByTestId('phone');
+		const icon = screen.getByTestId('icon');
+        const socialLinks = screen.getByTestId('socialLinks');
 		const submit = screen.getByTestId('submit');
 
-		fireEvent.input(userName)
+        fireEvent.input(fullName)
+		fireEvent.input(email)
+		fireEvent.input(confirmPassword)
 		fireEvent.input(password)
+		fireEvent.input(phone)
+		fireEvent.input(icon)
+        fireEvent.input(socialLinks)
 		fireEvent.submit(submit)
 
 	});
-	*/
-
+*/    
 });

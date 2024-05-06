@@ -4,6 +4,7 @@ import reducer from './reducer';
 import * as selectors from './selectors';
 
 export { default as Login } from './components/Login';
+export { default as SignUp } from './components/SignUp';
 
 // eslint-disable-next-line
 export default { actions, actionTypes, reducer, selectors };

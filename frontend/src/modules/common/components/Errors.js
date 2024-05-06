@@ -1,3 +1,8 @@
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import CloseButton from 'react-bootstrap/CloseButton';
+import ListGroup from 'react-bootstrap/ListGroup';
+
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
@@ -24,26 +29,23 @@ const Errors = ({ errors, onClose }) => {
 
 	return (
 
-		<div className="alert alert-danger alert-dismissible fade show" role="alert">
+		<Container fluid className="alert alert-danger alert-dismissible fade show" role="alert">
 
 			{globalError ? globalError : ''}
 
 			{fieldErrors ?
-				<ul>
+				<ListGroup>
 					{fieldErrors.map((fieldError, index) =>
-						<li key={index}>{fieldError}</li>
+						<ListGroup.Item key={index}>{fieldError}</ListGroup.Item>
 					)}
-				</ul>
+				</ListGroup>
 				:
 				''
 			}
 
-			<button type="button" className="close" data-dismiss="alert" aria-label="Close"
-				onClick={() => onClose()}>
-				<span aria-hidden="true">&times;</span>
-			</button>
+			<CloseButton className="close" data-dismiss="alert" aria-label="Close" onClick={() => onClose()} />
 
-		</div>
+		</Container>
 
 	);
 
