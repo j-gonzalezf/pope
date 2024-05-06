@@ -49,7 +49,9 @@ const SignUp = () => {
             })
 
         } else {
-            console.log("No se seleccionó ningún archivo");
+            // Resetea el valor del input de archivo al pulsar cancel
+            input.target.value = "";
+            setIcon(null);
         }
 
     }
