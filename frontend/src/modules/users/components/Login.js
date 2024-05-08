@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { Errors } from "../../common";
+import { Errors } from '../../common';
 import * as actions from '../actions';
 
 const Login = () => {
@@ -17,8 +17,8 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     let form;
 
@@ -31,17 +31,17 @@ const Login = () => {
             dispatch(actions.login(
                 email.trim(),
                 password,
-                () => navigate("/"),
+                () => navigate('/users/clients'),
                 errors => setError(errors),
                 () => {
-                    navigate("/users/login");
+                    navigate('/users/login');
                     dispatch(actions.logout());
                 }
             ));
 
         } else {
             setError(null);
-            form.classList.add("was-validated");
+            form.classList.add('was-validated');
         }
 
     }

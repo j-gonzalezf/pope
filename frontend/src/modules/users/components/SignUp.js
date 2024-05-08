@@ -2,6 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
+import { BsXLg } from "react-icons/bs";
 import './SignUp.css';
 
 import { useState } from 'react';
@@ -54,6 +55,11 @@ const SignUp = () => {
             setIcon(null);
         }
 
+    }
+
+    function clearImage() {
+        setIcon(null);
+        document.getElementById('icon').value = "";
     }
 
     const handleSubmit = event => {
@@ -208,14 +214,21 @@ const SignUp = () => {
                             <Form.Label data-testid="icon" htmlFor="icon" className="mb-3">
                                 <FormattedMessage id="project.users.icon" />
                             </Form.Label>
-                            <Form.Control
-                                type="file"
-                                className="form-control"
-                                id="icon"
-                                name="icon"
-                                accept="image/png, image/jpg, image/jpeg"
-                                onChange={(input) => readImage(input)}
-                            />
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Form.Control
+                                    type="file"
+                                    className="form-control"
+                                    id="icon"
+                                    name="icon"
+                                    accept="image/png, image/jpg, image/jpeg"
+                                    onChange={readImage}
+                                />
+                                {icon && (
+                                    <Button variant="danger" onClick={clearImage} style={{ marginLeft: '10px' }}>
+                                        <BsXLg />
+                                    </Button>
+                                )}
+                            </div>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="socialLinks" htmlFor="socialLinks" className="mb-3">
