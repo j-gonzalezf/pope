@@ -25,7 +25,7 @@ const Header = () => {
     const [showHeader, setShowHeader] = useState(false);
 
     // No mostrar el Header en las siguientes rutas o si el usuario no está autenticado
-    const hiddenRoutes = ['/pope', '/ruta3', '/ruta4', '/ruta5'];
+    const hiddenRoutes = ['/pope', '/users/addClient'];
 
     useEffect(() => {
         setShowHeader(!hiddenRoutes.includes(location.pathname) && isLoggedIn);
@@ -49,14 +49,14 @@ const Header = () => {
 
                     <Nav>
                         <NavDropdown title={icon !== undefined ?
-                            <Container className="icon-container">
+                            <div className="icon-container">
                                 <Image className="icon-image" src={"data:image/png;base64," + icon.base64} alt={icon.name} />
                                 {email}
-                            </Container>
+                            </div>
                             :
-                            <Container className="icon-container">
+                            <div className="icon-container">
                                 <Image className="icon-image" src={TrainerIcon} width="16" height="16" fill="currentColor" viewBox="0 0 16 16" />
-                            </Container>
+                            </div>
                         }>
                             <NavDropdown.Item as={Link} to="/users/update-profile">
                                 <FormattedMessage id="project.users.updateProfile" />

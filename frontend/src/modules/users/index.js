@@ -5,6 +5,9 @@ import * as selectors from './selectors';
 
 export { default as Login } from './components/Login';
 export { default as SignUp } from './components/SignUp';
+export { default as Logout } from './components/Logout';
+export { default as ClientsList } from './components/ClientsList';
+export { default as AddClient } from './components/AddClient';
 
 // eslint-disable-next-line
 export default { actions, actionTypes, reducer, selectors };

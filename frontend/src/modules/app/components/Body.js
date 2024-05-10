@@ -1,9 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
-import users, { Login, SignUp } from "../../users";
+import users, { AddClient, ClientsList, Login, Logout, SignUp } from "../../users";
 import Home from "./Home";
+import NotFoundPage from "./NotFoundPage";
 
 const Body = () => {
 
@@ -13,9 +14,14 @@ const Body = () => {
 
     <div data-testid="body" className="container" >
       <Routes>
-        <Route path="/*" element={<Home />} />
+        {!loggedIn && <Route path="/" element={<Home />} />}
         {!loggedIn && <Route path="/users/login" element={<Login />} />}
         {!loggedIn && <Route path="/users/signUp" element={<SignUp />} />}
+        {loggedIn && <Route path="/users/logout" element={<Logout />} />}
+        {loggedIn && <Route path="/users/clients" element={<ClientsList />} />}
+        {loggedIn && <Route path="/users/addClient" element={<AddClient />} />}
+        {/*<Route path="/notFound" element={<NotFoundPage />} />
+        /<Route path="/*" element={<Navigate to="/users/addClient" />} />*/}
       </Routes>
     </div >
 

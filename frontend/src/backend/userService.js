@@ -69,3 +69,11 @@ export const changePassword = (id, oldPassword, newPassword, onSuccess, onErrors
     onSuccess,
     onErrors
   );
+
+export const getClients = (id, onSuccess, onErrors) =>
+  appFetch(
+    `/users/${id}/clients`,
+    fetchConfig("GET"),
+    onSuccess,
+    onErrors
+  );
