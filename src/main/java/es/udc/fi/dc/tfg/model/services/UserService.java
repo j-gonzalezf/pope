@@ -7,6 +7,7 @@ import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Interfaz UserService.
@@ -82,7 +83,7 @@ public interface UserService {
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
      */
-    public Users updateClient(Long id, String email, String fullName, String phone, String icon,
+    Users updateClient(Long id, String email, String fullName, String phone, String icon,
             LocalDate birthdate, String injuries, String goals, BigDecimal height)
             throws DuplicateInstanceException, InstanceNotFoundException;
 
@@ -99,5 +100,14 @@ public interface UserService {
      */
     void changePassword(Long id, String oldPassword, String newPassword)
             throws InstanceNotFoundException, IncorrectPasswordException;
+    
+    /**
+     * Devuelve una lista con los clientes de un entrenador.
+     * 
+     * @param trainerId El ID del entrenador.
+     * @return La lista de objetos Users que representa los clientes.
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
+     */
+    List<Users> getClients(Long trainerId) throws InstanceNotFoundException;
 
 }

@@ -3,7 +3,9 @@ package es.udc.fi.dc.tfg.rest.controllers;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toAuthenticatedUserDto;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUser;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUserDto;
+import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUsersDto;
 import java.net.URI;
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,7 @@ import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
 import java.time.LocalDate;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * Clase UserController.
@@ -271,6 +273,19 @@ public class UserController {
 
         userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
 
+    }
+
+    /**
+     * Devuelve la lista de clientes de un entrenador.
+     *
+     * @param id el ID del entrenador
+     * @return una lista de clientes
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente
+     */
+    @GetMapping("/{id}/clients")
+    public List<UserDto> getClients(@PathVariable Long id) throws InstanceNotFoundException {
+        List<Users> clients = userService.getClients(id);
+        return toUsersDto(clients);
     }
 
     /**

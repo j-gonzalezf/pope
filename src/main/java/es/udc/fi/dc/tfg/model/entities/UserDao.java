@@ -1,5 +1,6 @@
 package es.udc.fi.dc.tfg.model.entities;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,5 +27,13 @@ public interface UserDao extends JpaRepository<Users, Long> {
      * caso contrario
      */
     Optional<Users> findByEmail(String email);
+    
+    /**
+     * Devuelve una lista con los clientes de un entrenador.
+     * 
+     * @param trainerId El ID del entrenador.
+     * @return La lista de objetos Users que representa los clientes.
+     */
+    List<Users> findByTrainerId(Long trainerId);
 
 }

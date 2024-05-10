@@ -2,6 +2,8 @@ package es.udc.fi.dc.tfg.rest.dtos;
 
 import es.udc.fi.dc.tfg.model.entities.Users;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Clase UserConversor.
@@ -39,6 +41,19 @@ public class UserConversor {
                 user.getSocialLinks(), birthdate, user.getInjuries(),
                 user.getGoals(), user.getHeight(), trainerId);
 
+    }
+
+    /**
+     * Convierte una lista de objetos Users a objetos UserDto.
+     *
+     * @param clients la lista de objetos Users a convertir
+     * @return una nueva lista de objetos UserDto que contiene los mismos datos
+     * que la lista de objetos Users proporcionada
+     */
+    public static final List<UserDto> toUsersDto(List<Users> clients) {
+        return clients.stream().map(client -> {
+            return toUserDto(client);
+        }).collect(Collectors.toList());
     }
 
     /**

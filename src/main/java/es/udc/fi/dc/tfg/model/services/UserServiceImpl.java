@@ -13,6 +13,7 @@ import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -204,6 +205,21 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(newPassword));
         }
 
+    }
+    
+    /**
+     * Devuelve una lista con los clientes de un entrenador.
+     * 
+     * @param trainerId El ID del entrenador.
+     * @return La lista de objetos Users que representa los clientes.
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
+     */
+    @Override
+    public List<Users> getClients(Long trainerId) throws InstanceNotFoundException {
+        
+        List<Users> clients = userDao.findByTrainerId(trainerId);
+        return clients;
+                
     }
 
 }
