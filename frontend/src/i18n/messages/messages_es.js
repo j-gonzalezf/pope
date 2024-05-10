@@ -3,6 +3,9 @@ export default {
 
     'project.home.login': 'Iniciar sesión como ',
 
+    'project.common.notFoundPage': 'Página no encontrada',
+    'project.common.notFoundPageMessage': 'Lo sentimos, la página que estás buscando no existe.',
+
     'project.users.trainer': 'Entrenador',
     'project.users.client': 'Cliente',
     'project.users.fullName': 'Nombre completo',
@@ -19,10 +22,22 @@ export default {
     'project.users.phonePattern': 'Formato de número incorrecto',
     'project.users.icon': 'Foto de perfil',
     'project.users.socialLinks': 'Enlaces sociales',
+    'project.users.birthdate': 'Fecha de nacimiento',
+    'project.users.birthdatePattern': 'Fecha incorrecta',
+    'project.users.injuries': 'Lesiones',
+    'project.users.goals': 'Objetivos',
+    'project.users.height': 'Altura',
+    'project.users.heightPattern': 'Formato de altura incorrecto',
     'project.users.login': 'Iniciar sesión',
+    'project.users.logout': 'Cerrar sesión',
     'project.users.login.button': 'Entrar',
     'project.users.signUp': 'Crear cuenta de entrenador',
     'project.users.signUp.button': 'Registrarse',
     'project.users.signUp.question': "¿No está registrado?",
+    'project.users.addClientAccount': 'Crear cuenta de cliente',
+    'project.users.addClient.button': 'Añadir',
+    'project.users.addClient': 'Añadir cliente',
+    'project.users.updateProfile': 'Actualizar perfil',
+    'project.users.changePassword': 'Cambiar contraseña',
     
 }

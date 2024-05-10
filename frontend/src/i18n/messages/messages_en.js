@@ -3,6 +3,9 @@ export default {
 
     'project.home.login': 'Login as ',
 
+    'project.common.notFoundPage': 'Page not found',
+    'project.common.notFoundPageMessage': 'Sorry, the page you are looking for does not exist.',
+
     'project.users.trainer': 'Trainer',
     'project.users.client': 'Client',
     'project.users.fullName': 'Full name',
@@ -19,10 +22,22 @@ export default {
     'project.users.phonePattern': 'Invalid phone number',
     'project.users.icon': 'Profile picture',
     'project.users.socialLinks': 'Social links',
+    'project.users.birthdate': 'Birthdate',
+    'project.users.birthdatePattern': 'Invalid date',
+    'project.users.injuries': 'Injuries',
+    'project.users.goals': 'Goals',
+    'project.users.height': 'Height',
+    'project.users.heightPattern': 'Invalid height',
     'project.users.login': 'Login',
     'project.users.login.button': 'Enter',
+    'project.users.logout': 'Logout',
     'project.users.signUp': 'Create trainer account',
     'project.users.signUp.button': 'Register',
     'project.users.signUp.question': "Still don't have an account?",
+    'project.users.addClientAccount': 'Create client account',
+    'project.users.addClient.button': 'Add',
+    'project.users.addClient': 'Add client',
+    'project.users.updateProfile': 'Update profile',
+    'project.users.changePassword': 'Change password',
     
 }

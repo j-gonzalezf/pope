@@ -1,0 +1,23 @@
+.border {
+    height: 75px;
+    min-width: 100vw;
+    background-color: #296084;
+    border-color: #296084;
+    margin-bottom: 5%;
+    padding: 0;
+}
+
+.icon-container {
+    display: flex;
+    height: 100%;
+}
+
+.anchor-icon {
+    max-height: 75px;
+    padding: 5px;
+}
+
+.dropdown-menu.show {
+    position: relative;
+    z-index: 9999;
+}

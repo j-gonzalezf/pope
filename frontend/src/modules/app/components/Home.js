@@ -1,5 +1,6 @@
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
+import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
 import './Home.css';
 
@@ -23,14 +24,14 @@ const Home = () => {
       <Row className='home'>
         <Col className='trainer-col' onClick={redirectToLogin}>
           <Col md="auto" className='trainer-content'>
-            <img className='trainer-icon' src={TrainerIcon} alt="Trainer icon" />
+            <Image className='trainer-icon' src={TrainerIcon} alt="Trainer icon" />
             <b><FormattedMessage id="project.home.login" />
               <br /><FormattedMessage id="project.users.trainer" /></b>
           </Col>
         </Col>
         <Col className='client-col'>
           <Col md="auto" className='client-content'>
-            <img className='client-icon' src={ClientIcon} alt="Client icon" />
+            <Image className='client-icon' src={ClientIcon} alt="Client icon" />
             <b><FormattedMessage id="project.home.login" />
               <br /><FormattedMessage id="project.users.client" /></b>
           </Col>
