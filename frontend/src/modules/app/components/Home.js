@@ -14,22 +14,22 @@ const Home = () => {
 
   const navigate = useNavigate();
 
-  const redirectToLogin = () => {
-    navigate('/users/login');
+  const redirectToLogin = (userType) => {
+    navigate(`/users/login/${userType}`);
   };
 
   return (
 
     <Container>
       <Row className='home'>
-        <Col className='trainer-col' onClick={redirectToLogin}>
+        <Col className='trainer-col' onClick={() => redirectToLogin('trainer')}>
           <Col md="auto" className='trainer-content'>
             <Image className='trainer-icon' src={TrainerIcon} alt="Trainer icon" />
             <b><FormattedMessage id="project.home.login" />
               <br /><FormattedMessage id="project.users.trainer" /></b>
           </Col>
         </Col>
-        <Col className='client-col'>
+        <Col className='client-col' onClick={() => redirectToLogin('client')}>
           <Col md="auto" className='client-content'>
             <Image className='client-icon' src={ClientIcon} alt="Client icon" />
             <b><FormattedMessage id="project.home.login" />

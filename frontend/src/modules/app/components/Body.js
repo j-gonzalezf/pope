@@ -15,7 +15,7 @@ const Body = () => {
     <div data-testid="body" className="container" >
       <Routes>
         {!loggedIn && <Route path="/" element={<Home />} />}
-        {!loggedIn && <Route path="/users/login" element={<Login />} />}
+        {!loggedIn && <Route path="/users/login/:userType" element={<Login />} />}
         {!loggedIn && <Route path="/users/signUp" element={<SignUp />} />}
         {loggedIn && <Route path="/users/logout" element={<Logout />} />}
         {loggedIn && <Route path="/users/clients" element={<ClientsList />} />}
