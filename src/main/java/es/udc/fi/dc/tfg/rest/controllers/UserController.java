@@ -139,8 +139,26 @@ public class UserController {
 
     }
 
+    // Método común para registrar un usuario
+    private Users createUser(UserDto userDto)
+            throws DuplicateInstanceException, IllegalArgumentException, InstanceNotFoundException {
+
+        Users trainer = null;
+
+        if (userDto.getTrainerId() != null) {
+            trainer = userService.loginFromId(userDto.getTrainerId());
+        }
+
+        Users user = toUser(userDto, trainer);
+
+        userService.signUp(user);
+
+        return user;
+
+    }
+
     /**
-     * Registrar un nuevo usuario.
+     * Registrar un nuevo entrenador.
      *
      * @param userDto el DTO del usuario
      * @return una ResponseEntity que contiene un AuthenticatedUserDto
@@ -154,20 +172,36 @@ public class UserController {
             @Validated({UserDto.AllValidations.class}) @RequestBody UserDto userDto)
             throws DuplicateInstanceException, IllegalArgumentException, InstanceNotFoundException {
 
-        Users trainer = null;
-
-        if (userDto.getTrainerId() != null) {
-            trainer = userService.loginFromId(userDto.getTrainerId());
-        }
-
-        Users user = toUser(userDto, trainer);
-
-        userService.signUp(user);
+        Users user = createUser(userDto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(user.getId()).toUri();
 
         return ResponseEntity.created(location).body(toAuthenticatedUserDto(generateServiceToken(user), user));
+
+    }
+
+    /**
+     * Registrar un nuevo cliente.
+     *
+     * @param userDto el DTO del usuario
+     * @return una ResponseEntity que contiene un AuthenticatedUserDto
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @PostMapping("/addClient")
+    public ResponseEntity<UserDto> addClient(
+            @Validated({UserDto.AllValidations.class}) @RequestBody UserDto userDto)
+            throws DuplicateInstanceException, IllegalArgumentException, InstanceNotFoundException {
+
+        Users user = createUser(userDto);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(user.getId()).toUri();
+
+        return ResponseEntity.created(location).body(toUserDto(user));
 
     }
 

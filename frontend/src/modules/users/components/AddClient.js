@@ -70,7 +70,7 @@ const AddClient = () => {
 
         if (form.checkValidity()) {
 
-            dispatch(actions.signUp(
+            dispatch(actions.addClient(
                 {
                     email: email.trim(),
                     password: password,
@@ -85,11 +85,7 @@ const AddClient = () => {
                     trainerId: user.id
                 },
                 () => navigate('/users/clients'),
-                errors => setError(errors),
-                () => {
-                    navigate('/users/login');
-                    dispatch(actions.logout());
-                }
+                errors => setError(errors)
             ));
 
         } else {

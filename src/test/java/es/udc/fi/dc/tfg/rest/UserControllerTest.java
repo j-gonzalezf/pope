@@ -28,8 +28,9 @@ import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import org.junit.Before;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Clase UserControllerTest.
@@ -74,24 +75,58 @@ public class UserControllerTest {
      * El authenticated user dto.
      */
     private AuthenticatedUserDto authTrainer;
+    private AuthenticatedUserDto authClient;
 
     @Before
     public void createEntities() throws IncorrectLoginException {
-        authTrainer = createAuthenticatedUser("user@user.com");
+        authTrainer = createAuthenticatedTrainer("trainer@user.com");
+        authClient = createAuthenticatedClient("client@user.com");
     }
 
     /**
-     * Crea el authenticated user.
+     * Crea el authenticated trainer.
      *
      * @param email el email
      * @return el authenticated user dto
      * @throws IncorrectLoginException si el email o la contraseña son
      * incorrectos.
      */
-    private AuthenticatedUserDto createAuthenticatedUser(String email)
+    private AuthenticatedUserDto createAuthenticatedTrainer(String email)
             throws IncorrectLoginException {
 
         Users user = new Users(email, PASSWORD, "trainer", "123456789", "", "");
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        userDao.save(user);
+
+        LoginParamsDto loginParams = new LoginParamsDto();
+        loginParams.setEmail(user.getEmail());
+        loginParams.setPassword(PASSWORD);
+
+        return userController.login(loginParams);
+
+    }
+
+    /**
+     * Crea el authenticated client.
+     *
+     * @param email el email
+     * @return el authenticated user dto
+     * @throws IncorrectLoginException si el email o la contraseña son
+     * incorrectos.
+     */
+    private AuthenticatedUserDto createAuthenticatedClient(String email)
+            throws IncorrectLoginException {
+
+        Users trainer = new Users("t" + email, PASSWORD, "trainer", "123456789", "", "");
+
+        trainer.setPassword(passwordEncoder.encode(trainer.getPassword()));
+
+        userDao.save(trainer);
+
+        Users user = new Users(email, PASSWORD, "trainer", "123456789", "", null,
+                null, null, null, trainer);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -121,16 +156,6 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/api/users/signUp")
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
-                .andExpect(status().isCreated());
-
-        UserDto clientDto = new UserDto(null, "client@client.com", "client",
-                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
-                "Objetivo", new BigDecimal("170"), trainerDto.getId());
-
-        clientDto.setPassword(PASSWORD);
-
-        mockMvc.perform(post("/api/users/signUp")
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
                 .andExpect(status().isCreated());
 
     }
@@ -194,6 +219,50 @@ public class UserControllerTest {
         mockMvc.perform(post("/api/users/signUp")
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
                 .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para registrar un cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        UserDto clientDto = new UserDto(null, "client@client.com", "client",
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/addClient").header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isCreated());
+
+    }
+
+    /**
+     * Test para registrar un cliente con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient_InvalidRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        UserDto clientDto = new UserDto(null, "client@client.com", "client",
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/addClient").header("Authorization", "Bearer " + authClient.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isForbidden());
 
     }
 
@@ -400,6 +469,22 @@ public class UserControllerTest {
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken()).contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(changePasswordParamsDto))
                 .header("userId", userDto.getId().toString())).andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para obtener los clientes de un entrenador.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetAllPosts() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        mockMvc.perform(get("/api/users/" + trainerDto.getId() + "/clients")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
 
     }
 

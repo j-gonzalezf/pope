@@ -18,7 +18,7 @@ const user = (state = initialState.user, action) => {
             return initialState.user;
 
         case actionTypes.SIGN_UP_COMPLETED:
-            return action.authenticatedUser.user;    
+            return action.authenticatedUser.user;
 
         default:
             return state;
@@ -28,16 +28,16 @@ const user = (state = initialState.user, action) => {
 }
 
 const getClients = (state = initialState.getClients, action) => {
-    
-	switch (action.type) {
 
-		case actionTypes.GET_CLIENTS_COMPLETED:
-			return action.getClients;
+    switch (action.type) {
 
-		default:
-			return state;
+        case actionTypes.GET_CLIENTS_COMPLETED:
+            return action.getClients;
 
-	}
+        default:
+            return state;
+
+    }
 
 }
 

@@ -45,6 +45,18 @@ export const signUp = (user, onSuccess, onErrors, reauthenticationCallback) => d
         onErrors,
         reauthenticationCallback);
 
+const addClientCompleted = () => ({
+    type: actionTypes.ADD_CLIENT_COMPLETED,
+})
+export const addClient = (newclient, onSuccess, onErrors) => dispatch =>
+    backend.userService.addClient(newclient,
+        () => {
+            dispatch(addClientCompleted());
+            onSuccess();
+        },
+        onErrors
+    );
+
 const getClientsCompleted = getClients => ({
     type: actionTypes.GET_CLIENTS_COMPLETED,
     getClients

@@ -229,7 +229,7 @@ public class UserDto {
      *
      * @return the phone
      */
-    @Size(min = 1, max = 15, groups = {AllValidations.class, UpdateValidations.class})
+    @Size(max = 15, groups = {AllValidations.class, UpdateValidations.class})
     public String getPhone() {
         return phone;
     }
