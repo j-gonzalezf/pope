@@ -10,6 +10,7 @@ export { default as ClientsList } from './components/ClientsList';
 export { default as AddClient } from './components/AddClient';
 export { default as UpdateProfile } from './components/UpdateProfile';
 export { default as ChangePassword } from './components/ChangePassword';
+export { default as UpdateClient } from './components/UpdateClient';
 
 // eslint-disable-next-line
 export default { actions, actionTypes, reducer, selectors };

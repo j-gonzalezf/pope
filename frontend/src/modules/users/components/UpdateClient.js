@@ -14,23 +14,23 @@ import { Errors } from '../../common';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
 
-const AddClient = () => {
+const UpdateClient = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [phone, setPhone] = useState('');
-    const [icon, setIcon] = useState(null);
-    const [birthdate, setBirthdate] = useState(null);
-    const [injuries, setInjuries] = useState('');
-    const [goals, setGoals] = useState('');
-    const [height, setHeight] = useState(null);
+    const user = useSelector(selectors.getUser);
+    const [fullName, setFullName] = useState(user.fullName);
+    const [email, setEmail] = useState(user.email);
+    const [password, setPassword] = useState(user.password);
+    const [phone, setPhone] = useState(user.phone);
+    const [icon, setIcon] = useState(user.icon);
+    const [birthdate, setBirthdate] = useState(user.birthdate);
+    const [injuries, setInjuries] = useState(user.injuries);
+    const [goals, setGoals] = useState(user.goals);
+    const [height, setHeight] = useState(user.height);
     const [error, setError] = useState(null);
 
-    const user = useSelector(selectors.getUser);
     let form;
 
     function readImage(input) {
@@ -70,10 +70,10 @@ const AddClient = () => {
 
         if (form.checkValidity()) {
 
-            dispatch(actions.addClient(
+            dispatch(actions.updateProfile(
                 {
+                    id: user.id,
                     email: email.trim(),
-                    password: password,
                     fullName: fullName.trim(),
                     phone: phone,
                     role: 'CLIENT',
@@ -81,10 +81,9 @@ const AddClient = () => {
                     birthdate: birthdate,
                     injuries: injuries,
                     goals: goals,
-                    height: height,
-                    trainerId: user.id
+                    height: height
                 },
-                () => navigate('/users/updateClient'),
+                () => navigate('/users/clients'),
                 errors => setError(errors)
             ));
 
@@ -101,7 +100,7 @@ const AddClient = () => {
             <Card className="card bg-light border-dark">
 
                 <Card.Header as="h3" className="card-header">
-                    <FormattedMessage id="project.users.addClientAccount" />
+                    <FormattedMessage id="project.users.updateProfile" />
                 </Card.Header>
 
                 <Card.Body className="card-body">
@@ -270,7 +269,7 @@ const AddClient = () => {
 
                         <Form.Group className="text-center">
                             <Button data-testid="submit" type="submit" className="primary" >
-                                <FormattedMessage id="project.users.addClient.button" />
+                                <FormattedMessage id="project.users.updateProfile.button" />
                             </Button>
                         </Form.Group>
                     </Form>
@@ -284,4 +283,4 @@ const AddClient = () => {
 
 }
 
-export default AddClient;
+export default UpdateClient;
