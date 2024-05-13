@@ -1,5 +1,3 @@
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
 import CloseButton from 'react-bootstrap/CloseButton';
 import ListGroup from 'react-bootstrap/ListGroup';
 
@@ -29,7 +27,7 @@ const Errors = ({ errors, onClose }) => {
 
 	return (
 
-		<Container fluid className="alert alert-danger alert-dismissible fade show" role="alert">
+		<div fluid className="alert alert-danger alert-dismissible fade show" role="alert">
 
 			{globalError ? globalError : ''}
 
@@ -45,7 +43,7 @@ const Errors = ({ errors, onClose }) => {
 
 			<CloseButton className="close" data-dismiss="alert" aria-label="Close" onClick={() => onClose()} />
 
-		</Container>
+		</div>
 
 	);
 
@@ -54,6 +52,6 @@ const Errors = ({ errors, onClose }) => {
 Errors.propTypes = {
 	errors: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 	onClose: PropTypes.func.isRequired
-};
+}
 
 export default Errors;

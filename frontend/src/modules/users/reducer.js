@@ -20,6 +20,9 @@ const user = (state = initialState.user, action) => {
         case actionTypes.SIGN_UP_COMPLETED:
             return action.authenticatedUser.user;
 
+        case actionTypes.UPDATE_PROFILE_COMPLETED:
+            return action.user;
+
         default:
             return state;
 

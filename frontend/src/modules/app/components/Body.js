@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import users, { AddClient, ClientsList, Login, Logout, SignUp } from "../../users";
+import users, { AddClient, ClientsList, Login, Logout, SignUp, UpdateProfile, ChangePassword } from "../../users";
 import Home from "./Home";
 import NotFoundPage from "./NotFoundPage";
 
@@ -20,6 +20,8 @@ const Body = () => {
         {loggedIn && <Route path="/users/logout" element={<Logout />} />}
         {loggedIn && <Route path="/users/clients" element={<ClientsList />} />}
         {loggedIn && <Route path="/users/addClient" element={<AddClient />} />}
+        {loggedIn && <Route path="/users/updateProfile" element={<UpdateProfile />} />}
+        {loggedIn && <Route path="/users/changePassword" element={<ChangePassword />} />}
         {/*<Route path="/notFound" element={<NotFoundPage />} />
         /<Route path="/*" element={<Navigate to="/users/addClient" />} />*/}
       </Routes>

@@ -40,6 +40,13 @@ export default {
     'project.users.addClient.button': 'Añadir',
     'project.users.addClient': 'Añadir cliente',
     'project.users.updateProfile': 'Actualizar perfil',
+    'project.users.updateProfile.button': 'Actualizar',
     'project.users.changePassword': 'Cambiar contraseña',
+    'project.users.changePassword.button': 'Cambiar',
+    'project.users.oldPassword': 'Contraseña anterior',
+    'project.users.oldPasswordRequired': 'La contraseña anterior es obligatoria',
+    'project.users.newPassword': 'Contraseña nueva',
+    'project.users.newPasswordRequired': 'La contraseña nueva es obligatoria',
+    'project.users.confirmNewPassword': 'Confirmar contraseña nueva',
     
 }

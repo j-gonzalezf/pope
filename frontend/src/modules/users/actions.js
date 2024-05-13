@@ -48,6 +48,7 @@ export const signUp = (user, onSuccess, onErrors, reauthenticationCallback) => d
 const addClientCompleted = () => ({
     type: actionTypes.ADD_CLIENT_COMPLETED,
 })
+
 export const addClient = (newclient, onSuccess, onErrors) => dispatch =>
     backend.userService.addClient(newclient,
         () => {
@@ -56,6 +57,31 @@ export const addClient = (newclient, onSuccess, onErrors) => dispatch =>
         },
         onErrors
     );
+
+export const updateProfileCompleted = user => ({
+    type: actionTypes.UPDATE_PROFILE_COMPLETED,
+    user
+})
+
+export const updateProfile = (user, onSuccess, onErrors) => dispatch =>
+    backend.userService.updateProfile(user,
+        user => {
+            dispatch(updateProfileCompleted(user));
+            onSuccess();
+        },
+        onErrors);
+
+const changePasswordCompleted = () => ({
+    type: actionTypes.CHANGE_PASSWORD_COMPLETED,
+})
+
+export const changePassword = (id, oldPassword, newPassword, onSuccess, onErrors) => dispatch =>
+    backend.userService.changePassword(id, oldPassword, newPassword,
+        () => {
+            dispatch(changePasswordCompleted());
+            onSuccess();
+        },
+        onErrors);
 
 const getClientsCompleted = getClients => ({
     type: actionTypes.GET_CLIENTS_COMPLETED,

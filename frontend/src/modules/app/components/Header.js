@@ -58,10 +58,10 @@ const Header = () => {
                                 <Image className="icon-image" src={TrainerIcon} width="16" height="16" fill="currentColor" viewBox="0 0 16 16" />
                             </div>
                         }>
-                            <NavDropdown.Item as={Link} to="/users/update-profile">
+                            <NavDropdown.Item as={Link} to="/users/updateProfile">
                                 <FormattedMessage id="project.users.updateProfile" />
                             </NavDropdown.Item>
-                            <NavDropdown.Item as={Link} to="/users/change-password">
+                            <NavDropdown.Item as={Link} to="/users/changePassword">
                                 <FormattedMessage id="project.users.changePassword" />
                             </NavDropdown.Item>
                             <NavDropdown.Divider />

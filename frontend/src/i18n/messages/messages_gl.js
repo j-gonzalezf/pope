@@ -40,6 +40,13 @@ export default {
     'project.users.addClient.button': 'Engadir',
     'project.users.addClient': 'Engadir cliente',
     'project.users.updateProfile': 'Actualizar perfil',
+    'project.users.updateProfile.button': 'Actualizar',
     'project.users.changePassword': 'Cambiar contrasinal',
+    'project.users.changePassword.button': 'Cambiar',
+    'project.users.oldPassword': 'Contrasinal anterior',
+    'project.users.oldPasswordRequired': 'O contrasinal anterior é obrigatorio',
+    'project.users.newPassword': 'Contrasinal novo',
+    'project.users.newPasswordRequired': 'O contrasinal novo é obrigatorio',
+    'project.users.confirmNewPassword': 'Confirmar contrasinal novo',
 
 }
