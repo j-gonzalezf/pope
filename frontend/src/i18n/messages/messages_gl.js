@@ -39,8 +39,14 @@ export default {
     'project.users.addClientAccount': 'Crear conta de cliente',
     'project.users.addClient.button': 'Engadir',
     'project.users.addClient': 'Engadir cliente',
-    'project.users.updateProfile': 'Actualizar perfil',
+    'project.users.viewProfile': 'Ver perfil',
+    'project.users.myProfile': 'Meu perfil',
+    'project.users.updateProfile': 'Editar perfil',
     'project.users.updateProfile.button': 'Actualizar',
+    'project.users.deleteAccount': 'Eliminar conta',
+    'project.users.deleteAccount.title': 'Seguro que queres eliminar a túa conta?',
+    'project.users.deleteAccount.body': 'Esta acción non se pode desfacer, polo que non poderás recuperar esta conta unha vez eliminada.',
+    'project.users.deleteAccount.button': 'Eliminar',
     'project.users.changePassword': 'Cambiar contrasinal',
     'project.users.changePassword.button': 'Cambiar',
     'project.users.oldPassword': 'Contrasinal anterior',
@@ -48,5 +54,7 @@ export default {
     'project.users.newPassword': 'Contrasinal novo',
     'project.users.newPasswordRequired': 'O contrasinal novo é obrigatorio',
     'project.users.confirmNewPassword': 'Confirmar contrasinal novo',
+
+    'project.global.button.cancel': 'Cancelar',
 
 }

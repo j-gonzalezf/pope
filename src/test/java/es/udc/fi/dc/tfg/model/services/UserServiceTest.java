@@ -365,4 +365,41 @@ public class UserServiceTest {
                         "Asma", "No", new BigDecimal("180")));
     }
 
+    /**
+     * Test para eliminar usuario.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testDeleteUser() throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Users user = createTrainer("user@user.com");
+
+        userService.signUp(user);
+
+        Long deletedUserId = userService.deleteUser(user.getId());
+
+        // Comprobar que el ID del usuario eliminado es el correcto
+        assertEquals(user.getId(), deletedUserId);
+
+    }
+
+    /**
+     * Test para eliminar usuario con un ID inexistente.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testDeleteUserWithNonExistentId()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> userService.deleteUser(NON_EXISTENT_ID));
+    }
+
 }

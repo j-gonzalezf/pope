@@ -1,8 +1,9 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import { BsXLg } from "react-icons/bs";
+import Modal from 'react-bootstrap/Modal';
+import Nav from 'react-bootstrap/Nav';
+import { BsPencilSquare, BsTrashFill, BsXLg } from "react-icons/bs";
 import './SignUp.css';
 
 import { useState } from 'react';
@@ -26,6 +27,8 @@ const UpdateProfile = () => {
     const [icon, setIcon] = useState(user.icon);
     const [socialLinks, setSocialLinks] = useState(user.socialLinks);
     const [error, setError] = useState(null);
+    const [activeTab, setActiveTab] = useState('profile');
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     let form;
 
@@ -86,14 +89,50 @@ const UpdateProfile = () => {
         }
     }
 
+    const handleSelectTab = (selectedTab) => {
+        setActiveTab(selectedTab);
+    }
+
+    const handleDelete = () => {
+
+        dispatch(actions.deleteUser(user.id,
+            () => {
+                navigate('/');
+                dispatch(actions.logout());
+            },
+            errors => setError(errors)
+        ));
+
+        setShowDeleteModal(false)
+
+    }
+
     return (
 
-        <Container fluid className="SignUp">
+        <div fluid className="SignUp">
 
             <Card className="card bg-light border-dark">
 
                 <Card.Header as="h3" className="card-header">
-                    <FormattedMessage id="project.users.updateProfile" />
+                    <Nav variant="pills" className="justify-content-between" activeKey={activeTab} onSelect={handleSelectTab}>
+                        <Nav.Item>
+                            <Nav.Link className="text-white" eventKey="profile">
+                                <FormattedMessage id="project.users.myProfile" />
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link className="text-white" eventKey="update">
+                                <BsPencilSquare style={{ marginRight: '10px' }} />
+                                <FormattedMessage id="project.users.updateProfile" />
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item className="bg-danger text-white">
+                            <Nav.Link className="text-white" onClick={() => setShowDeleteModal(true)}>
+                                <BsTrashFill style={{ marginRight: '10px' }} />
+                                <FormattedMessage id="project.users.deleteAccount" />
+                            </Nav.Link>
+                        </Nav.Item>
+                    </Nav>
                 </Card.Header>
 
                 <Card.Body className="card-body">
@@ -117,6 +156,7 @@ const UpdateProfile = () => {
                                 onChange={e => setFullName(e.target.value)}
                                 required
                                 autoFocus
+                                disabled={activeTab === 'profile'}
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.fullNameRequired" />
@@ -135,6 +175,7 @@ const UpdateProfile = () => {
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
                                 required
+                                disabled={activeTab === 'profile'}
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.emailRequired" />
@@ -149,10 +190,11 @@ const UpdateProfile = () => {
                                 className="form-control"
                                 id="phone"
                                 name="phone"
-                                placeholder="Introduzca un teléfono"
+                                placeholder={activeTab === 'profile' ? '' : "Introduzca un teléfono"}
                                 value={phone}
                                 onChange={e => setPhone(e.target.value)}
                                 pattern='[0-9]*'
+                                disabled={activeTab === 'profile'}
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.phonePattern" />
@@ -170,6 +212,7 @@ const UpdateProfile = () => {
                                     name="icon"
                                     accept="image/png, image/jpg, image/jpeg"
                                     onChange={readImage}
+                                    disabled={activeTab === 'profile'}
                                 />
                                 {icon && (
                                     <Button variant="danger" onClick={clearImage} style={{ marginLeft: '10px' }}>
@@ -187,25 +230,47 @@ const UpdateProfile = () => {
                                 className="form-control"
                                 id="socialLinks"
                                 name="socialLinks"
-                                placeholder="Introduzca una URL (p.e. https://linktr.ee/usuario)"
+                                placeholder={activeTab === 'profile' ? '' : "Introduzca una URL (p.e. https://linktr.ee/usuario)"}
                                 value={socialLinks}
                                 onChange={e => setSocialLinks(e.target.value)}
+                                disabled={activeTab === 'profile'}
                             />
                         </Form.Group>
 
                         <Errors errors={error} onClose={() => setError(null)} />
 
-                        <Form.Group className="text-center">
-                            <Button data-testid="submit" type="submit" className="primary" >
-                                <FormattedMessage id="project.users.updateProfile.button" />
-                            </Button>
-                        </Form.Group>
+                        {activeTab === 'update' && (
+                            <Form.Group className="text-center">
+                                <Button data-testid="submit" type="submit" className="primary" >
+                                    <FormattedMessage id="project.users.updateProfile.button" />
+                                </Button>
+                            </Form.Group>
+                        )}
                     </Form>
                 </Card.Body>
 
+                <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            <FormattedMessage id="project.users.deleteAccount.title" />
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <FormattedMessage id="project.users.deleteAccount.body" />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+                            <FormattedMessage id="project.global.button.cancel" />
+                        </Button>
+                        <Button variant="danger" onClick={handleDelete}>
+                            <FormattedMessage id="project.users.deleteAccount.button" />
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
             </Card>
 
-        </Container>
+        </div>
 
     );
 

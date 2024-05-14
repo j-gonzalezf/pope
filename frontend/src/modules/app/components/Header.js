@@ -59,7 +59,7 @@ const Header = () => {
                             </div>
                         }>
                             <NavDropdown.Item as={Link} to="/users/updateProfile">
-                                <FormattedMessage id="project.users.updateProfile" />
+                                <FormattedMessage id="project.users.viewProfile" />
                             </NavDropdown.Item>
                             <NavDropdown.Item as={Link} to="/users/changePassword">
                                 <FormattedMessage id="project.users.changePassword" />

@@ -30,6 +30,7 @@ export default {
     'project.users.goals': 'Objetivos',
     'project.users.height': 'Altura',
     'project.users.heightPattern': 'Formato de altura incorrecto',
+    
     'project.users.login': 'Iniciar sesión',
     'project.users.logout': 'Cerrar sesión',
     'project.users.login.button': 'Entrar',
@@ -39,8 +40,14 @@ export default {
     'project.users.addClientAccount': 'Crear cuenta de cliente',
     'project.users.addClient.button': 'Añadir',
     'project.users.addClient': 'Añadir cliente',
-    'project.users.updateProfile': 'Actualizar perfil',
+    'project.users.viewProfile': 'Ver perfil',
+    'project.users.myProfile': 'Mi perfil',
+    'project.users.updateProfile': 'Editar perfil',
     'project.users.updateProfile.button': 'Actualizar',
+    'project.users.deleteAccount': 'Eliminar cuenta',
+    'project.users.deleteAccount.title': '¿Seguro que quieres eliminar tu cuenta?',
+    'project.users.deleteAccount.body': 'Esta acción no se puede deshacer, por lo que no podrás recuperar esta cuenta una vez eliminada.',
+    'project.users.deleteAccount.button': 'Eliminar',
     'project.users.changePassword': 'Cambiar contraseña',
     'project.users.changePassword.button': 'Cambiar',
     'project.users.oldPassword': 'Contraseña anterior',
@@ -48,5 +55,7 @@ export default {
     'project.users.newPassword': 'Contraseña nueva',
     'project.users.newPasswordRequired': 'La contraseña nueva es obligatoria',
     'project.users.confirmNewPassword': 'Confirmar contraseña nueva',
-    
+
+    'project.global.button.cancel': 'Cancelar',
+
 }

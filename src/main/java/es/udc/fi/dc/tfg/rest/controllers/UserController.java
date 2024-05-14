@@ -40,6 +40,7 @@ import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
 import java.time.LocalDate;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
@@ -307,6 +308,29 @@ public class UserController {
 
         userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
 
+    }
+    
+    /**
+     * Elimina un usuario.
+     * 
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID del usuario al que se le va a eliminar la cuenta
+     * @return el ID del usuario que ha sido eliminado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del usuario al que se le va a cambiar la contraseña
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado 
+     */
+    @DeleteMapping("/{id}/delete")
+    public Long deleteUser(@RequestAttribute Long userId, @PathVariable("id") Long id)
+            throws PermissionException, InstanceNotFoundException {
+        
+        if (!id.equals(userId)) {
+            throw new PermissionException();
+        }
+        
+        return userService.deleteUser(id);
+        
     }
 
     /**

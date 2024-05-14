@@ -1,5 +1,7 @@
 package es.udc.fi.dc.tfg.rest;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.entities.UserDao;
-import es.udc.fi.dc.tfg.model.entities.Users.RoleType;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.rest.controllers.UserController;
 import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
@@ -29,8 +30,6 @@ import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
 import java.math.BigDecimal;
 import org.junit.Before;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Clase UserControllerTest.
@@ -469,6 +468,22 @@ public class UserControllerTest {
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken()).contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(changePasswordParamsDto))
                 .header("userId", userDto.getId().toString())).andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para eliminar un usuario.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteUser() throws Exception {
+
+        UserDto userDto = authTrainer.getUserDto();
+
+        mockMvc.perform(delete("/api/users/" + userDto.getId() + "/delete")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
 
     }
 

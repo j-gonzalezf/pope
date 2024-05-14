@@ -39,8 +39,14 @@ export default {
     'project.users.addClientAccount': 'Create client account',
     'project.users.addClient.button': 'Add',
     'project.users.addClient': 'Add client',
+    'project.users.viewProfile': 'View profile',
+    'project.users.myProfile': 'My profile',
     'project.users.updateProfile': 'Update profile',
     'project.users.updateProfile.button': 'Update',
+    'project.users.deleteAccount': 'Delete account',
+    'project.users.deleteAccount.title': 'Are you sure you want to delete your account?',
+    'project.users.deleteAccount.body': 'This action cannot be undone, so please be careful.',
+    'project.users.deleteAccount.button': 'Delete',
     'project.users.changePassword': 'Change password',
     'project.users.changePassword.button': 'Change',
     'project.users.oldPassword': 'Old password',
@@ -48,5 +54,7 @@ export default {
     'project.users.newPassword': 'New password',
     'project.users.newPasswordRequired': 'New password is required',
     'project.users.confirmNewPassword': 'Confirm new password',
-    
+
+    'project.global.button.cancel': 'Cancel',
+
 }

@@ -102,6 +102,16 @@ public interface UserService {
             throws InstanceNotFoundException, IncorrectPasswordException;
     
     /**
+     * Elimina la cuenta de un usuario.
+     * 
+     * @param id El ID del usuario.
+     * @return el ID del usuario que ha sido eliminado
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado 
+     */
+    Long deleteUser(Long id) throws InstanceNotFoundException;
+    
+    /**
      * Devuelve una lista con los clientes de un entrenador.
      * 
      * @param trainerId El ID del entrenador.

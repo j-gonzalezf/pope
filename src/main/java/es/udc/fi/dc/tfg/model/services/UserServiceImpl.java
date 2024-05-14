@@ -206,20 +206,43 @@ public class UserServiceImpl implements UserService {
         }
 
     }
-    
+
+    /**
+     * Elimina la cuenta de un usuario.
+     * 
+     * @param id El ID del usuario.
+     * @return el ID del usuario que ha sido eliminado
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado 
+     */
+    @Override
+    public Long deleteUser(Long id) throws InstanceNotFoundException {
+
+        Optional<Users> user = userDao.findById(id);
+
+        if (user.isEmpty()) {
+            throw new InstanceNotFoundException("project.entitites.post", id);
+        }
+        
+        userDao.deleteById(id);
+        
+        return id;
+
+    }
+
     /**
      * Devuelve una lista con los clientes de un entrenador.
-     * 
+     *
      * @param trainerId El ID del entrenador.
      * @return La lista de objetos Users que representa los clientes.
      * @throws InstanceNotFoundException si no se encuentra ningún cliente.
      */
     @Override
     public List<Users> getClients(Long trainerId) throws InstanceNotFoundException {
-        
+
         List<Users> clients = userDao.findByTrainerId(trainerId);
         return clients;
-                
+
     }
 
 }

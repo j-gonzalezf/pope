@@ -78,6 +78,13 @@ export const changePassword = (id, oldPassword, newPassword, onSuccess, onErrors
     onErrors
   );
 
+export const deleteUser = (id, onSuccess, onErrors) =>
+  appFetch(
+    `/users/${id}/delete`, fetchConfig("DELETE"),
+    onSuccess,
+    onErrors
+  );
+
 export const getClients = (id, onSuccess, onErrors) =>
   appFetch(
     `/users/${id}/clients`,
