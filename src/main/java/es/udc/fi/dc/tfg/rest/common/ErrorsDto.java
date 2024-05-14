@@ -3,68 +3,72 @@ package es.udc.fi.dc.tfg.rest.common;
 import java.util.List;
 
 /**
- * The Class ErrorsDto.
+ * Clase ErrorsDto.
  */
 public class ErrorsDto {
 
-	/** The global error. */
-	private String globalError;
-	
-	/** The field errors. */
-	private List<FieldErrorDto> fieldErrors;
+    /**
+     * El global error.
+     */
+    private String globalError;
 
-	/**
-	 * Instantiates a new errors dto.
-	 *
-	 * @param globalError the global error
-	 */
-	public ErrorsDto(String globalError) {
-		setGlobalError(globalError);
-	}
+    /**
+     * Los field errors.
+     */
+    private List<FieldErrorDto> fieldErrors;
 
-	/**
-	 * Instantiates a new errors dto.
-	 *
-	 * @param fieldErrors the field errors
-	 */
-	public ErrorsDto(List<FieldErrorDto> fieldErrors) {
-		setFieldErrors(fieldErrors);
-	}
+    /**
+     * Crea una nueva instancia de ErrorsDto con un error global.
+     *
+     * @param globalError El mensaje de error global
+     */
+    public ErrorsDto(String globalError) {
+        setGlobalError(globalError);
+    }
 
-	/**
-	 * Gets the global error.
-	 *
-	 * @return the global error
-	 */
-	public String getGlobalError() {
-		return globalError;
-	}
+    /**
+     * Crea una nueva instancia de ErrorsDto con una lista de errores de campo.
+     *
+     * @param fieldErrors La lista de errores de campo
+     */
+    public ErrorsDto(List<FieldErrorDto> fieldErrors) {
+        setFieldErrors(fieldErrors);
+    }
 
-	/**
-	 * Sets the global error.
-	 *
-	 * @param globalError the new global error
-	 */
-	public void setGlobalError(String globalError) {
-		this.globalError = globalError;
-	}
+    /**
+     * Gets the global error.
+     *
+     * @return the global error
+     */
+    public String getGlobalError() {
+        return globalError;
+    }
 
-	/**
-	 * Gets the field errors.
-	 *
-	 * @return the field errors
-	 */
-	public List<FieldErrorDto> getFieldErrors() {
-		return fieldErrors;
-	}
+    /**
+     * Sets the global error.
+     *
+     * @param globalError the new global error
+     */
+    public void setGlobalError(String globalError) {
+        this.globalError = globalError;
+    }
 
-	/**
-	 * Sets the field errors.
-	 *
-	 * @param fieldErrors the new field errors
-	 */
-	public void setFieldErrors(List<FieldErrorDto> fieldErrors) {
-		this.fieldErrors = fieldErrors;
-	}
+    /**
+     * Gets the field errors.
+     *
+     * @return the field errors
+     */
+    public List<FieldErrorDto> getFieldErrors() {
+        return fieldErrors;
+    }
+
+    /**
+     * Sets the field errors.
+     *
+     * @param fieldErrors the new field errors
+     */
+    public void setFieldErrors(List<FieldErrorDto> fieldErrors) {
+        this.fieldErrors = fieldErrors;
+    }
 
 }

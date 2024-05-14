@@ -5,34 +5,25 @@ import {
   getServiceToken,
   removeServiceToken,
   setReauthenticationCallback,
-} from "./appFetch";
+} from './appFetch';
 
-const processLoginSignUp = (authenticatedUser, reauthenticationCallback) => {
+const processLoginSignUp = (authenticatedUser, reauthenticationCallback, onSuccess) => {
   setServiceToken(authenticatedUser.serviceToken);
   setReauthenticationCallback(reauthenticationCallback);
   onSuccess(authenticatedUser);
 }
 
-export const login = (
-  userName,
-  password,
-  onSuccess,
-  onErrors,
-  reauthenticationCallback
-) =>
+export const login = (email, password, onSuccess, onErrors, reauthenticationCallback) =>
   appFetch(
     "/users/login",
-    fetchConfig("POST", { userName, password }),
+    fetchConfig("POST", { email, password }),
     (authenticatedUser) => {
-      processLoginSignUp(authenticatedUser, reauthenticationCallback);
+      processLoginSignUp(authenticatedUser, reauthenticationCallback, onSuccess);
     },
     onErrors
   );
 
-export const tryLoginFromServiceToken = (
-  onSuccess,
-  reauthenticationCallback
-) => {
+export const tryLoginFromServiceToken = (onSuccess, reauthenticationCallback) => {
   const serviceToken = getServiceToken();
 
   if (!serviceToken) {
@@ -48,34 +39,56 @@ export const tryLoginFromServiceToken = (
     (authenticatedUser) => onSuccess(authenticatedUser),
     () => removeServiceToken()
   );
-};
+}
 
-export const signUp = (user, onSuccess, onErrors, reauthenticationCallback) => {
+export const signUp = (user, onSuccess, onErrors, reauthenticationCallback) =>
   appFetch(
     "/users/signUp",
     fetchConfig("POST", user),
     (authenticatedUser) => {
-      processLoginSignUp(authenticatedUser, reauthenticationCallback);
+      processLoginSignUp(authenticatedUser, reauthenticationCallback, onSuccess);
     },
     onErrors
   );
-};
+
+
+export const addClient = (user, onSuccess, onErrors) =>
+  appFetch(
+    "/users/addClient",
+    fetchConfig("POST", user),
+    onSuccess,
+    onErrors
+  );
 
 export const logout = () => removeServiceToken();
 
 export const updateProfile = (user, onSuccess, onErrors) =>
-  appFetch(`/users/${user.id}`, fetchConfig("PUT", user), onSuccess, onErrors);
+  appFetch(
+    `/users/${user.id}`,
+    fetchConfig("PUT", user),
+    onSuccess,
+    onErrors
+  );
 
-export const changePassword = (
-  id,
-  oldPassword,
-  newPassword,
-  onSuccess,
-  onErrors
-) =>
+export const changePassword = (id, oldPassword, newPassword, onSuccess, onErrors) =>
   appFetch(
     `/users/${id}/changePassword`,
     fetchConfig("POST", { oldPassword, newPassword }),
+    onSuccess,
+    onErrors
+  );
+
+export const deleteUser = (id, onSuccess, onErrors) =>
+  appFetch(
+    `/users/${id}/delete`, fetchConfig("DELETE"),
+    onSuccess,
+    onErrors
+  );
+
+export const getClients = (id, onSuccess, onErrors) =>
+  appFetch(
+    `/users/${id}/clients`,
+    fetchConfig("GET"),
     onSuccess,
     onErrors
   );

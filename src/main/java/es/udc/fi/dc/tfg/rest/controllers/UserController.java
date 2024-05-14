@@ -1,10 +1,11 @@
 package es.udc.fi.dc.tfg.rest.controllers;
 
-//import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toAuthenticatedUserDto;
+import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toAuthenticatedUserDto;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUser;
-//import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUserDto;
-
+import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUserDto;
+import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUsersDto;
 import java.net.URI;
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,194 +39,325 @@ import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
 import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
+import java.time.LocalDate;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
- * The Class UserController.
+ * Clase UserController.
  */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-	/** The Constant INCORRECT_LOGIN_EXCEPTION_CODE. */
-	private static final String INCORRECT_LOGIN_EXCEPTION_CODE = "project.exceptions.IncorrectLoginException";
+    /**
+     * La constante INCORRECT_LOGIN_EXCEPTION_CODE.
+     */
+    private static final String INCORRECT_LOGIN_EXCEPTION_CODE = "project.exceptions.IncorrectLoginException";
 
-	/** The Constant INCORRECT_PASSWORD_EXCEPTION_CODE. */
-	private static final String INCORRECT_PASS_EXCEPTION_CODE = "project.exceptions.IncorrectPasswordException";
+    /**
+     * La constante INCORRECT_PASSWORD_EXCEPTION_CODE.
+     */
+    private static final String INCORRECT_PASS_EXCEPTION_CODE = "project.exceptions.IncorrectPasswordException";
 
-	/** The message source. */
-	@Autowired
-	private MessageSource messageSource;
+    /**
+     * La constante ILLEGAL_ARGUMENT_EXCEPTION
+     */
+    private static final String ILLEGAL_ARGUMENT_EXCEPTION = "project.exceptions.IllegalArgumentException";
 
-	/** The jwt generator. */
-	@Autowired
-	private JwtGenerator jwtGenerator;
+    /**
+     * El message source.
+     */
+    @Autowired
+    private MessageSource messageSource;
 
-	/** The user service. */
-	@Autowired
-	private UserService userService;
+    /**
+     * El jwt generator.
+     */
+    @Autowired
+    private JwtGenerator jwtGenerator;
 
-	/**
-	 * Handle incorrect login exception.
-	 *
-	 * @param exception the exception
-	 * @param locale    the locale
-	 * @return the errors dto
-	 */
-	@ExceptionHandler(IncorrectLoginException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ResponseBody
-	public ErrorsDto handleIncorrectLoginException(IncorrectLoginException exception, Locale locale) {
+    /**
+     * El user service.
+     */
+    @Autowired
+    private UserService userService;
 
-		String errorMessage = messageSource.getMessage(INCORRECT_LOGIN_EXCEPTION_CODE, null,
-				INCORRECT_LOGIN_EXCEPTION_CODE, locale);
+    /**
+     * Maneja la excepción de inicio de sesión incorrecto.
+     *
+     * @param exception la excepción de inicio de sesión incorrecto
+     * @param locale la ubicación geográfica del usuario
+     * @return un objeto ErrorsDto con el mensaje de error
+     */
+    @ExceptionHandler(IncorrectLoginException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorsDto handleIncorrectLoginException(IncorrectLoginException exception, Locale locale) {
 
-		return new ErrorsDto(errorMessage);
+        String errorMessage = messageSource.getMessage(INCORRECT_LOGIN_EXCEPTION_CODE, null,
+                INCORRECT_LOGIN_EXCEPTION_CODE, locale);
 
-	}
+        return new ErrorsDto(errorMessage);
 
-	/**
-	 * Handle incorrect password exception.
-	 *
-	 * @param exception the exception
-	 * @param locale    the locale
-	 * @return the errors dto
-	 */
-	@ExceptionHandler(IncorrectPasswordException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ResponseBody
-	public ErrorsDto handleIncorrectPasswordException(IncorrectPasswordException exception, Locale locale) {
+    }
 
-		String errorMessage = messageSource.getMessage(INCORRECT_PASS_EXCEPTION_CODE, null,
-				INCORRECT_PASS_EXCEPTION_CODE, locale);
+    /**
+     * Maneja la excepción de contraseña incorrecta.
+     *
+     * @param exception la excepción de contraseña incorrecta
+     * @param locale la ubicación geográfica del usuario
+     * @return un objeto ErrorsDto con el mensaje de error
+     */
+    @ExceptionHandler(IncorrectPasswordException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorsDto handleIncorrectPasswordException(IncorrectPasswordException exception, Locale locale) {
 
-		return new ErrorsDto(errorMessage);
+        String errorMessage = messageSource.getMessage(INCORRECT_PASS_EXCEPTION_CODE, null,
+                INCORRECT_PASS_EXCEPTION_CODE, locale);
 
-	}
+        return new ErrorsDto(errorMessage);
 
-	/**
-	 * Sign up.
-	 *
-	 * @param userDto the user dto
-	 * @return the response entity
-	 * @throws DuplicateInstanceException the duplicate instance exception
-	 */
-/*
-	@PostMapping("/signUp")
-	public ResponseEntity<AuthenticatedUserDto> signUp(
-			@Validated({ UserDto.AllValidations.class }) @RequestBody UserDto userDto)
-			throws DuplicateInstanceException {
+    }
 
-		Users user = toUser(userDto);
+    /**
+     * Maneja la excepción de rol inválido.
+     *
+     * @param exception la excepción de rol inválido
+     * @param locale la ubicación geográfica del usuario
+     * @return un objeto ErrorsDto con el mensaje de error
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorsDto handleIllegalArgumentException(IllegalArgumentException exception, Locale locale) {
 
-		userService.signUp(user);
+        String errorMessage = messageSource.getMessage(ILLEGAL_ARGUMENT_EXCEPTION, null,
+                ILLEGAL_ARGUMENT_EXCEPTION, locale);
 
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId())
-				.toUri();
+        return new ErrorsDto(errorMessage);
 
-		return ResponseEntity.created(location).body(toAuthenticatedUserDto(generateServiceToken(user), user));
-*/
-	}
+    }
 
-	/**
-	 * Login.
-	 *
-	 * @param params the params
-	 * @return the authenticated user dto
-	 * @throws IncorrectLoginException the incorrect login exception
-	 */
-/*
-	@PostMapping("/login")
-	public AuthenticatedUserDto login(@Validated @RequestBody LoginParamsDto params) throws IncorrectLoginException {
+    // Método común para registrar un usuario
+    private Users createUser(UserDto userDto)
+            throws DuplicateInstanceException, IllegalArgumentException, InstanceNotFoundException {
 
-		Users user = userService.login(params.getUserName(), params.getPassword());
+        Users trainer = null;
 
-		return toAuthenticatedUserDto(generateServiceToken(user), user);
+        if (userDto.getTrainerId() != null) {
+            trainer = userService.loginFromId(userDto.getTrainerId());
+        }
 
-	}
-*/
-	/**
-	 * Login from service token.
-	 *
-	 * @param userId       the user id
-	 * @param serviceToken the service token
-	 * @return the authenticated user dto
-	 * @throws InstanceNotFoundException the instance not found exception
-	 */
-/*
-	@PostMapping("/loginFromServiceToken")
-	public AuthenticatedUserDto loginFromServiceToken(@RequestAttribute Long userId,
-			@RequestAttribute String serviceToken) throws InstanceNotFoundException {
+        Users user = toUser(userDto, trainer);
 
-		Users user = userService.loginFromId(userId);
+        userService.signUp(user);
 
-		return toAuthenticatedUserDto(serviceToken, user);
+        return user;
 
-	}
-*/
-	/**
-	 * Update profile.
-	 *
-	 * @param userId  the user id
-	 * @param id      the id
-	 * @param userDto the user dto
-	 * @return the user dto
-	 * @throws InstanceNotFoundException the instance not found exception
-	 * @throws PermissionException       the permission exception
-	 */
-/*
-	@PutMapping("/{id}")
-	public UserDto updateProfile(@RequestAttribute Long userId, @PathVariable("id") Long id,
-			@Validated({ UserDto.UpdateValidations.class }) @RequestBody UserDto userDto)
-			throws InstanceNotFoundException, PermissionException {
+    }
 
-		if (!id.equals(userId)) {
-			throw new PermissionException();
-		}
+    /**
+     * Registrar un nuevo entrenador.
+     *
+     * @param userDto el DTO del usuario
+     * @return una ResponseEntity que contiene un AuthenticatedUserDto
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @PostMapping("/signUp")
+    public ResponseEntity<AuthenticatedUserDto> signUp(
+            @Validated({UserDto.AllValidations.class}) @RequestBody UserDto userDto)
+            throws DuplicateInstanceException, IllegalArgumentException, InstanceNotFoundException {
 
-		return toUserDto(
-				userService.updateProfile(id, userDto.getFirstName(), userDto.getLastName(), userDto.getEmail()));
+        Users user = createUser(userDto);
 
-	}
-*/
-	/**
-	 * Change password.
-	 *
-	 * @param userId the user id
-	 * @param id     the id
-	 * @param params the params
-	 * @throws PermissionException        the permission exception
-	 * @throws InstanceNotFoundException  the instance not found exception
-	 * @throws IncorrectPasswordException the incorrect password exception
-	 */
-/*
-	@PostMapping("/{id}/changePassword")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void changePassword(@RequestAttribute Long userId, @PathVariable Long id,
-			@Validated @RequestBody ChangePasswordParamsDto params)
-			throws PermissionException, InstanceNotFoundException, IncorrectPasswordException {
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(user.getId()).toUri();
 
-		if (!id.equals(userId)) {
-			throw new PermissionException();
-		}
+        return ResponseEntity.created(location).body(toAuthenticatedUserDto(generateServiceToken(user), user));
 
-		userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
+    }
 
-	}
-*/	
-	/**
-	 * Generate service token.
-	 *
-	 * @param user the user
-	 * @return the string
-	 */
-/*
-	private String generateServiceToken(Users user) {
+    /**
+     * Registrar un nuevo cliente.
+     *
+     * @param userDto el DTO del usuario
+     * @return una ResponseEntity que contiene un AuthenticatedUserDto
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @PostMapping("/addClient")
+    public ResponseEntity<UserDto> addClient(
+            @Validated({UserDto.AllValidations.class}) @RequestBody UserDto userDto)
+            throws DuplicateInstanceException, IllegalArgumentException, InstanceNotFoundException {
 
-		JwtInfo jwtInfo = new JwtInfo(user.getId(), user.getUserName(), user.getRole().toString());
+        Users user = createUser(userDto);
 
-		return jwtGenerator.generate(jwtInfo);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(user.getId()).toUri();
 
-	}
+        return ResponseEntity.created(location).body(toUserDto(user));
+
+    }
+
+    /**
+     * Login.
+     *
+     * @param params the params
+     * @return the authenticated user dto
+     * @throws IncorrectLoginException the incorrect login exception
+     */
+    @PostMapping("/login")
+    public AuthenticatedUserDto login(@Validated @RequestBody LoginParamsDto params) throws IncorrectLoginException {
+
+        Users user = userService.login(params.getEmail(), params.getPassword());
+
+        return toAuthenticatedUserDto(generateServiceToken(user), user);
+
+    }
+
+    /**
+     * Login from service token.
+     *
+     * @param userId el ID del usuario
+     * @param serviceToken el service token
+     * @return el authenticated user dto
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @PostMapping("/loginFromServiceToken")
+    public AuthenticatedUserDto loginFromServiceToken(@RequestAttribute Long userId,
+            @RequestAttribute String serviceToken) throws InstanceNotFoundException {
+
+        Users user = userService.loginFromId(userId);
+
+        return toAuthenticatedUserDto(serviceToken, user);
+
+    }
+
+    /**
+     * Actualizar perfil.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID del usuario al que se le va a actualizar el perfil
+     * @param userDto el user dto
+     * @return el user dto
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del usuario al que se le va a actualizar el perfil
+     */
+    @PutMapping("/{id}")
+    public UserDto updateProfile(@RequestAttribute Long userId, @PathVariable("id") Long id,
+            @Validated({UserDto.UpdateValidations.class}) @RequestBody UserDto userDto)
+            throws DuplicateInstanceException, InstanceNotFoundException, PermissionException {
+
+        if (!id.equals(userId)) {
+            throw new PermissionException();
+        }
+
+        Users user = userService.loginFromId(userId);
+        String role = user.getUserRole().toString();
+
+        if (Users.RoleType.TRAINER.toString().equals(role)) {
+            return toUserDto(userService.updateProfile(id, userDto.getEmail(),
+                    userDto.getFullName(), userDto.getPhone(),
+                    userDto.getIcon(), userDto.getSocialLinks()));
+        } else if (Users.RoleType.CLIENT.toString().equals(role)) {
+            return toUserDto(userService.updateClient(id, userDto.getEmail(),
+                    userDto.getFullName(), userDto.getPhone(), userDto.getIcon(),
+                    LocalDate.parse(userDto.getBirthdate()), userDto.getInjuries(),
+                    userDto.getGoals(), userDto.getHeight()));
+        } else {
+            throw new IllegalArgumentException("Invalid role: " + userDto.getRole());
+        }
+
+    }
+
+    /**
+     * Cambia la contraseña de un usuario.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID del usuario al que se le va a cambiar la contraseña
+     * @param params los parámetros de cambio de contraseña, que incluyen la
+     * contraseña antigua y la nueva
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del usuario al que se le va a cambiar la contraseña
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado
+     * @throws IncorrectPasswordException si la contraseña antigua proporcionada
+     * no coincide con la contraseña actual del usuario
+     */
+    @PostMapping("/{id}/changePassword")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changePassword(@RequestAttribute Long userId, @PathVariable Long id,
+            @Validated @RequestBody ChangePasswordParamsDto params)
+            throws PermissionException, InstanceNotFoundException, IncorrectPasswordException {
+
+        if (!id.equals(userId)) {
+            throw new PermissionException();
+        }
+
+        userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
+
+    }
+    
+    /**
+     * Elimina un usuario.
+     * 
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID del usuario al que se le va a eliminar la cuenta
+     * @return el ID del usuario que ha sido eliminado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del usuario al que se le va a cambiar la contraseña
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado 
+     */
+    @DeleteMapping("/{id}/delete")
+    public Long deleteUser(@RequestAttribute Long userId, @PathVariable("id") Long id)
+            throws PermissionException, InstanceNotFoundException {
+        
+        if (!id.equals(userId)) {
+            throw new PermissionException();
+        }
+        
+        return userService.deleteUser(id);
+        
+    }
+
+    /**
+     * Devuelve la lista de clientes de un entrenador.
+     *
+     * @param id el ID del entrenador
+     * @return una lista de clientes
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente
+     */
+    @GetMapping("/{id}/clients")
+    public List<UserDto> getClients(@PathVariable Long id) throws InstanceNotFoundException {
+        List<Users> clients = userService.getClients(id);
+        return toUsersDto(clients);
+    }
+
+    /**
+     * Genera un service token para el usuario.
+     *
+     * @param user el usuario para el que se va a generar el token
+     * @return el service token generado
+     */
+    private String generateServiceToken(Users user) {
+
+        JwtInfo jwtInfo = new JwtInfo(user.getId(), user.getEmail(), user.getUserRole().toString());
+
+        return jwtGenerator.generate(jwtInfo);
+
+    }
 
 }
-*/

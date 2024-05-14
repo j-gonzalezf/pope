@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS PersonalBests;
 DROP TABLE IF EXISTS Weights;
 DROP TABLE IF EXISTS Users;
 
+-- El campo userRole guarda un 0 si es TRAINER y un 1 si es CLIENT.
 CREATE TABLE Users (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(60) NOT NULL UNIQUE,
@@ -21,8 +22,8 @@ CREATE TABLE Users (
     birthdate DATE,
     injuries VARCHAR(500),
     goals VARCHAR(500),
-    cm NUMERIC(5,2),
-    trainerId BIGINT NOT NULL,
+    height NUMERIC(5,2),
+    trainerId BIGINT,
     CONSTRAINT trainerClientsIdFK FOREIGN KEY(trainerId) REFERENCES Users(id) ON DELETE CASCADE
 );
 
@@ -88,7 +89,7 @@ CREATE TABLE Sensations (
 
 CREATE TABLE Weights (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    kg NUMERIC(5,2) NOT NULL,
+    weight NUMERIC(5,2) NOT NULL,
     weightDate TIMESTAMP NOT NULL,
     clientId BIGINT NOT NULL,
     CONSTRAINT clientWeightsIdFK FOREIGN KEY(clientId) REFERENCES Users(id) ON DELETE CASCADE

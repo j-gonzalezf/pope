@@ -1,6 +1,8 @@
 **/build/
 **/node_modules/
 **/coverage
+nbactions.xml
+nb-configuration.xml
 
 .classpath
 .idea
