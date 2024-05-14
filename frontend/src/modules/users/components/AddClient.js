@@ -84,7 +84,7 @@ const AddClient = () => {
                     height: height,
                     trainerId: user.id
                 },
-                () => navigate('/users/updateClient'),
+                () => navigate('/users/clients'),
                 errors => setError(errors)
             ));
 

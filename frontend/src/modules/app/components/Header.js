@@ -24,11 +24,8 @@ const Header = () => {
 
     const [showHeader, setShowHeader] = useState(false);
 
-    // No mostrar el Header en las siguientes rutas o si el usuario no está autenticado
-    const hiddenRoutes = ['/pope', '/users/addClient'];
-
     useEffect(() => {
-        setShowHeader(!hiddenRoutes.includes(location.pathname) && isLoggedIn);
+        setShowHeader(isLoggedIn);
     }, [location, isLoggedIn]);
 
     return (
