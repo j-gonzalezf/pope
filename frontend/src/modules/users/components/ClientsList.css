@@ -1,0 +1,52 @@
+.ClientsList {
+    margin: 0;
+    padding: 0;
+    padding-left: 5%;
+    padding-right: 5%;
+    width: auto;
+}
+
+.listStyle {
+    list-style: 'none';
+	padding: 0;
+	margin: 0;
+	display: 'flex';
+	flex-wrap: 'wrap';
+	justify-content: 'center';
+	font-family: 'Arial, sans-serif'
+}
+
+.listItemStyle {
+    width: 12rem;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border: 1px;
+    border-radius: 10px;
+    border-color: grey;
+    border-style: solid;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+    margin: 10px;
+}
+
+.smallImageStyle {
+    max-width: 120px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.text-center.card {
+    align-items: center;
+    width: 9rem;
+    padding-bottom: 0%;
+    cursor: pointer;
+}
+
+.plus {
+    padding-top: 5%;
+}
+
+.text-center.card-title {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}

@@ -9,58 +9,58 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 /**
- * The Class Application.
+ * Clase Application.
  */
 @SpringBootApplication
 public class Application {
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
-	
-	/**
-	 * Password encoder.
-	 *
-	 * @return the b crypt password encoder
-	 */
-	@Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-    	return new BCryptPasswordEncoder();
+    /**
+     * El método main que inicia la aplicación.
+     *
+     * @param args Argumentos de la línea de comandos
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
     }
-    
+
+    /**
+     * Password encoder.
+     *
+     * @return Un nuevo codificador de contraseñas BCrypt
+     */
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     /**
      * Message source.
      *
-     * @return the message source
+     * @return Un nuevo message source con la codificación por defecto en UTF-8.
      */
     @Bean
     public MessageSource messageSource() {
-    	
+
         ReloadableResourceBundleMessageSource bean = new ReloadableResourceBundleMessageSource();
-        
+
         bean.setBasename("classpath:messages");
         bean.setDefaultEncoding("UTF-8");
-        
+
         return bean;
     }
-    
+
     /**
      * Validator.
      *
-     * @return the local validator factory bean
+     * @return Un nuevo validador local con el message source establecido.
      */
     @Bean
     public LocalValidatorFactoryBean validator() {
-    	
+
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-        
+
         bean.setValidationMessageSource(messageSource());
-        
+
         return bean;
     }
 

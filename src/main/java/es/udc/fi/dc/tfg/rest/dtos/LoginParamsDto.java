@@ -3,59 +3,63 @@ package es.udc.fi.dc.tfg.rest.dtos;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * The Class LoginParamsDto.
+ * Clase LoginParamsDto.
  */
 public class LoginParamsDto {
 
-	/** The user name. */
-	private String userName;
+    /**
+     * El email.
+     */
+    private String email;
 
-	/** The password. */
-	private String password;
+    /**
+     * La contraseña.
+     */
+    private String password;
 
-	/**
-	 * Instantiates a new login params dto.
-	 */
-	public LoginParamsDto() {
-		super();
-	}
+    /**
+     * Instancia un nuevo login params dto.
+     */
+    public LoginParamsDto() {
+        super();
+    }
 
-	/**
-	 * Gets the user name.
-	 *
-	 * @return the user name
-	 */
-	@NotNull
-	public String getUserName() {
-		return userName;
-	}
+    /**
+     * Gets the email.
+     *
+     * @return the email
+     */
+    @NotNull
+    public String getEmail() {
+        return email;
+    }
 
-	/**
-	 * Sets the user name.
-	 *
-	 * @param userName the new user name
-	 */
-	public void setUserName(String userName) {
-		this.userName = userName.trim();
-	}
+    /**
+     * Sets the email.
+     *
+     * @param email the new email
+     */
+    public void setEmail(String email) {
+        this.email = email.trim();
+    }
 
-	/**
-	 * Gets the password.
-	 *
-	 * @return the password
-	 */
-	@NotNull
-	public String getPassword() {
-		return password;
-	}
+    /**
+     * Gets the password.
+     *
+     * @return the password
+     */
+    @NotNull
+    public String getPassword() {
+        return password;
+    }
 
-	/**
-	 * Sets the password.
-	 *
-	 * @param password the new password
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    /**
+     * Sets the password.
+     *
+     * @param password the new password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 }

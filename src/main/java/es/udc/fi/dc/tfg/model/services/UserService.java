@@ -5,61 +5,119 @@ import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
- * The Interface UserService.
+ * Interfaz UserService.
  */
 public interface UserService {
-	
-	/**
-	 * Sign up.
-	 *
-	 * @param user the user
-	 * @throws DuplicateInstanceException the duplicate instance exception
-	 */
-	void signUp(Users user) throws DuplicateInstanceException;
-	
-	/**
-	 * Login.
-	 *
-	 * @param userName the user name
-	 * @param password the password
-	 * @return the user
-	 * @throws IncorrectLoginException the incorrect login exception
-	 */
-	Users login(String userName, String password) throws IncorrectLoginException;
-	
-	/**
-	 * Login from id.
-	 *
-	 * @param id the id
-	 * @return the user
-	 * @throws InstanceNotFoundException the instance not found exception
-	 */
-	Users loginFromId(Long id) throws InstanceNotFoundException;
-	
-	/**
-	 * Update profile.
-	 *
-	 * @param id the id
-	 * @param firstName the first name
-	 * @param lastName the last name
-	 * @param email the email
-	 * @return the user
-	 * @throws InstanceNotFoundException the instance not found exception
-	 */
-	Users updateProfile(Long id, String firstName, String lastName, String email) throws InstanceNotFoundException;
-	
-	/**
-	 * Change password.
-	 *
-	 * @param id the id
-	 * @param oldPassword the old password
-	 * @param newPassword the new password
-	 * @throws InstanceNotFoundException the instance not found exception
-	 * @throws IncorrectPasswordException the incorrect password exception
-	 */
-	void changePassword(Long id, String oldPassword, String newPassword)
-		throws InstanceNotFoundException, IncorrectPasswordException;
+
+    /**
+     * Crea un nuevo usuario.
+     *
+     * @param user el objeto Users que representa al usuario a crear.
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     */
+    void signUp(Users user) throws DuplicateInstanceException;
+
+    /**
+     * Inicia sesión con el email y la contraseña proporcionados.
+     *
+     * @param email El correo electrónico del usuario.
+     * @param password La contraseña del usuario.
+     * @return El objeto Users que representa al usuario que inició sesión.
+     * @throws IncorrectLoginException si el email o la contraseña son
+     * incorrectos.
+     */
+    Users login(String email, String password) throws IncorrectLoginException;
+
+    /**
+     * Inicia sesión a partir del id del usuario.
+     *
+     * @param id El ID del usuario.
+     * @return El objeto Users que representa al usuario con el perfil
+     * actualizado.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    Users loginFromId(Long id) throws InstanceNotFoundException;
+
+    /**
+     * Actualiza el perfil de un entrenador.
+     *
+     * @param id El ID del entrenador.
+     * @param email El nuevo correo electrónico del entrenador.
+     * @param fullName El nuevo nombre completo del entrenador.
+     * @param phone El nuevo número de teléfono del entrenador.
+     * @param icon La foto de perfil del entrenador.
+     * @param socialLinks El enlace a las redes sociales del entrenador.
+     * @return El objeto Users que representa al usuario con el perfil
+     * actualizado.
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    Users updateProfile(Long id, String email, String fullName, String phone,
+            String icon, String socialLinks) throws DuplicateInstanceException, InstanceNotFoundException;
+
+    /**
+     * Actualiza el perfil de un cliente.
+     *
+     * @param id El ID del cliente.
+     * @param email El nuevo correo electrónico del cliente.
+     * @param fullName El nuevo nombre completo del cliente.
+     * @param phone El nuevo número de teléfono del cliente.
+     * @param icon La foto de perfil del cliente.
+     * @param birthdate La fecha de nacimiento del cliente.
+     * @param injuries Las lesiones del cliente.
+     * @param goals Los objetivos del cliente.
+     * @param height La altura del cliente en cm.
+     * @return El objeto Users que representa al usuario con el perfil
+     * actualizado.
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    Users updateClient(Long id, String email, String fullName, String phone, String icon,
+            LocalDate birthdate, String injuries, String goals, BigDecimal height)
+            throws DuplicateInstanceException, InstanceNotFoundException;
+
+    /**
+     * Cambia la contraseña de un usuario.
+     *
+     * @param id El ID del usuario.
+     * @param oldPassword La contraseña antigua del usuario.
+     * @param newPassword La nueva contraseña del usuario.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     * @throws IncorrectPasswordException si la contraseña antigua proporcionada
+     * no coincide con la contraseña actual del usuario.
+     */
+    void changePassword(Long id, String oldPassword, String newPassword)
+            throws InstanceNotFoundException, IncorrectPasswordException;
+    
+    /**
+     * Elimina la cuenta de un usuario.
+     * 
+     * @param id El ID del usuario.
+     * @return el ID del usuario que ha sido eliminado
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado 
+     */
+    Long deleteUser(Long id) throws InstanceNotFoundException;
+    
+    /**
+     * Devuelve una lista con los clientes de un entrenador.
+     * 
+     * @param trainerId El ID del entrenador.
+     * @return La lista de objetos Users que representa los clientes.
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
+     */
+    List<Users> getClients(Long trainerId) throws InstanceNotFoundException;
 
 }

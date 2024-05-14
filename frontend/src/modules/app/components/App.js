@@ -1,15 +1,30 @@
-import React from "react";
+import "./App.css";
 
-import { HashRouter as Router } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
+import users from "../../users";
+import Header from "./Header";
 import Body from "./Body";
 
 const App = () => {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+
+    dispatch(users.actions.tryLoginFromServiceToken(
+      () => dispatch(users.actions.logout())));
+
+  })
+
   return (
-    <Router>
+    <div>
+      <Header />
       <Body />
-    </Router>
+    </div>
   );
-};
+
+}
 
 export default App;

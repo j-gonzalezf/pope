@@ -1,46 +1,50 @@
 package es.udc.fi.dc.tfg.model.services.exceptions;
 
 /**
- * The Class IncorrectLoginException.
+ * Clase IncorrectLoginException.
  */
 @SuppressWarnings("serial")
 public class IncorrectLoginException extends Exception {
 
-	/** The user name. */
-	private final String userName;
+    /**
+     * El email.
+     */
+    private final String email;
 
-	/** The password. */
-	private final String password;
+    /**
+     * La contraseña.
+     */
+    private final String password;
 
-	/**
-	 * Instantiates a new incorrect login exception.
-	 *
-	 * @param userName the user name
-	 * @param password the password
-	 */
-	public IncorrectLoginException(String userName, String password) {
+    /**
+     * Instancia una nueva incorrect login exception.
+     *
+     * @param email el email
+     * @param password la contraseña
+     */
+    public IncorrectLoginException(String email, String password) {
 
-		this.userName = userName;
-		this.password = password;
+        this.email = email;
+        this.password = password;
 
-	}
+    }
 
-	/**
-	 * Gets the user name.
-	 *
-	 * @return the user name
-	 */
-	public String getUserName() {
-		return userName;
-	}
+    /**
+     * Gets the email.
+     *
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
 
-	/**
-	 * Gets the password.
-	 *
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
+    /**
+     * Gets the password.
+     *
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
 
 }

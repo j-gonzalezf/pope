@@ -1,7 +1,5 @@
 package es.udc.fi.dc.tfg.model.services;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,130 +11,238 @@ import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.entities.UserDao;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * The Class UserServiceImpl.
+ * Clase UserServiceImpl.
  */
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
-	/** The permission checker. */
-	@Autowired
-	private PermissionChecker permissionChecker;
+    /**
+     * El permission checker.
+     */
+    @Autowired
+    private PermissionChecker permissionChecker;
 
-	/** The password encoder. */
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+    /**
+     * El password encoder.
+     */
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
-	/** The user dao. */
-	@Autowired
-	private UserDao userDao;
+    /**
+     * El user dao.
+     */
+    @Autowired
+    private UserDao userDao;
 
-	/**
-	 * Sign up.
-	 *
-	 * @param user the user
-	 * @throws DuplicateInstanceException the duplicate instance exception
-	 */
-	@Override
-	public void signUp(Users user) throws DuplicateInstanceException {
-/*
-		if (userDao.existsByUserName(user.getUserName())) {
-			throw new DuplicateInstanceException("project.entities.user", user.getUserName());
-		}
+    /**
+     * Crea un nuevo usuario.
+     *
+     * @param user el objeto Users que representa al usuario a crear.
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     */
+    @Override
+    public void signUp(Users user) throws DuplicateInstanceException {
 
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRole(Users.RoleType.USER);
+        if (userDao.existsByEmail(user.getEmail())) {
+            throw new DuplicateInstanceException("project.entities.user", user.getEmail());
+        }
 
-		userDao.save(user);
-*/
-	}
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-	/**
-	 * Login.
-	 *
-	 * @param userName the user name
-	 * @param password the password
-	 * @return the user
-	 * @throws IncorrectLoginException the incorrect login exception
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Users login(String userName, String password) throws IncorrectLoginException {
+        userDao.save(user);
 
-		Optional<Users> user = userDao.findByUserName(userName);
+    }
 
-		if (!user.isPresent()) {
-			throw new IncorrectLoginException(userName, password);
-		}
+    /**
+     * Inicia sesión con el email y la contraseña proporcionados.
+     *
+     * @param email El correo electrónico del usuario.
+     * @param password La contraseña del usuario.
+     * @return El objeto Users que representa al usuario que inició sesión.
+     * @throws IncorrectLoginException si el email o la contraseña son
+     * incorrectos.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Users login(String email, String password) throws IncorrectLoginException {
 
-		if (!passwordEncoder.matches(password, user.get().getPassword())) {
-			throw new IncorrectLoginException(userName, password);
-		}
+        Optional<Users> user = userDao.findByEmail(email);
 
-		return user.get();
+        if (!user.isPresent()) {
+            throw new IncorrectLoginException(email, password);
+        }
 
-	}
+        if (!passwordEncoder.matches(password, user.get().getPassword())) {
+            throw new IncorrectLoginException(email, password);
+        }
 
-	/**
-	 * Login from id.
-	 *
-	 * @param id the id
-	 * @return the user
-	 * @throws InstanceNotFoundException the instance not found exception
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Users loginFromId(Long id) throws InstanceNotFoundException {
-		return permissionChecker.checkUser(id);
-	}
+        return user.get();
 
-	/**
-	 * Update profile.
-	 *
-	 * @param id        the id
-	 * @param firstName the first name
-	 * @param lastName  the last name
-	 * @param email     the email
-	 * @return the user
-	 * @throws InstanceNotFoundException the instance not found exception
-	 */
-	@Override
-	public Users updateProfile(Long id, String firstName, String lastName, String email)
-			throws InstanceNotFoundException {
+    }
 
-		Users user = permissionChecker.checkUser(id);
+    /**
+     * Inicia sesión a partir del id del usuario.
+     *
+     * @param id El ID del usuario.
+     * @return El objeto Users que representa al usuario con el perfil
+     * actualizado.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Users loginFromId(Long id) throws InstanceNotFoundException {
+        return permissionChecker.checkUser(id);
+    }
 
-		user.setFullName(firstName);
-		user.setPhone(lastName);
-		user.setEmail(email);
+    /**
+     * Actualiza el perfil de un entrenador.
+     *
+     * @param id El ID del entrenador.
+     * @param email El nuevo correo electrónico del entrenador.
+     * @param fullName El nuevo nombre completo del entrenador.
+     * @param phone El nuevo número de teléfono del entrenador.
+     * @param icon La foto de perfil del entrenador.
+     * @param socialLinks El enlace a las redes sociales del entrenador.
+     * @return El objeto Users que representa al usuario con el perfil
+     * actualizado.
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Override
+    public Users updateProfile(Long id, String email, String fullName, String phone,
+            String icon, String socialLinks) throws DuplicateInstanceException, InstanceNotFoundException {
 
-		return user;
+        Users user = permissionChecker.checkUser(id);
 
-	}
+        if (!user.getEmail().equals(email) && userDao.existsByEmail(email)) {
+            throw new DuplicateInstanceException("project.entities.user", email);
+        }
 
-	/**
-	 * Change password.
-	 *
-	 * @param id          the id
-	 * @param oldPassword the old password
-	 * @param newPassword the new password
-	 * @throws InstanceNotFoundException  the instance not found exception
-	 * @throws IncorrectPasswordException the incorrect password exception
-	 */
-	@Override
-	public void changePassword(Long id, String oldPassword, String newPassword)
-			throws InstanceNotFoundException, IncorrectPasswordException {
+        user.setEmail(email);
+        user.setFullName(fullName);
+        user.setPhone(phone);
+        user.setIcon(icon);
+        user.setSocialLinks(socialLinks);
 
-		Users user = permissionChecker.checkUser(id);
+        return user;
 
-		if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-			throw new IncorrectPasswordException();
-		} else {
-			user.setPassword(passwordEncoder.encode(newPassword));
-		}
+    }
 
-	}
+    /**
+     * Actualiza el perfil de un cliente.
+     *
+     * @param id El ID del cliente.
+     * @param email El nuevo correo electrónico del cliente.
+     * @param fullName El nuevo nombre completo del cliente.
+     * @param phone El nuevo número de teléfono del cliente.
+     * @param icon La foto de perfil del cliente.
+     * @param birthdate La fecha de nacimiento del cliente.
+     * @param injuries Las lesiones del cliente.
+     * @param goals Los objetivos del cliente.
+     * @param height La altura del cliente en cm.
+     * @return El objeto Users que representa al usuario con el perfil
+     * actualizado.
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Override
+    public Users updateClient(Long id, String email, String fullName, String phone, String icon,
+            LocalDate birthdate, String injuries, String goals, BigDecimal height)
+            throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Users user = permissionChecker.checkUser(id);
+
+        if (!user.getEmail().equals(email) && userDao.existsByEmail(email)) {
+            throw new DuplicateInstanceException("project.entities.user", email);
+        }
+
+        user.setEmail(email);
+        user.setFullName(fullName);
+        user.setPhone(phone);
+        user.setIcon(icon);
+        user.setBirthdate(birthdate);
+        user.setInjuries(injuries);
+        user.setGoals(goals);
+        user.setHeight(height);
+
+        return user;
+
+    }
+
+    /**
+     * Cambia la contraseña de un usuario.
+     *
+     * @param id El ID del usuario.
+     * @param oldPassword La contraseña antigua del usuario.
+     * @param newPassword La nueva contraseña del usuario.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     * @throws IncorrectPasswordException si la contraseña antigua proporcionada
+     * no coincide con la contraseña actual del usuario.
+     */
+    @Override
+    public void changePassword(Long id, String oldPassword, String newPassword)
+            throws InstanceNotFoundException, IncorrectPasswordException {
+
+        Users user = permissionChecker.checkUser(id);
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IncorrectPasswordException();
+        } else {
+            user.setPassword(passwordEncoder.encode(newPassword));
+        }
+
+    }
+
+    /**
+     * Elimina la cuenta de un usuario.
+     * 
+     * @param id El ID del usuario.
+     * @return el ID del usuario que ha sido eliminado
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado 
+     */
+    @Override
+    public Long deleteUser(Long id) throws InstanceNotFoundException {
+
+        Optional<Users> user = userDao.findById(id);
+
+        if (user.isEmpty()) {
+            throw new InstanceNotFoundException("project.entitites.post", id);
+        }
+        
+        userDao.deleteById(id);
+        
+        return id;
+
+    }
+
+    /**
+     * Devuelve una lista con los clientes de un entrenador.
+     *
+     * @param trainerId El ID del entrenador.
+     * @return La lista de objetos Users que representa los clientes.
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
+     */
+    @Override
+    public List<Users> getClients(Long trainerId) throws InstanceNotFoundException {
+
+        List<Users> clients = userDao.findByTrainerId(trainerId);
+        return clients;
+
+    }
 
 }

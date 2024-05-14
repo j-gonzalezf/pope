@@ -1,24 +1,24 @@
 package es.udc.fi.dc.tfg.rest.common;
 
 /**
- * The Interface JwtGenerator.
+ * Interfaz JwtGenerator.
  */
 public interface JwtGenerator {
-	
-	/**
-	 * Generate.
-	 *
-	 * @param info the info
-	 * @return the string
-	 */
-	String generate(JwtInfo info);
-	
-	/**
-	 * Gets the info.
-	 *
-	 * @param token the token
-	 * @return the info
-	 */
-	JwtInfo getInfo(String token);
+
+    /**
+     * Genera un token JWT a partir de la información proporcionada.
+     *
+     * @param info Información del usuario para generar el token
+     * @return Un string con el token JWT generado
+     */
+    String generate(JwtInfo info);
+
+    /**
+     * Obtiene la información del usuario a partir de un token JWT.
+     *
+     * @param token El token JWT del que se extraerá la información
+     * @return La información del usuario extraída del token
+     */
+    JwtInfo getInfo(String token);
 
 }

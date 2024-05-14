@@ -18,100 +18,108 @@ import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 
 /**
- * The Class CommonControllerAdvice.
+ * Clase CommonControllerAdvice.
  */
 @ControllerAdvice
 public class CommonControllerAdvice {
 
-	/** The Constant INSTANCE_NOT_FOUND_EXCEPTION_CODE. */
-	private static final String INSTANCE_NOT_FOUND_EXCEPTION_CODE = "project.exceptions.InstanceNotFoundException";
+    /**
+     * La Constante INSTANCE_NOT_FOUND_EXCEPTION_CODE.
+     */
+    private static final String INSTANCE_NOT_FOUND_EXCEPTION_CODE = "project.exceptions.InstanceNotFoundException";
 
-	/** The Constant DUPLICATE_INSTANCE_EXCEPTION_CODE. */
-	private static final String DUPLICATE_INSTANCE_EXCEPTION_CODE = "project.exceptions.DuplicateInstanceException";
+    /**
+     * La Constante DUPLICATE_INSTANCE_EXCEPTION_CODE.
+     */
+    private static final String DUPLICATE_INSTANCE_EXCEPTION_CODE = "project.exceptions.DuplicateInstanceException";
 
-	/** The Constant PERMISSION_EXCEPTION_CODE. */
-	private static final String PERMISSION_EXCEPTION_CODE = "project.exceptions.PermissionException";
+    /**
+     * La Constante PERMISSION_EXCEPTION_CODE.
+     */
+    private static final String PERMISSION_EXCEPTION_CODE = "project.exceptions.PermissionException";
 
-	/** The message source. */
-	@Autowired
-	private MessageSource messageSource;
+    /**
+     * El message source.
+     */
+    @Autowired
+    private MessageSource messageSource;
 
-	/**
-	 * Handle method argument not valid exception.
-	 *
-	 * @param exception the exception
-	 * @return the errors dto
-	 */
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ResponseBody
-	public ErrorsDto handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    /**
+     * Maneja las excepciones de argumentos de método no válidos.
+     *
+     * @param exception La excepción que se va a manejar
+     * @return Un objeto ErrorsDto con los errores de campo
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorsDto handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
 
-		List<FieldErrorDto> fieldErrors = exception.getBindingResult().getFieldErrors().stream()
-				.map(error -> new FieldErrorDto(error.getField(), error.getDefaultMessage()))
-				.collect(Collectors.toList());
+        List<FieldErrorDto> fieldErrors = exception.getBindingResult().getFieldErrors().stream()
+                .map(error -> new FieldErrorDto(error.getField(), error.getDefaultMessage()))
+                .collect(Collectors.toList());
 
-		return new ErrorsDto(fieldErrors);
+        return new ErrorsDto(fieldErrors);
 
-	}
+    }
 
-	/**
-	 * Handle instance not found exception.
-	 *
-	 * @param exception the exception
-	 * @param locale    the locale
-	 * @return the errors dto
-	 */
-	@ExceptionHandler(InstanceNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ResponseBody
-	public ErrorsDto handleInstanceNotFoundException(InstanceNotFoundException exception, Locale locale) {
+    /**
+     * Maneja las excepciones de instancia no encontrada.
+     *
+     * @param exception La excepción que se va a manejar
+     * @param locale El locale para la internacionalización
+     * @return Un objeto ErrorsDto con el error global
+     */
+    @ExceptionHandler(InstanceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorsDto handleInstanceNotFoundException(InstanceNotFoundException exception, Locale locale) {
 
-		String nameMessage = messageSource.getMessage(exception.getName(), null, exception.getName(), locale);
-		String errorMessage = messageSource.getMessage(INSTANCE_NOT_FOUND_EXCEPTION_CODE,
-				new Object[] { nameMessage, exception.getKey().toString() }, INSTANCE_NOT_FOUND_EXCEPTION_CODE, locale);
+        String nameMessage = messageSource.getMessage(exception.getName(), null, exception.getName(), locale);
+        String errorMessage = messageSource.getMessage(INSTANCE_NOT_FOUND_EXCEPTION_CODE,
+                new Object[]{nameMessage, exception.getKey().toString()}, INSTANCE_NOT_FOUND_EXCEPTION_CODE, locale);
 
-		return new ErrorsDto(errorMessage);
+        return new ErrorsDto(errorMessage);
 
-	}
+    }
 
-	/**
-	 * Handle duplicate instance exception.
-	 *
-	 * @param exception the exception
-	 * @param locale    the locale
-	 * @return the errors dto
-	 */
-	@ExceptionHandler(DuplicateInstanceException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ResponseBody
-	public ErrorsDto handleDuplicateInstanceException(DuplicateInstanceException exception, Locale locale) {
+    /**
+     * Maneja las excepciones de instancia duplicada.
+     *
+     * @param exception La excepción que se va a manejar
+     * @param locale El locale para la internacionalización
+     * @return Un objeto ErrorsDto con el error global
+     */
+    @ExceptionHandler(DuplicateInstanceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorsDto handleDuplicateInstanceException(DuplicateInstanceException exception, Locale locale) {
 
-		String nameMessage = messageSource.getMessage(exception.getName(), null, exception.getName(), locale);
-		String errorMessage = messageSource.getMessage(DUPLICATE_INSTANCE_EXCEPTION_CODE,
-				new Object[] { nameMessage, exception.getKey().toString() }, DUPLICATE_INSTANCE_EXCEPTION_CODE, locale);
+        String nameMessage = messageSource.getMessage(exception.getName(), null, exception.getName(), locale);
+        String errorMessage = messageSource.getMessage(DUPLICATE_INSTANCE_EXCEPTION_CODE,
+                new Object[]{nameMessage, exception.getKey().toString()}, DUPLICATE_INSTANCE_EXCEPTION_CODE, locale);
 
-		return new ErrorsDto(errorMessage);
+        return new ErrorsDto(errorMessage);
 
-	}
+    }
 
-	/**
-	 * Handle permission exception.
-	 *
-	 * @param exception the exception
-	 * @param locale    the locale
-	 * @return the errors dto
-	 */
-	@ExceptionHandler(PermissionException.class)
-	@ResponseStatus(HttpStatus.FORBIDDEN)
-	@ResponseBody
-	public ErrorsDto handlePermissionException(PermissionException exception, Locale locale) {
+    /**
+     * Maneja las excepciones de permisos.
+     *
+     * @param exception La excepción que se va a manejar
+     * @param locale El locale para la internacionalización
+     * @return Un objeto ErrorsDto con el error global
+     */
+    @ExceptionHandler(PermissionException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    public ErrorsDto handlePermissionException(PermissionException exception, Locale locale) {
 
-		String errorMessage = messageSource.getMessage(PERMISSION_EXCEPTION_CODE, null, PERMISSION_EXCEPTION_CODE,
-				locale);
+        String errorMessage = messageSource.getMessage(PERMISSION_EXCEPTION_CODE, null, PERMISSION_EXCEPTION_CODE,
+                locale);
 
-		return new ErrorsDto(errorMessage);
+        return new ErrorsDto(errorMessage);
 
-	}
+    }
 
 }
