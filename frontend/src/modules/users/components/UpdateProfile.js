@@ -126,8 +126,8 @@ const UpdateProfile = () => {
                                 <FormattedMessage id="project.users.updateProfile" />
                             </Nav.Link>
                         </Nav.Item>
-                        <Nav.Item className="bg-danger text-white">
-                            <Nav.Link className="text-white" onClick={() => setShowDeleteModal(true)}>
+                        <Nav.Item className="text-white">
+                            <Nav.Link className="bg-danger text-white" onClick={() => setShowDeleteModal(true)}>
                                 <BsTrashFill style={{ marginRight: '10px' }} />
                                 <FormattedMessage id="project.users.deleteAccount" />
                             </Nav.Link>

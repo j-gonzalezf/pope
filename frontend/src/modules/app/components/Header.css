@@ -1,23 +1,46 @@
 .border {
-    height: 75px;
+    height: 100px;
     min-width: 100vw;
     background-color: #296084;
     border-color: #296084;
-    margin-bottom: 5%;
     padding: 0;
+    margin: 0;
+}
+
+.header-nav {
+    max-height: 90px;
+}
+
+.navbar-toggle-custom {
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.anchor-icon {
+    max-height: 90px;
+    padding: 10%;
 }
 
 .icon-container {
     display: flex;
-    height: 100%;
+    justify-content: flex-end;
 }
 
-.anchor-icon {
-    max-height: 75px;
-    padding: 5px;
+.dropdown-toggle.nav-link {
+    display: flex;
+    align-items: center;
+}
+
+.icon-image-large {
+    width: 7%;
+    height: 7%;
 }
 
 .dropdown-menu.show {
     position: relative;
+    top: 90%;
+    left: 95%;
     z-index: 9999;
 }

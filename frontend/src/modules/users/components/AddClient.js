@@ -1,6 +1,5 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import { BsXLg } from "react-icons/bs";
 import './SignUp.css';
@@ -22,11 +21,11 @@ const AddClient = () => {
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [phone, setPhone] = useState('');
+    const [phone, setPhone] = useState(null);
     const [icon, setIcon] = useState(null);
     const [birthdate, setBirthdate] = useState(null);
-    const [injuries, setInjuries] = useState('');
-    const [goals, setGoals] = useState('');
+    const [injuries, setInjuries] = useState(null);
+    const [goals, setGoals] = useState(null);
     const [height, setHeight] = useState(null);
     const [error, setError] = useState(null);
 
@@ -96,7 +95,7 @@ const AddClient = () => {
 
     return (
 
-        <Container fluid className="SignUp">
+        <div fluid className="SignUp">
 
             <Card className="card bg-light border-dark">
 
@@ -150,14 +149,14 @@ const AddClient = () => {
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="password" htmlFor="password" className="mb-3">
-                                <FormattedMessage id="project.users.password" />
+                                <FormattedMessage id="project.users.passwordClient" />
                             </Form.Label>
                             <Form.Control
                                 type="password"
                                 className="form-control"
                                 id="password"
                                 name="password"
-                                placeholder="Introduzca una clave de acceso para el cliente"
+                                placeholder="Introduzca una contraseña para el cliente"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                                 required
@@ -278,7 +277,7 @@ const AddClient = () => {
 
             </Card>
 
-        </Container>
+        </div>
 
     );
 

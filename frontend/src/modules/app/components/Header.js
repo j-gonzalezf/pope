@@ -1,4 +1,3 @@
-import Container from 'react-bootstrap/Container';
 import Image from 'react-bootstrap/Image';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
@@ -34,41 +33,43 @@ const Header = () => {
 
             <Navbar data-testid="header" expand="lg" variant="light" className="border">
 
-                <Container className="icon-container">
-                    <Navbar.Brand as={Link} to="/users/clients">
-                        <Image className="anchor-icon" src={AnchorIcon} alt="Logo" />
-                    </Navbar.Brand>
-                </Container>
+                <Navbar.Brand as={Link} to="/users/clients">
+                    <Image className="anchor-icon" src={AnchorIcon} alt="Logo" />
+                </Navbar.Brand>
 
-                <Navbar.Toggle aria-controls="navbarSupportedContent" />
+                <div className="align-items-center">
 
-                <Navbar.Collapse className="collapse navbar-collapse" id="navbarSupportedContent" >
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" className="navbar-toggle-custom" />
 
-                    <Nav>
-                        <NavDropdown title={icon !== undefined ?
-                            <div className="icon-container">
-                                <Image className="icon-image" src={"data:image/png;base64," + icon.base64} alt={icon.name} />
-                                {email}
-                            </div>
-                            :
-                            <div className="icon-container">
-                                <Image className="icon-image" src={TrainerIcon} width="16" height="16" fill="currentColor" viewBox="0 0 16 16" />
-                            </div>
-                        }>
-                            <NavDropdown.Item as={Link} to="/users/updateProfile">
-                                <FormattedMessage id="project.users.viewProfile" />
-                            </NavDropdown.Item>
-                            <NavDropdown.Item as={Link} to="/users/changePassword">
-                                <FormattedMessage id="project.users.changePassword" />
-                            </NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item as={Link} to="/users/logout">
-                                <FormattedMessage id="project.users.logout" />
-                            </NavDropdown.Item>
-                        </NavDropdown>
-                    </Nav>
+                    <Navbar.Collapse id="basic-navbar-nav" style={{ paddingRight: '200px' }} >
 
-                </Navbar.Collapse >
+                        <Nav className="header-nav">
+                            <NavDropdown title={icon !== undefined ?
+                                <div className="icon-container">
+                                    <Image className="icon-image-large" src={"data:image/png;base64," + icon.base64} alt={icon.name} />
+                                    {email}
+                                </div>
+                                :
+                                <div className="icon-container">
+                                    <Image className="icon-image-large" src={TrainerIcon} width="16" height="16" fill="currentColor" viewBox="0 0 16 16" />
+                                </div>
+                            }>
+                                <NavDropdown.Item as={Link} to="/users/updateProfile">
+                                    <FormattedMessage id="project.users.viewProfile" />
+                                </NavDropdown.Item>
+                                <NavDropdown.Item as={Link} to="/users/changePassword">
+                                    <FormattedMessage id="project.users.changePassword" />
+                                </NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                <NavDropdown.Item as={Link} to="/users/logout">
+                                    <FormattedMessage id="project.users.logout" />
+                                </NavDropdown.Item>
+                            </NavDropdown>
+                        </Nav>
+
+                    </Navbar.Collapse >
+
+                </div>
 
             </Navbar >
 

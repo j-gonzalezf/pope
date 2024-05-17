@@ -1,6 +1,5 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import './Login.css';
 
@@ -50,9 +49,9 @@ const Login = () => {
 
     return (
 
-        <Container fluid className="Login">
+        <div fluid className="Login">
 
-            <Card className="card bg-light border-dark">
+            <Card className="card bg-light border-dark login">
 
                 <Card.Header as="h3" className="card-header">
                     <FormattedMessage id="project.users.login" />
@@ -149,7 +148,7 @@ const Login = () => {
 
             </Card>
 
-        </Container>
+        </div>
 
     );
 

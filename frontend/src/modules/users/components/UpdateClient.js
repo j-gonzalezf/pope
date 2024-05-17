@@ -1,6 +1,5 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import { BsXLg } from "react-icons/bs";
 import './SignUp.css';
@@ -95,7 +94,7 @@ const UpdateClient = () => {
 
     return (
 
-        <Container fluid className="SignUp">
+        <div fluid className="SignUp">
 
             <Card className="card bg-light border-dark">
 
@@ -277,7 +276,7 @@ const UpdateClient = () => {
 
             </Card>
 
-        </Container>
+        </div>
 
     );
 
