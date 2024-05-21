@@ -12,3 +12,4 @@ target
 .vscode
 
 src/main/resources/db
+frontend/src/modules/common/fonts/discartedFonts

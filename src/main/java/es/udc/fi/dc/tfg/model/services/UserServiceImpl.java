@@ -209,11 +209,11 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Elimina la cuenta de un usuario.
-     * 
+     *
      * @param id El ID del usuario.
-     * @return el ID del usuario que ha sido eliminado
+     * @return El ID del usuario que ha sido eliminado.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
-     * proporcionado 
+     * proporcionado.
      */
     @Override
     public Long deleteUser(Long id) throws InstanceNotFoundException {
@@ -221,11 +221,11 @@ public class UserServiceImpl implements UserService {
         Optional<Users> user = userDao.findById(id);
 
         if (user.isEmpty()) {
-            throw new InstanceNotFoundException("project.entitites.post", id);
+            throw new InstanceNotFoundException("project.entitites.user", id);
         }
-        
+
         userDao.deleteById(id);
-        
+
         return id;
 
     }
@@ -242,6 +242,26 @@ public class UserServiceImpl implements UserService {
 
         List<Users> clients = userDao.findByTrainerId(trainerId);
         return clients;
+
+    }
+
+    /**
+     * Devuelve un usuario a partir de su ID.
+     *
+     * @param id El ID del usuario.
+     * @return El objeto Users que representa al usuario.
+     * @throws InstanceNotFoundException si no se encuentra ningún usuario.
+     */
+    @Override
+    public Users getUser(Long id) throws InstanceNotFoundException {
+
+        Optional<Users> user = userDao.findById(id);
+
+        if (user.isEmpty()) {
+            throw new InstanceNotFoundException("project.entitites.post", id);
+        }
+
+        return user.get();
 
     }
 

@@ -100,24 +100,33 @@ public interface UserService {
      */
     void changePassword(Long id, String oldPassword, String newPassword)
             throws InstanceNotFoundException, IncorrectPasswordException;
-    
+
     /**
      * Elimina la cuenta de un usuario.
-     * 
+     *
      * @param id El ID del usuario.
-     * @return el ID del usuario que ha sido eliminado
+     * @return el ID del usuario que ha sido eliminado.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
-     * proporcionado 
+     * proporcionado.
      */
     Long deleteUser(Long id) throws InstanceNotFoundException;
-    
+
     /**
      * Devuelve una lista con los clientes de un entrenador.
-     * 
+     *
      * @param trainerId El ID del entrenador.
      * @return La lista de objetos Users que representa los clientes.
      * @throws InstanceNotFoundException si no se encuentra ningún cliente.
      */
     List<Users> getClients(Long trainerId) throws InstanceNotFoundException;
+
+    /**
+     * Devuelve un usuario a partir de su ID.
+     *
+     * @param id El ID del usuario.
+     * @return El objeto Users que representa al usuario.
+     * @throws InstanceNotFoundException si no se encuentra ningún usuario.
+     */
+    Users getUser(Long id) throws InstanceNotFoundException;
 
 }

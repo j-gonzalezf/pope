@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -234,12 +235,20 @@ public class UserControllerTest {
         UserDto clientDto = new UserDto(null, "client@client.com", "client",
                 "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
                 "Objetivo", new BigDecimal("170"), trainerDto.getId());
-
+        
         clientDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/addClient").header("Authorization", "Bearer " + authTrainer.getServiceToken())
+        MvcResult result = mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        UserDto createdClient = new ObjectMapper().readValue(content, UserDto.class);
+
+        mockMvc.perform(get("/api/users/client/" + createdClient.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
 
     }
 
@@ -259,7 +268,8 @@ public class UserControllerTest {
 
         clientDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/addClient").header("Authorization", "Bearer " + authClient.getServiceToken())
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authClient.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
                 .andExpect(status().isForbidden());
 
@@ -321,7 +331,8 @@ public class UserControllerTest {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        mockMvc.perform(post("/api/users/login").header("Authorization", "Bearer " + authTrainer.getServiceToken())
+        mockMvc.perform(post("/api/users/login")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(loginParams)))
                 .andExpect(status().isNotFound());
 
@@ -493,7 +504,7 @@ public class UserControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testGetAllPosts() throws Exception {
+    public void testGetClients() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
 

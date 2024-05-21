@@ -29,6 +29,10 @@ const ClientsList = () => {
         navigate('/users/addClient');
     };
 
+    const redirectToClientDetails = (clientId) => {
+        navigate(`/templates/clientDetails/${clientId}`);
+    };
+
     useEffect(() => {
 
         dispatch(actions.getClients(user.id,
@@ -41,42 +45,51 @@ const ClientsList = () => {
 
         <div fluid className='ClientsList'>
 
-                <Row className="listStyle">
-                    {getClients && (getClients.map((client) => (
-                        <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle" key={client.id}>
-                            <div className="image-container">
-                                {client.icon ? (client.icon.map((icon, index) => (
+            <Row className="listStyle">
+
+                {getClients && (getClients.map((client) => (
+
+                    <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle"
+                        key={client.id} onClick={() => redirectToClientDetails(client.id)}>
+
+                        <div className="image-container">
+                            {client.icon ? (client.icon.map((icon, index) => (
+                                <Image
+                                    key={index}
+                                    src={"data:image/png;base64," + icon.base64}
+                                    alt={icon.name}
+                                    className="smallImageStyle"
+                                />
+                            )))
+                                : (
                                     <Image
-                                        key={index}
-                                        src={"data:image/png;base64," + icon.base64}
-                                        alt={icon.name}
+                                        src={DefaultIcon}
+                                        alt="Default Icon"
                                         className="smallImageStyle"
                                     />
-                                )))
-                                    : (
-                                        <Image
-                                            src={DefaultIcon}
-                                            alt="Default Icon"
-                                            className="smallImageStyle"
-                                        />
-                                    )}
-                            </div>
-                            <h5>{client.fullName}</h5>
-                        </Col>
-                    )))}
-                    <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle">
-                        <Card className='text-center' onClick={redirectToCreateClient}>
-                            <BsFillPlusCircleFill className='plus' size={50} color='grey' />
-                            <Card.Body>
-                                <Card.Title className='text-center'>
-                                    <b><FormattedMessage id="project.users.addClient" /></b>
-                                </Card.Title>
-                            </Card.Body>
-                        </Card>
+                                )}
+                        </div>
+
+                        <h5>{client.fullName}</h5>
+
                     </Col>
-                </Row>
+                )))}
+
+                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle" onClick={redirectToCreateClient}>
+                    <Card className='text-center' >
+                        <BsFillPlusCircleFill className='plus' size={50} color='grey' />
+                        <Card.Body>
+                            <Card.Title className='text-center'>
+                                <b><FormattedMessage id="project.users.addClient" /></b>
+                            </Card.Title>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+            </Row>
 
             <Errors errors={error} onClose={() => setError(null)} />
+
         </div>
 
     );

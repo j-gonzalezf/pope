@@ -1,4 +1,4 @@
-.ClientsList {
+.ClientDetails {
     margin: 0;
     padding: 0;
     padding: 5%;
@@ -12,10 +12,11 @@
 	display: 'flex';
 	flex-wrap: 'wrap';
 	justify-content: 'center';
-	font-family: Georgia, 'Times New Roman', Times, serif;
+	font-family: 'Hey Comic';
 }
 
 .listItemStyle {
+    height: 12rem;
     width: 12rem;
     background-color: #f0f0f0;
     padding: 20px;
@@ -27,25 +28,8 @@
     transition: background-color 0.3s ease;
     margin: 10px;
     cursor: pointer;
-}
-
-.smallImageStyle {
-    max-width: 120px;
-    height: auto;
-    margin-bottom: 10px;
-}
-
-.text-center.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    width: 9rem;
-    padding-bottom: 0%;
-}
-
-.plus {
-    padding-top: 5%;
-}
-
-.text-center.card-title {
-    margin-top: 5%;
-    margin-bottom: 5%;
 }

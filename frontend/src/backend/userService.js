@@ -92,3 +92,11 @@ export const getClients = (id, onSuccess, onErrors) =>
     onSuccess,
     onErrors
   );
+
+export const getClientInfo = (clientId, onSuccess, onErrors) =>
+  appFetch(
+    `/users/client/${clientId}`,
+    fetchConfig("GET"),
+    onSuccess,
+    onErrors
+  );

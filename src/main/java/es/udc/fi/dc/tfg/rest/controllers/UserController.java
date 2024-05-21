@@ -260,24 +260,42 @@ public class UserController {
             @Validated({UserDto.UpdateValidations.class}) @RequestBody UserDto userDto)
             throws DuplicateInstanceException, InstanceNotFoundException, PermissionException {
 
-        if (!id.equals(userId)) {
-            throw new PermissionException();
-        }
-
-        Users user = userService.loginFromId(userId);
+        Users user = userService.getUser(id);
         String role = user.getUserRole().toString();
 
         if (Users.RoleType.TRAINER.toString().equals(role)) {
+
+            // Comprobamos que el que realiza la petición y el entrenador 
+            // a actualizar son el mismo usuario
+            if (!id.equals(userId)) {
+                throw new PermissionException();
+            }
+
             return toUserDto(userService.updateProfile(id, userDto.getEmail(),
                     userDto.getFullName(), userDto.getPhone(),
                     userDto.getIcon(), userDto.getSocialLinks()));
+
         } else if (Users.RoleType.CLIENT.toString().equals(role)) {
+
+            // Comprobamos si el que realiza la petición y el entrenador
+            // del cliente a actualizar son el mismo usuario
+            if (!user.getTrainer().getId().equals(userId)) {
+                throw new PermissionException();
+            }
+
+            LocalDate birthdate = null;
+
+            // Comprobamos si la fecha es nula para que no falle .parse
+            if (userDto.getBirthdate() != null && !userDto.getBirthdate().isEmpty()) {
+                birthdate = LocalDate.parse(userDto.getBirthdate());
+            }
+
             return toUserDto(userService.updateClient(id, userDto.getEmail(),
                     userDto.getFullName(), userDto.getPhone(), userDto.getIcon(),
-                    LocalDate.parse(userDto.getBirthdate()), userDto.getInjuries(),
-                    userDto.getGoals(), userDto.getHeight()));
+                    birthdate, userDto.getInjuries(), userDto.getGoals(), userDto.getHeight()));
+
         } else {
-            throw new IllegalArgumentException("Invalid role: " + userDto.getRole());
+            throw new IllegalArgumentException("Invalid role: " + role);
         }
 
     }
@@ -309,41 +327,98 @@ public class UserController {
         userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
 
     }
-    
+
     /**
      * Elimina un usuario.
-     * 
+     *
      * @param userId el ID del usuario que realiza la petición
      * @param id el ID del usuario al que se le va a eliminar la cuenta
      * @return el ID del usuario que ha sido eliminado
      * @throws PermissionException si el ID del usuario que realiza la petición
      * no coincide con el ID del usuario al que se le va a cambiar la contraseña
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
-     * proporcionado 
+     * proporcionado
      */
     @DeleteMapping("/{id}/delete")
     public Long deleteUser(@RequestAttribute Long userId, @PathVariable("id") Long id)
             throws PermissionException, InstanceNotFoundException {
-        
-        if (!id.equals(userId)) {
-            throw new PermissionException();
+
+        Users user = userService.getUser(id);
+        String role = user.getUserRole().toString();
+
+        if (Users.RoleType.TRAINER.toString().equals(role)) {
+
+            // Comprobamos que el que realiza la petición y el entrenador 
+            // a eliminar son el mismo usuario
+            if (!id.equals(userId)) {
+                throw new PermissionException();
+            }
+
+            return userService.deleteUser(id);
+
+        } else if (Users.RoleType.CLIENT.toString().equals(role)) {
+
+            // Comprobamos si el que realiza la petición y el entrenador
+            // del cliente a eliminar son el mismo usuario
+            if (!user.getTrainer().getId().equals(userId)) {
+                throw new PermissionException();
+            }
+
+            return userService.deleteUser(id);
+
+        } else {
+            throw new IllegalArgumentException("Invalid role: " + role);
         }
-        
-        return userService.deleteUser(id);
-        
+
     }
 
     /**
      * Devuelve la lista de clientes de un entrenador.
      *
+     * @param userId el ID del usuario que realiza la petición
      * @param id el ID del entrenador
      * @return una lista de clientes
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador
      * @throws InstanceNotFoundException si no se encuentra ningún cliente
      */
     @GetMapping("/{id}/clients")
-    public List<UserDto> getClients(@PathVariable Long id) throws InstanceNotFoundException {
+    public List<UserDto> getClients(@RequestAttribute Long userId, @PathVariable Long id)
+            throws PermissionException, InstanceNotFoundException {
+
+        if (!id.equals(userId)) {
+            throw new PermissionException();
+        }
+
         List<Users> clients = userService.getClients(id);
+
         return toUsersDto(clients);
+
+    }
+
+    /**
+     * Devuelve el cliente de un entrenador a partir de su ID.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param clientId el ID del cliente
+     * @return un cliente
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el trainer ID del cliente que se solicita
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
+     */
+    @GetMapping("/client/{clientId}")
+    public UserDto getClientInfo(@RequestAttribute Long userId,
+            @PathVariable("clientId") Long clientId)
+            throws PermissionException, InstanceNotFoundException {
+
+        Users client = userService.getUser(clientId);
+
+        if (!client.getTrainer().getId().equals(userId)) {
+            throw new PermissionException();
+        }
+
+        return toUserDto(client);
+
     }
 
     /**

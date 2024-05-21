@@ -72,6 +72,20 @@ export const updateProfile = (user, onSuccess, onErrors) => dispatch =>
         onErrors
     );
 
+export const updateClientCompleted = getClientInfo => ({
+    type: actionTypes.UPDATE_CLIENT_COMPLETED,
+    getClientInfo
+});
+
+export const updateClient = (client, onSuccess, onErrors) => dispatch =>
+    backend.userService.updateProfile(client,
+        client => {
+            dispatch(updateClientCompleted(client));
+            onSuccess();
+        },
+        onErrors
+    );
+
 const changePasswordCompleted = () => ({
     type: actionTypes.CHANGE_PASSWORD_COMPLETED,
 });
@@ -98,7 +112,6 @@ export const deleteUser = (id, onSuccess, onErrors) => dispatch =>
         onErrors
     );
 
-
 const getClientsCompleted = getClients => ({
     type: actionTypes.GET_CLIENTS_COMPLETED,
     getClients
@@ -108,6 +121,19 @@ export const getClients = (id, onSuccess, onErrors) => dispatch =>
     backend.userService.getClients(id,
         getClients => {
             dispatch(getClientsCompleted(getClients));
+            onSuccess();
+        }, onErrors
+    );
+
+const getClientInfoCompleted = getClientInfo => ({
+    type: actionTypes.GET_CLIENT_INFO_COMPLETED,
+    getClientInfo
+});
+
+export const getClientInfo = (clientId, onSuccess, onErrors) => dispatch =>
+    backend.userService.getClientInfo(clientId,
+        getClientInfo => {
+            dispatch(getClientInfoCompleted(getClientInfo));
             onSuccess();
         }, onErrors
     );

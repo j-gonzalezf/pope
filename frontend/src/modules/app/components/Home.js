@@ -25,15 +25,15 @@ const Home = () => {
         <Col className='trainer-col' onClick={() => redirectToLogin('trainer')}>
           <Col md="auto" className='trainer-content'>
             <Image className='trainer-icon' src={TrainerIcon} alt="Trainer icon" />
-            <b><FormattedMessage id="project.home.login" />
-              <br /><FormattedMessage id="project.users.trainer" /></b>
+            <FormattedMessage id="project.home.login" />
+              <br /><FormattedMessage id="project.users.trainer" />
           </Col>
         </Col>
         <Col className='client-col' onClick={() => redirectToLogin('client')}>
           <Col md="auto" className='client-content'>
             <Image className='client-icon' src={ClientIcon} alt="Client icon" />
-            <b><FormattedMessage id="project.home.login" />
-              <br /><FormattedMessage id="project.users.client" /></b>
+            <FormattedMessage id="project.home.login" />
+              <br /><FormattedMessage id="project.users.client" />
           </Col>
         </Col>
       </Row>

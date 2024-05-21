@@ -16,6 +16,7 @@ import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
@@ -400,6 +401,68 @@ public class UserServiceTest {
             throws DuplicateInstanceException, InstanceNotFoundException {
         assertThrows(InstanceNotFoundException.class,
                 () -> userService.deleteUser(NON_EXISTENT_ID));
+    }
+
+    /**
+     * Test para obtener la lista de clientes de un entrenador.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
+     */
+    @Test
+    public void testGetClients() throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Users trainer = createTrainer("trainer@trainer.com");
+
+        userService.signUp(trainer);
+
+        Users client1 = createClient("client1@client.com");
+        client1.setTrainer(trainer);
+        userService.signUp(client1);
+
+        Users client2 = createClient("client2@client.com");
+        client2.setTrainer(trainer);
+        userService.signUp(client2);
+
+        List<Users> clients = userService.getClients(trainer.getId());
+
+        assertEquals(2, clients.size());
+        assertTrue(clients.contains(client1));
+        assertTrue(clients.contains(client2));
+
+    }
+
+    /**
+     * Test para obtener la información de un usuario a partir de su ID.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
+     */
+    @Test
+    public void testGetUser() throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Users trainer = createTrainer("trainer@trainer.com");
+
+        userService.signUp(trainer);
+
+        Users client = createClient("client@client.com");
+        client.setTrainer(trainer);
+        userService.signUp(client);
+
+        Users foundClient = userService.getUser(client.getId());
+
+        assertEquals(client.getId(), foundClient.getId());
+        assertEquals(client.getEmail(), foundClient.getEmail());
+        assertEquals(client.getFullName(), foundClient.getFullName());
+        assertEquals(client.getPhone(), foundClient.getPhone());
+        assertEquals(client.getBirthdate(), foundClient.getBirthdate());
+        assertEquals(client.getInjuries(), foundClient.getInjuries());
+        assertEquals(client.getGoals(), foundClient.getGoals());
+        assertEquals(client.getHeight(), foundClient.getHeight());
+        assertEquals(client.getTrainer(), foundClient.getTrainer());
+
     }
 
 }

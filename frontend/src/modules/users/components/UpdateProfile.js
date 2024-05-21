@@ -114,10 +114,11 @@ const UpdateProfile = () => {
             <Card className="card bg-light border-dark">
 
                 <Card.Header as="h3" className="card-header">
+                    <FormattedMessage id="project.users.myProfile" />
                     <Nav variant="pills" className="justify-content-between" activeKey={activeTab} onSelect={handleSelectTab}>
                         <Nav.Item>
                             <Nav.Link className="text-white" eventKey="profile">
-                                <FormattedMessage id="project.users.myProfile" />
+                                <FormattedMessage id="project.users.myInfo" />
                             </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>

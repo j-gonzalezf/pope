@@ -48,6 +48,9 @@ public class SecurityConfig {
                 .requestMatchers(antMatcher("/api/users/login")).permitAll()
                 .requestMatchers(antMatcher("/api/users/loginFromServiceToken")).permitAll()
                 .requestMatchers(antMatcher("/api/users/addClient")).hasRole("TRAINER")
+                .requestMatchers(antMatcher("/api/users/{id}")).hasRole("TRAINER")
+                .requestMatchers(antMatcher("/api/users/{id}/changePassword")).hasRole("TRAINER")
+                .requestMatchers(antMatcher("/api/users/{id}/delete")).hasRole("TRAINER")
                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
