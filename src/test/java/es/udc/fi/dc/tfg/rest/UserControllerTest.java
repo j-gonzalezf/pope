@@ -5,7 +5,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.math.BigDecimal;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +31,6 @@ import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
 import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
-import java.math.BigDecimal;
-import org.junit.Before;
 
 /**
  * Clase UserControllerTest.
@@ -94,14 +94,14 @@ public class UserControllerTest {
     private AuthenticatedUserDto createAuthenticatedTrainer(String email)
             throws IncorrectLoginException {
 
-        Users user = new Users(email, PASSWORD, "trainer", "123456789", "", "");
+        Users trainer = new Users(email, PASSWORD, "trainer", "123456789", "", "");
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        trainer.setPassword(passwordEncoder.encode(trainer.getPassword()));
 
-        userDao.save(user);
+        userDao.save(trainer);
 
         LoginParamsDto loginParams = new LoginParamsDto();
-        loginParams.setEmail(user.getEmail());
+        loginParams.setEmail(trainer.getEmail());
         loginParams.setPassword(PASSWORD);
 
         return userController.login(loginParams);
@@ -119,21 +119,21 @@ public class UserControllerTest {
     private AuthenticatedUserDto createAuthenticatedClient(String email)
             throws IncorrectLoginException {
 
-        Users trainer = new Users("t" + email, PASSWORD, "trainer", "123456789", "", "");
+        Users trainer = new Users(authTrainer.getUserDto().getEmail(), PASSWORD,
+                "trainer", "123456789", "", "");
 
         trainer.setPassword(passwordEncoder.encode(trainer.getPassword()));
+        trainer.setId(authTrainer.getUserDto().getId());
 
-        userDao.save(trainer);
-
-        Users user = new Users(email, PASSWORD, "trainer", "123456789", "", null,
+        Users client = new Users(email, PASSWORD, "trainer", "123456789", "", null,
                 null, null, null, trainer);
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        client.setPassword(passwordEncoder.encode(client.getPassword()));
 
-        userDao.save(user);
+        userDao.save(client);
 
         LoginParamsDto loginParams = new LoginParamsDto();
-        loginParams.setEmail(user.getEmail());
+        loginParams.setEmail(client.getEmail());
         loginParams.setPassword(PASSWORD);
 
         return userController.login(loginParams);
@@ -235,7 +235,7 @@ public class UserControllerTest {
         UserDto clientDto = new UserDto(null, "client@client.com", "client",
                 "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
                 "Objetivo", new BigDecimal("170"), trainerDto.getId());
-        
+
         clientDto.setPassword(PASSWORD);
 
         MvcResult result = mockMvc.perform(post("/api/users/addClient")

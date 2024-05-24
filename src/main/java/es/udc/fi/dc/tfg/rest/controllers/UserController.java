@@ -140,7 +140,7 @@ public class UserController {
 
     }
 
-    // Método para verificar un entrenador si id es trainer
+    // Método para validar un entrenador si id es trainer
     private void validateForTrainer(Long userId, Long id) 
             throws PermissionException {
         if (!id.equals(userId)) {
@@ -148,7 +148,7 @@ public class UserController {
         }
     }
 
-    // Método para verificar un entrenador si id es client
+    // Método para validar un entrenador si id es client
     private void validateForClient(Long userId, Users user) 
             throws PermissionException {
         if (!user.getTrainer().getId().equals(userId)) {
@@ -156,7 +156,7 @@ public class UserController {
         }
     }
 
-    // Método para verificar un usuario, userId siempre es un TRAINER
+    // Método para validar un usuario, userId siempre es un TRAINER
     private void validateUser(Long userId, Long id)
             throws InstanceNotFoundException, PermissionException {
 
