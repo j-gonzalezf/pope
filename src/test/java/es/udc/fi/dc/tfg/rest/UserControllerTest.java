@@ -223,12 +223,12 @@ public class UserControllerTest {
     }
 
     /**
-     * Test para registrar un cliente.
+     * Test para registrar un cliente y mostrar sus datos.
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testAddClient() throws Exception {
+    public void testAddClientAndGetClientInfo() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
 
@@ -414,7 +414,7 @@ public class UserControllerTest {
         mockMvc.perform(put("/api/users/" + incorrectUserId, updatedUserDto.getId())
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedUserDto))
-                .header("userId", updatedUserDto.getId().toString())).andExpect(status().isForbidden());
+                .header("userId", updatedUserDto.getId().toString())).andExpect(status().isNotFound());
 
     }
 

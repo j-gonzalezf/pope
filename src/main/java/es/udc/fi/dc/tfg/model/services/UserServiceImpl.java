@@ -245,24 +245,4 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    /**
-     * Devuelve un usuario a partir de su ID.
-     *
-     * @param id El ID del usuario.
-     * @return El objeto Users que representa al usuario.
-     * @throws InstanceNotFoundException si no se encuentra ningún usuario.
-     */
-    @Override
-    public Users getUser(Long id) throws InstanceNotFoundException {
-
-        Optional<Users> user = userDao.findById(id);
-
-        if (user.isEmpty()) {
-            throw new InstanceNotFoundException("project.entitites.post", id);
-        }
-
-        return user.get();
-
-    }
-
 }

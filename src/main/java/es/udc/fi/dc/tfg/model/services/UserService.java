@@ -62,7 +62,8 @@ public interface UserService {
      * proporcionado.
      */
     Users updateProfile(Long id, String email, String fullName, String phone,
-            String icon, String socialLinks) throws DuplicateInstanceException, InstanceNotFoundException;
+            String icon, String socialLinks)
+            throws DuplicateInstanceException, InstanceNotFoundException;
 
     /**
      * Actualiza el perfil de un cliente.
@@ -119,14 +120,5 @@ public interface UserService {
      * @throws InstanceNotFoundException si no se encuentra ningún cliente.
      */
     List<Users> getClients(Long trainerId) throws InstanceNotFoundException;
-
-    /**
-     * Devuelve un usuario a partir de su ID.
-     *
-     * @param id El ID del usuario.
-     * @return El objeto Users que representa al usuario.
-     * @throws InstanceNotFoundException si no se encuentra ningún usuario.
-     */
-    Users getUser(Long id) throws InstanceNotFoundException;
 
 }

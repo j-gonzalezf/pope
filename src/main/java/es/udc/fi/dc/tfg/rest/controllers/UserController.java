@@ -5,6 +5,7 @@ import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUser;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUserDto;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUsersDto;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 
@@ -13,7 +14,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -39,9 +42,6 @@ import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
 import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
-import java.time.LocalDate;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * Clase UserController.
@@ -140,6 +140,47 @@ public class UserController {
 
     }
 
+    // Método para verificar un entrenador si id es trainer
+    private void validateForTrainer(Long userId, Long id) 
+            throws PermissionException {
+        if (!id.equals(userId)) {
+            throw new PermissionException();
+        }
+    }
+
+    // Método para verificar un entrenador si id es client
+    private void validateForClient(Long userId, Users user) 
+            throws PermissionException {
+        if (!user.getTrainer().getId().equals(userId)) {
+            throw new PermissionException();
+        }
+    }
+
+    // Método para verificar un usuario, userId siempre es un TRAINER
+    private void validateUser(Long userId, Long id)
+            throws InstanceNotFoundException, PermissionException {
+
+        Users user = userService.loginFromId(id);
+        String role = user.getUserRole().toString();
+
+        switch (role) {
+            // En caso de CRUD a un trainer, comprobamos que el que realiza la 
+            // petición y el trainer a actualizar son el mismo user
+            case "TRAINER":
+                validateForTrainer(userId, id);
+                break;
+
+            // En caso de CRUD a un client, comprobamos si el que realiza la 
+            // petición y el trainer del client a actualizar son el mismo user
+            case "CLIENT":
+                validateForClient(userId, user);
+                break;
+
+            default:
+                throw new IllegalArgumentException("Invalid role: " + role);
+        }
+    }
+
     // Método común para registrar un usuario
     private Users createUser(UserDto userDto)
             throws DuplicateInstanceException, IllegalArgumentException, InstanceNotFoundException {
@@ -185,18 +226,23 @@ public class UserController {
     /**
      * Registrar un nuevo cliente.
      *
+     * @param userId el ID del usuario que realiza la petición
      * @param userDto el DTO del usuario
-     * @return una ResponseEntity que contiene un AuthenticatedUserDto
+     * @return una ResponseEntity que contiene un UserDto
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador del cliente que se va a crear
      */
     @PostMapping("/addClient")
-    public ResponseEntity<UserDto> addClient(
+    public ResponseEntity<UserDto> addClient(@RequestAttribute Long userId, 
             @Validated({UserDto.AllValidations.class}) @RequestBody UserDto userDto)
-            throws DuplicateInstanceException, IllegalArgumentException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, PermissionException {
 
+        validateForTrainer(userId, userDto.getTrainerId());
+        
         Users user = createUser(userDto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -214,7 +260,8 @@ public class UserController {
      * @throws IncorrectLoginException the incorrect login exception
      */
     @PostMapping("/login")
-    public AuthenticatedUserDto login(@Validated @RequestBody LoginParamsDto params) throws IncorrectLoginException {
+    public AuthenticatedUserDto login(@Validated @RequestBody LoginParamsDto params) 
+            throws IncorrectLoginException {
 
         Users user = userService.login(params.getEmail(), params.getPassword());
 
@@ -249,9 +296,9 @@ public class UserController {
      * @param userDto el user dto
      * @return el user dto
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
-     * email.
+     * email
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
-     * proporcionado.
+     * proporcionado
      * @throws PermissionException si el ID del usuario que realiza la petición
      * no coincide con el ID del usuario al que se le va a actualizar el perfil
      */
@@ -260,16 +307,12 @@ public class UserController {
             @Validated({UserDto.UpdateValidations.class}) @RequestBody UserDto userDto)
             throws DuplicateInstanceException, InstanceNotFoundException, PermissionException {
 
-        Users user = userService.getUser(id);
+        Users user = userService.loginFromId(id);
         String role = user.getUserRole().toString();
 
         if (Users.RoleType.TRAINER.toString().equals(role)) {
 
-            // Comprobamos que el que realiza la petición y el entrenador 
-            // a actualizar son el mismo usuario
-            if (!id.equals(userId)) {
-                throw new PermissionException();
-            }
+            validateForTrainer(userId, id);
 
             return toUserDto(userService.updateProfile(id, userDto.getEmail(),
                     userDto.getFullName(), userDto.getPhone(),
@@ -277,11 +320,7 @@ public class UserController {
 
         } else if (Users.RoleType.CLIENT.toString().equals(role)) {
 
-            // Comprobamos si el que realiza la petición y el entrenador
-            // del cliente a actualizar son el mismo usuario
-            if (!user.getTrainer().getId().equals(userId)) {
-                throw new PermissionException();
-            }
+            validateForClient(userId, user);
 
             LocalDate birthdate = null;
 
@@ -320,10 +359,8 @@ public class UserController {
             @Validated @RequestBody ChangePasswordParamsDto params)
             throws PermissionException, InstanceNotFoundException, IncorrectPasswordException {
 
-        if (!id.equals(userId)) {
-            throw new PermissionException();
-        }
-
+        validateUser(userId, id);
+        
         userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
 
     }
@@ -343,32 +380,9 @@ public class UserController {
     public Long deleteUser(@RequestAttribute Long userId, @PathVariable("id") Long id)
             throws PermissionException, InstanceNotFoundException {
 
-        Users user = userService.getUser(id);
-        String role = user.getUserRole().toString();
-
-        if (Users.RoleType.TRAINER.toString().equals(role)) {
-
-            // Comprobamos que el que realiza la petición y el entrenador 
-            // a eliminar son el mismo usuario
-            if (!id.equals(userId)) {
-                throw new PermissionException();
-            }
-
-            return userService.deleteUser(id);
-
-        } else if (Users.RoleType.CLIENT.toString().equals(role)) {
-
-            // Comprobamos si el que realiza la petición y el entrenador
-            // del cliente a eliminar son el mismo usuario
-            if (!user.getTrainer().getId().equals(userId)) {
-                throw new PermissionException();
-            }
-
-            return userService.deleteUser(id);
-
-        } else {
-            throw new IllegalArgumentException("Invalid role: " + role);
-        }
+        validateUser(userId, id);
+        
+        return userService.deleteUser(id);
 
     }
 
@@ -386,9 +400,7 @@ public class UserController {
     public List<UserDto> getClients(@RequestAttribute Long userId, @PathVariable Long id)
             throws PermissionException, InstanceNotFoundException {
 
-        if (!id.equals(userId)) {
-            throw new PermissionException();
-        }
+        validateForTrainer(userId, id);
 
         List<Users> clients = userService.getClients(id);
 
@@ -411,11 +423,9 @@ public class UserController {
             @PathVariable("clientId") Long clientId)
             throws PermissionException, InstanceNotFoundException {
 
-        Users client = userService.getUser(clientId);
+        Users client = userService.loginFromId(clientId);
 
-        if (!client.getTrainer().getId().equals(userId)) {
-            throw new PermissionException();
-        }
+        validateForClient(userId, client);
 
         return toUserDto(client);
 

@@ -35,7 +35,7 @@ public class UserServiceTest {
     private final Long NON_EXISTENT_ID = Long.valueOf(-1);
 
     /**
-     * El trainer service.
+     * El user service.
      */
     @Autowired
     private UserService userService;
@@ -430,38 +430,6 @@ public class UserServiceTest {
         assertEquals(2, clients.size());
         assertTrue(clients.contains(client1));
         assertTrue(clients.contains(client2));
-
-    }
-
-    /**
-     * Test para obtener la información de un usuario a partir de su ID.
-     *
-     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
-     * email.
-     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
-     */
-    @Test
-    public void testGetUser() throws DuplicateInstanceException, InstanceNotFoundException {
-
-        Users trainer = createTrainer("trainer@trainer.com");
-
-        userService.signUp(trainer);
-
-        Users client = createClient("client@client.com");
-        client.setTrainer(trainer);
-        userService.signUp(client);
-
-        Users foundClient = userService.getUser(client.getId());
-
-        assertEquals(client.getId(), foundClient.getId());
-        assertEquals(client.getEmail(), foundClient.getEmail());
-        assertEquals(client.getFullName(), foundClient.getFullName());
-        assertEquals(client.getPhone(), foundClient.getPhone());
-        assertEquals(client.getBirthdate(), foundClient.getBirthdate());
-        assertEquals(client.getInjuries(), foundClient.getInjuries());
-        assertEquals(client.getGoals(), foundClient.getGoals());
-        assertEquals(client.getHeight(), foundClient.getHeight());
-        assertEquals(client.getTrainer(), foundClient.getTrainer());
 
     }
 
