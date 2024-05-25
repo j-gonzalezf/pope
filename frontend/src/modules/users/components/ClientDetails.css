@@ -12,7 +12,7 @@
 	display: 'flex';
 	flex-wrap: 'wrap';
 	justify-content: 'center';
-	font-family: 'Hey Comic';
+	font-family: 'Hey Comic'; /* No está en discartedFonts??? */
 }
 
 .listItemStyle {

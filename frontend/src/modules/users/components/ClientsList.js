@@ -30,7 +30,7 @@ const ClientsList = () => {
     };
 
     const redirectToClientDetails = (clientId) => {
-        navigate(`/templates/clientDetails/${clientId}`);
+        navigate(`/users/clientDetails/${clientId}`);
     };
 
     useEffect(() => {

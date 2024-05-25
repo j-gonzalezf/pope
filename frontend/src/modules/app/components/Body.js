@@ -2,8 +2,11 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 
-import users, { AddClient, ChangePassword, ClientsList, Login, Logout, SignUp, UpdateClient, UpdateProfile } from "../../users";
-import { ClientDetails } from "../../templates";
+import users, {
+  AddClient, ChangePassword, ClientDetails, ClientsList,
+  Login, Logout, SignUp, UpdateClient, UpdateProfile
+} from "../../users";
+import { } from "../../templates";
 import Home from "./Home";
 
 const Body = () => {
@@ -23,7 +26,7 @@ const Body = () => {
         {loggedIn && <Route path="/users/updateProfile" element={<UpdateProfile />} />}
         {loggedIn && <Route path="/users/changePassword" element={<ChangePassword />} />}
         {loggedIn && <Route path="/users/updateClient/:id" element={<UpdateClient />} />}
-        {loggedIn && <Route path="/templates/clientDetails/:clientId" element={<ClientDetails />} />}
+        {loggedIn && <Route path="/users/clientDetails/:clientId" element={<ClientDetails />} />}
         {/*<Route path="/notFound" element={<NotFoundPage />} />
         /<Route path="/*" element={<Navigate to="/users/addClient" />} />*/}
       </Routes>
