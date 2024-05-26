@@ -27,6 +27,10 @@ const ClientDetails = () => {
             errors => setError(errors)));
     }, [dispatch, clientId]);
 
+    const redirectToCyclesList = (clientId) => {
+        navigate('/templates/trainingCycles/' + clientId);
+    }
+
     const redirectToUpdateClient = (clientId) => {
         navigate('/users/updateClient/' + clientId);
     }
@@ -39,13 +43,13 @@ const ClientDetails = () => {
 
             <Row className="listStyle">
 
-                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle">
+                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle" onClick={() => redirectToCyclesList(clientId)}>
                     <div className="align-content-center">
                         <GiFishingNet size={60} />
                     </div>
                     <div>
                         <br />
-                        <h5><FormattedMessage id="project.templates.templates" /></h5>
+                        <h5><FormattedMessage id="project.users.templates" /></h5>
                     </div>
                 </Col>
                 <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle">
@@ -54,7 +58,7 @@ const ClientDetails = () => {
                     </div>
                     <div>
                         <br />
-                        <h5><FormattedMessage id="project.templates.tracking" /></h5>
+                        <h5><FormattedMessage id="project.users.tracking" /></h5>
                     </div>
                 </Col>
                 <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle" onClick={() => redirectToUpdateClient(clientId)}>
@@ -63,7 +67,7 @@ const ClientDetails = () => {
                     </div>
                     <div>
                         <br />
-                        <h5><FormattedMessage id="project.templates.clientDetails" /></h5>
+                        <h5><FormattedMessage id="project.users.clientDetails" /></h5>
                     </div>
                 </Col>
 

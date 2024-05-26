@@ -6,7 +6,7 @@ import users, {
   AddClient, ChangePassword, ClientDetails, ClientsList,
   Login, Logout, SignUp, UpdateClient, UpdateProfile
 } from "../../users";
-import { } from "../../templates";
+import { CyclesList } from "../../templates";
 import Home from "./Home";
 
 const Body = () => {
@@ -27,6 +27,7 @@ const Body = () => {
         {loggedIn && <Route path="/users/changePassword" element={<ChangePassword />} />}
         {loggedIn && <Route path="/users/updateClient/:id" element={<UpdateClient />} />}
         {loggedIn && <Route path="/users/clientDetails/:clientId" element={<ClientDetails />} />}
+        {loggedIn && <Route path="/templates/trainingCycles/:clientId" element={<CyclesList />} />}
         {/*<Route path="/notFound" element={<NotFoundPage />} />
         /<Route path="/*" element={<Navigate to="/users/addClient" />} />*/}
       </Routes>

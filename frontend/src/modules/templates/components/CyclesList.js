@@ -1,0 +1,185 @@
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+import Row from 'react-bootstrap/Row';
+import { BsFillPlusCircleFill } from "react-icons/bs";
+import './CyclesList.css';
+
+import { useState } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { Errors } from '../../common';
+import * as actions from '../actions';
+//import * as selectors from '../selectors';
+import * as userSelectors from '../../users/selectors';
+
+const CyclesList = () => {
+
+    const dispatch = useDispatch();
+    //const navigate = useNavigate();
+
+    const user = useSelector(userSelectors.getUser);
+    const { clientId } = useParams();
+
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState(null);
+    const [fromDate, setFromDate] = useState(null);
+    const [toDate, setToDate] = useState(null);
+    const [error, setError] = useState(null);
+    const [showAddCycleModal, setShowAddCycleModal] = useState(false);
+
+    let form;
+
+    const handleSubmit = event => {
+
+        event.preventDefault();
+
+        if (form.checkValidity()) {
+
+            dispatch(actions.createCycle(
+                {
+                    name: name.trim(),
+                    description: description,
+                    fromDate: fromDate,
+                    toDate: toDate,
+                    trainerId: user.id,
+                    clientId: clientId
+                },
+                () => {
+                    setShowAddCycleModal(false);
+                    setName('');
+                    setDescription(null);
+                    setFromDate(null);
+                    setToDate(null)
+                },
+                errors => setError(errors)
+            ));
+
+        } else {
+            setError(null);
+            form.classList.add('was-validated');
+        }
+    }
+
+    return (
+        <div fluid className='CyclesList'>
+
+            <Modal show={showAddCycleModal} onHide={() => setShowAddCycleModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        <FormattedMessage id="project.templates.addCycle.title" />
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form
+                        ref={node => form = node}
+                        className="needs-validation"
+                        noValidate
+                        onSubmit={e => handleSubmit(e)}
+                    >
+                        <Form.Group className="mb-3">
+
+                            <Form.Label>
+                                <FormattedMessage id="project.templates.cycleName" />
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Ingrese el nombre del ciclo de entrenamiento"
+                                value={name}
+                                onChange={e => setName(e.target.value)}
+                                required
+                                autoFocus
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                <FormattedMessage id="project.templates.cycleNameRequired" />
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <FormattedMessage id="project.templates.cycleDescription" />
+                            </Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                placeholder="Ingrese una descripción para el ciclo de entrenamiento"
+                                value={description}
+                                onChange={e => setDescription(e.target.value)}
+                            />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <FormattedMessage id="project.templates.cycleFromDate" />
+                            </Form.Label>
+                            <Form.Control
+                                type="date"
+                                value={fromDate}
+                                onChange={e => setFromDate(e.target.value)}
+                                required
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                <FormattedMessage id="project.templates.cycleFromDateRequired" />
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <FormattedMessage id="project.templates.cycleToDate" />
+                            </Form.Label>
+                            <Form.Control
+                                type="date"
+                                value={toDate}
+                                onChange={e => setToDate(e.target.value)}
+                                required
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                <FormattedMessage id="project.templates.cycleToDateRequired" />
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                    </Form>
+
+                    <Errors errors={error} onClose={() => setError(null)} />
+
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowAddCycleModal(false)}>
+                        <FormattedMessage id="project.global.button.cancel" />
+                    </Button>
+                    <Button variant="primary" onClick={handleSubmit}>
+                        <FormattedMessage id="project.templates.addCycle.button" />
+                    </Button>
+                </Modal.Footer>
+
+            </Modal>
+
+            <Row className="listStyle">
+
+                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle" onClick={() => setShowAddCycleModal(true)}>
+                    <Card className='text-center' >
+                        <BsFillPlusCircleFill className='plus' size={50} color='grey' />
+                        <Card.Body>
+                            <Card.Title className='text-center'>
+                                <b><FormattedMessage id="project.templates.addCycle" /></b>
+                            </Card.Title>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+            </Row>
+
+            <Errors errors={error} onClose={() => setError(null)} />
+
+        </div>
+
+    );
+
+}
+
+export default CyclesList;

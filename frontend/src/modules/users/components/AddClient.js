@@ -100,7 +100,7 @@ const AddClient = () => {
             <Card className="card bg-light border-dark">
 
                 <Card.Header as="h3" className="card-header">
-                    <FormattedMessage id="project.users.addClientAccount" />
+                    <FormattedMessage id="project.users.addClient.title" />
                 </Card.Header>
 
                 <Card.Body className="card-body">

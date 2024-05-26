@@ -37,7 +37,7 @@ export default {
     'project.users.signUp': 'Crear cuenta de entrenador',
     'project.users.signUp.button': 'Registrarse',
     'project.users.signUp.question': "¿No está registrado?",
-    'project.users.addClientAccount': 'Crear cuenta de cliente',
+    'project.users.addClient.title': 'Crear cuenta de cliente',
     'project.users.addClient.button': 'Añadir',
     'project.users.addClient': 'Añadir cliente',
     'project.users.viewProfile': 'Ver perfil',
@@ -62,10 +62,21 @@ export default {
     'project.users.newPassword': 'Contraseña nueva',
     'project.users.newPasswordRequired': 'La contraseña nueva es obligatoria',
     'project.users.confirmNewPassword': 'Confirmar contraseña nueva',
+    'project.users.templates': 'Plantillas',
+    'project.users.tracking': 'Seguimiento',
+    'project.users.clientDetails': 'Datos del cliente',
 
-    'project.templates.templates': 'Plantillas',
-    'project.templates.tracking': 'Seguimiento',
-    'project.templates.clientDetails': 'Datos del cliente',
+    'project.templates.cycleName': 'Nombre del ciclo',
+    'project.templates.cycleNameRequired': 'El nombre del ciclo es obligatorio',
+    'project.templates.cycleDescription': 'Descripción del ciclo',
+    'project.templates.cycleFromDate': 'Fecha de inicio',
+    'project.templates.cycleFromDateRequired': 'La fecha inicial es obligatoria',
+    'project.templates.cycleToDate': 'Fecha de fin',
+    'project.templates.cycleToDateRequired': 'La fecha final es obligatoria',
+
+    'project.templates.addCycle.title': 'Crear ciclo de entrenamiento',
+    'project.templates.addCycle.button': 'Crear',
+    'project.templates.addCycle': 'Crear ciclo',
 
     'project.global.button.cancel': 'Cancelar',
 
