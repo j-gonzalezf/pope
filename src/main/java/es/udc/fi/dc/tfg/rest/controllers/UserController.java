@@ -397,7 +397,7 @@ public class UserController {
      * @throws InstanceNotFoundException si no se encuentra ningún cliente
      */
     @GetMapping("/{id}/clients")
-    public List<UserDto> getClients(@RequestAttribute Long userId, @PathVariable Long id)
+    public List<UserDto> getClients(@RequestAttribute Long userId, @PathVariable("id") Long id)
             throws PermissionException, InstanceNotFoundException {
 
         validateForTrainer(userId, id);

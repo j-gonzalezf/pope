@@ -26,6 +26,8 @@ import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.TrainingCycleDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Clase TrainingCycleControllerTest.
@@ -144,7 +146,6 @@ public class TrainingCycleControllerTest {
     public void testCreateTrainingCycle() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
-
         UserDto clientDto = authClient.getUserDto();
 
         TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
@@ -154,6 +155,23 @@ public class TrainingCycleControllerTest {
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
                 .andExpect(status().isCreated()).andReturn();
+
+    }
+    
+    /**
+     * Test para obtener los ciclos del clientes de un entrenador.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTrainingCycles() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        mockMvc.perform(get("/api/templates/" + trainerDto.getId() + "/clients/" + clientDto.getId() + "/cycles")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
 
     }
 

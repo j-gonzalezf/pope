@@ -1,12 +1,16 @@
 package es.udc.fi.dc.tfg.rest.controllers;
 
 import static es.udc.fi.dc.tfg.rest.dtos.TrainingCycleConversor.toTrainingCycleDto;
+import static es.udc.fi.dc.tfg.rest.dtos.TrainingCycleConversor.toTrainingCyclesDto;
 import static es.udc.fi.dc.tfg.rest.dtos.TrainingCycleConversor.toTrainingCycles;
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,21 +43,27 @@ public class TrainingCycleController {
     private void validateUser(Long userId, Users trainer, Users client)
             throws PermissionException {
 
-        // Comprobamos si el usuario que realiza la petición es el entrenador
-        // del ciclo que se va a crear
-        if (!trainer.getId().equals(userId)) {
-            throw new PermissionException();
-        }
+        try {
+            
+            // Comprobamos si el usuario que realiza la petición es el entrenador
+            // del ciclo que se va a crear
+            if (!trainer.getId().equals(userId)) {
+                throw new PermissionException();
+            }
 
-        // Comprobamos si el usuario que realiza la petición es el entrenador
-        // del cliente asignado al ciclo que se va a crear
-        if (!client.getTrainer().getId().equals(userId)) {
+            // Comprobamos si el usuario que realiza la petición es el entrenador
+            // del cliente asignado al ciclo que se va a crear
+            if (!client.getTrainer().getId().equals(userId)) {
+                throw new PermissionException();
+            }
+
+            // Por la propiedad transitiva de la igualdad omitimos comprobar
+            // que el entrenador del ciclo que se va a crear es el entrenador del 
+            // cliente asignado al ciclo que se va a crear
+            
+        } catch (NullPointerException e) {
             throw new PermissionException();
         }
-        
-        // Por la propiedad transitiva de la igualdad omitimos comprobar
-        // que el entrenador del ciclo que se va a crear es el entrenador del 
-        // cliente asignado al ciclo que se va a crear
 
     }
 
@@ -66,13 +76,13 @@ public class TrainingCycleController {
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado
      * @throws PermissionException si el ID del usuario que realiza la petición
-     * no coincide con el ID del usuario al que se le va a actualizar el perfil
+     * no coincide con el ID del entrenador que crea el ciclo
      */
     @PostMapping("/cycle/create")
     public ResponseEntity<TrainingCycleDto> createTrainingCycle(@RequestAttribute Long userId,
             @Validated({TrainingCycleDto.AllValidations.class}) @RequestBody TrainingCycleDto cycleDto)
             throws InstanceNotFoundException, PermissionException {
-        
+
         Users trainer = userService.loginFromId(cycleDto.getTrainerId());
         Users client = userService.loginFromId(cycleDto.getClientId());
 
@@ -86,6 +96,34 @@ public class TrainingCycleController {
                 .buildAndExpand(cycle.getId()).toUri();
 
         return ResponseEntity.created(location).body(toTrainingCycleDto(cycle));
+
+    }
+
+    /**
+     * Devuelve la lista de ciclos de entrenamiento del cliente de un
+     * entrenador.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param trainerId el ID del entrenador
+     * @param clientId el ID del cliente
+     * @return una lista de ciclos
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente
+     */
+    @GetMapping("/{trainerId}/clients/{clientId}/cycles")
+    public List<TrainingCycleDto> getTrainingCycles(@RequestAttribute Long userId,
+            @PathVariable("trainerId") Long trainerId, @PathVariable("clientId") Long clientId)
+            throws PermissionException, InstanceNotFoundException {
+
+        Users trainer = userService.loginFromId(trainerId);
+        Users client = userService.loginFromId(clientId);
+
+        validateUser(userId, trainer, client);
+
+        List<TrainingCycles> cycles = cycleService.getCycles(trainerId, clientId);
+
+        return toTrainingCyclesDto(cycles);
 
     }
 

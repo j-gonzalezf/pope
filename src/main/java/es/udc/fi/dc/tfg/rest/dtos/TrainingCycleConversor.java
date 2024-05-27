@@ -3,6 +3,8 @@ package es.udc.fi.dc.tfg.rest.dtos;
 import es.udc.fi.dc.tfg.model.entities.TrainingCycles;
 import es.udc.fi.dc.tfg.model.entities.Users;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Clase TrainingCycleConversor.
@@ -27,6 +29,19 @@ public class TrainingCycleConversor {
                 cycle.getDescription(), cycle.getFromDate().toString(),
                 cycle.getToDate().toString(), cycle.getTrainer().getId(),
                 cycle.getClient().getId());
+    }
+
+    /**
+     * Convierte una lista de objetos TrainingCycles a objetos TrainingCycleDto.
+     *
+     * @param cycles la lista de objetos TrainingCycles a convertir
+     * @return una nueva lista de objetos TrainingCycleDto que contiene los
+     * mismos datos que la lista de objetos TrainingCycles proporcionada
+     */
+    public static final List<TrainingCycleDto> toTrainingCyclesDto(List<TrainingCycles> cycles) {
+        return cycles.stream().map(cycle -> {
+            return toTrainingCycleDto(cycle);
+        }).collect(Collectors.toList());
     }
 
     /**
