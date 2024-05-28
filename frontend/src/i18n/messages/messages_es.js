@@ -74,7 +74,7 @@ export default {
     'project.templates.cycleToDate': 'Fecha de fin',
     'project.templates.cycleToDateRequired': 'La fecha final es obligatoria',
 
-    'project.templates.addCycle.title': 'Crear ciclo de entrenamiento',
+    'project.templates.addCycle.title': 'Nuevo ciclo de entrenamiento',
     'project.templates.addCycle.button': 'Crear',
     'project.templates.addCycle': 'Crear ciclo',
 

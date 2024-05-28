@@ -7,3 +7,11 @@ export const createCycle = (cycle, onSuccess, onErrors) =>
         onSuccess,
         onErrors
     );
+
+export const getCycles = (trainerId, clientId, onSuccess, onErrors) =>
+    appFetch(
+        `/templates/${trainerId}/clients/${clientId}/cycles`,
+        fetchConfig("GET"),
+        onSuccess,
+        onErrors
+    );

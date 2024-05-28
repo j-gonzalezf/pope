@@ -7,14 +7,14 @@ import Row from 'react-bootstrap/Row';
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import './CyclesList.css';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Errors } from '../../common';
 import * as actions from '../actions';
-//import * as selectors from '../selectors';
+import * as selectors from '../selectors';
 import * as userSelectors from '../../users/selectors';
 
 const CyclesList = () => {
@@ -24,6 +24,7 @@ const CyclesList = () => {
 
     const user = useSelector(userSelectors.getUser);
     const { clientId } = useParams();
+    const getCycles = useSelector(selectors.getCycles);
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState(null);
@@ -33,6 +34,17 @@ const CyclesList = () => {
     const [showAddCycleModal, setShowAddCycleModal] = useState(false);
 
     let form;
+
+    function dateFormat(date) {
+        let d = new Date(date);
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        let year = d.getFullYear().toString().slice(-2);
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [day, month, year].join('/');
+    }
 
     const handleSubmit = event => {
 
@@ -55,6 +67,9 @@ const CyclesList = () => {
                     setDescription(null);
                     setFromDate(null);
                     setToDate(null)
+                    dispatch(actions.getCycles(user.id, clientId,
+                        () => { },
+                        errors => setError(errors)));
                 },
                 errors => setError(errors)
             ));
@@ -65,12 +80,20 @@ const CyclesList = () => {
         }
     }
 
+    useEffect(() => {
+
+        dispatch(actions.getCycles(user.id, clientId,
+            () => { },
+            errors => setError(errors)));
+
+    }, [dispatch, user.id, clientId]);
+
     return (
         <div fluid className='CyclesList'>
 
-            <Modal show={showAddCycleModal} onHide={() => setShowAddCycleModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>
+            <Modal show={showAddCycleModal} onHide={() => setShowAddCycleModal(false)} className='modal'>
+                <Modal.Header className='modal-header'>
+                    <Modal.Title as="h3">
                         <FormattedMessage id="project.templates.addCycle.title" />
                     </Modal.Title>
                 </Modal.Header>
@@ -148,7 +171,7 @@ const CyclesList = () => {
 
                 </Modal.Body>
 
-                <Modal.Footer>
+                <Modal.Footer className='modal-footer'>
                     <Button variant="secondary" onClick={() => setShowAddCycleModal(false)}>
                         <FormattedMessage id="project.global.button.cancel" />
                     </Button>
@@ -161,8 +184,30 @@ const CyclesList = () => {
 
             <Row className="listStyle">
 
+                {getCycles && (getCycles.map((cycle) => (
+
+                    <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle"
+                        key={cycle.id}>
+
+                        <Card className='text-center'>
+                            <Card.Body>
+                                <Card.Title className='text-center'>
+                                    <b>{cycle.name}</b>
+                                </Card.Title>
+                                <Card.Text className='description'>
+                                    {cycle.description}
+                                </Card.Text>
+                                <Card.Text>
+                                    <b>{dateFormat(cycle.fromDate)} - {dateFormat(cycle.toDate)}</b>
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
+
+                    </Col>
+                )))}
+
                 <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle" onClick={() => setShowAddCycleModal(true)}>
-                    <Card className='text-center' >
+                    <Card className='text-center'>
                         <BsFillPlusCircleFill className='plus' size={50} color='grey' />
                         <Card.Body>
                             <Card.Title className='text-center'>
