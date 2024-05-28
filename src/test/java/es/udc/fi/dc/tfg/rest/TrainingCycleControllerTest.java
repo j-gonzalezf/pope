@@ -139,12 +139,12 @@ public class TrainingCycleControllerTest {
     }
 
     /**
-     * Test para crear un ciclo de entrenamiento.
+     * Test para crear un ciclo de entrenamiento y obtenerlo a partir de su ID.
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testCreateTrainingCycle() throws Exception {
+    public void testCreateTrainingCycleAndGetCycle() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
@@ -152,10 +152,17 @@ public class TrainingCycleControllerTest {
         TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
                 "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
 
-        mockMvc.perform(post("/api/templates/cycle/create")
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
                 .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        mockMvc.perform(get("/api/templates/cycle/" + createdCycle.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
 
     }
 

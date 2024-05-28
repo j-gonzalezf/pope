@@ -53,13 +53,15 @@ public class TrainingCycleServiceTest {
     }
 
     /**
-     * Test para crear ciclos de entrenamiento.
+     * Test para crear ciclos de entrenamiento y obtenerlo a partir de su ID.
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
      */
     @Test
-    public void testCreateCycle() throws DuplicateInstanceException {
+    public void testCreateCycleAndGetCycleInfo()
+            throws DuplicateInstanceException, InstanceNotFoundException {
 
         TrainingCycles cycle = createCycle();
         Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
@@ -73,6 +75,16 @@ public class TrainingCycleServiceTest {
         cycle.setClient(client);
 
         cycleService.createCycle(cycle);
+
+        TrainingCycles getCycle = cycleService.getCycleInfo(cycle.getId());
+
+        assertEquals(cycle.getId(), getCycle.getId());
+        assertEquals(cycle.getName(), getCycle.getName());
+        assertEquals(cycle.getDescription(), getCycle.getDescription());
+        assertEquals(cycle.getFromDate(), getCycle.getFromDate());
+        assertEquals(cycle.getToDate(), getCycle.getToDate());
+        assertEquals(cycle.getTrainer(), getCycle.getTrainer());
+        assertEquals(cycle.getClient(), getCycle.getClient());
 
     }
 

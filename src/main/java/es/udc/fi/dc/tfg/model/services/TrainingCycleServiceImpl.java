@@ -82,5 +82,26 @@ public class TrainingCycleServiceImpl implements TrainingCycleService {
         return cycles;
 
     }
+    
+    /**
+     * Devuelve un ciclo a partir de su ID.
+     * 
+     * @param cycleId El ID del ciclo.
+     * @return El objeto TrainingCycles que representa el ciclo solicitado.
+     * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
+     */
+    @Override
+    public TrainingCycles getCycleInfo(Long cycleId) throws InstanceNotFoundException {
+        
+        Optional<TrainingCycles> Ocycle = cycleDao.findById(cycleId);
+
+        if (!Ocycle.isPresent()) {
+            throw new InstanceNotFoundException("project.entities.trainingCycles", cycleId);
+        }
+        
+        TrainingCycles cycle = Ocycle.get();
+        
+        return cycle;
+    }
 
 }

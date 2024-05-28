@@ -41,5 +41,14 @@ public interface TrainingCycleService {
      */
     List<TrainingCycles> getCycles(Long trainerId, Long clientId) 
             throws InstanceNotFoundException;
+    
+    /**
+     * Devuelve un ciclo a partir de su ID.
+     * 
+     * @param cycleId El ID del ciclo.
+     * @return El objeto TrainingCycles que representa el ciclo solicitado.
+     * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
+     */
+    public TrainingCycles getCycleInfo(Long cycleId) throws InstanceNotFoundException;
 
 }

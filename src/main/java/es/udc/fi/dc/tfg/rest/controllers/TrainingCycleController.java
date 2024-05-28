@@ -156,4 +156,30 @@ public class TrainingCycleController {
 
     }
 
+    /**
+     * Devuelve el ciclo de un entrenador a partir de su ID.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param cycleId el ID del ciclo
+     * @return un ciclo
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el trainer ID del ciclo que se solicita
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
+     */
+    @GetMapping("/cycle/{id}")
+    public TrainingCycleDto getClientInfo(@RequestAttribute Long userId,
+            @PathVariable("id") Long cycleId)throws PermissionException, 
+            InstanceNotFoundException {
+
+        Users trainer = userService.loginFromId(userId);
+        TrainingCycles cycle = cycleService.getCycleInfo(cycleId);
+
+        if (!trainer.getId().equals(cycle.getTrainer().getId())) {
+                throw new PermissionException();
+            }
+
+        return toTrainingCycleDto(cycle);
+
+    }
+
 }
