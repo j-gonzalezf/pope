@@ -2,6 +2,7 @@ package es.udc.fi.dc.tfg.model.services;
 
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.TrainingCycles;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -15,6 +16,20 @@ public interface TrainingCycleService {
      * @param cycle El objeto TrainingCycles que representa el ciclo a crear.
      */
     void createCycle(TrainingCycles cycle);
+    
+    /**
+     * Edita un ciclo de entrenamiento.
+     * 
+     * @param id El ID del ciclo.
+     * @param name El nombre del ciclo.
+     * @param description La descripción del ciclo.
+     * @param fromDate La fecha de inicio del ciclo.
+     * @param toDate La fecha de fin del ciclo.
+     * @return El objeto TrainingCycles que representa el ciclo actualizado.
+     * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
+     */
+    TrainingCycles updateCycle(Long id, String name, String description,
+            LocalDate fromDate, LocalDate toDate) throws InstanceNotFoundException;
     
     /**
      * Devuelve una lista con los ciclos del cliente de un entrenador.

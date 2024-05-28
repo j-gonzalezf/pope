@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import es.udc.fi.dc.tfg.model.services.TrainingCycleService;
 import es.udc.fi.dc.tfg.model.services.UserService;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 import es.udc.fi.dc.tfg.rest.dtos.TrainingCycleDto;
+import java.time.LocalDate;
 
 /**
  * Clase TrainingCycleController.
@@ -44,7 +46,7 @@ public class TrainingCycleController {
             throws PermissionException {
 
         try {
-            
+
             // Comprobamos si el usuario que realiza la petición es el entrenador
             // del ciclo que se va a crear
             if (!trainer.getId().equals(userId)) {
@@ -60,7 +62,6 @@ public class TrainingCycleController {
             // Por la propiedad transitiva de la igualdad omitimos comprobar
             // que el entrenador del ciclo que se va a crear es el entrenador del 
             // cliente asignado al ciclo que se va a crear
-            
         } catch (NullPointerException e) {
             throw new PermissionException();
         }
@@ -96,6 +97,34 @@ public class TrainingCycleController {
                 .buildAndExpand(cycle.getId()).toUri();
 
         return ResponseEntity.created(location).body(toTrainingCycleDto(cycle));
+
+    }
+
+    /**
+     * Editar ciclo.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID del ciclo que se va a editar
+     * @param cycleDto el training cycle dto
+     * @return el user dto
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del usuario al que se le va a actualizar el perfil
+     */
+    @PutMapping("/{id}")
+    public TrainingCycleDto updateTrainingCycle(@RequestAttribute Long userId, @PathVariable("id") Long id,
+            @Validated({TrainingCycleDto.UpdateValidations.class}) @RequestBody TrainingCycleDto cycleDto)
+            throws InstanceNotFoundException, PermissionException {
+
+        Users trainer = userService.loginFromId(cycleDto.getTrainerId());
+        Users client = userService.loginFromId(cycleDto.getClientId());
+
+        validateUser(userId, trainer, client);
+
+        return toTrainingCycleDto(cycleService.updateCycle(id, cycleDto.getName(),
+                cycleDto.getDescription(), LocalDate.parse(cycleDto.getFromDate()),
+                LocalDate.parse(cycleDto.getToDate())));
 
     }
 

@@ -183,7 +183,7 @@ public class UserController {
 
     // Método común para registrar un usuario
     private Users createUser(UserDto userDto)
-            throws DuplicateInstanceException, IllegalArgumentException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException {
 
         Users trainer = null;
 
@@ -212,7 +212,7 @@ public class UserController {
     @PostMapping("/signUp")
     public ResponseEntity<AuthenticatedUserDto> signUp(
             @Validated({UserDto.AllValidations.class}) @RequestBody UserDto userDto)
-            throws DuplicateInstanceException, IllegalArgumentException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException {
 
         Users user = createUser(userDto);
 

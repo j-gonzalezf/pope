@@ -390,7 +390,7 @@ public class UserControllerTest {
 
         UserDto userDto = authTrainer.getUserDto();
 
-        mockMvc.perform(put("/api/users/" + userDto.getId(), userDto.getId())
+        mockMvc.perform(put("/api/users/" + userDto.getId())
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(userDto))
                 .header("userId", userDto.getId().toString()))

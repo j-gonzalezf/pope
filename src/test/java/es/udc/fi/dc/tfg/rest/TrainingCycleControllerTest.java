@@ -1,6 +1,8 @@
 package es.udc.fi.dc.tfg.rest;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,8 +29,6 @@ import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.TrainingCycleDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Clase TrainingCycleControllerTest.
@@ -157,7 +158,37 @@ public class TrainingCycleControllerTest {
                 .andExpect(status().isCreated()).andReturn();
 
     }
-    
+
+    /**
+     * Test para editar un ciclo de entrenamiento.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateTrainingCycle() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto newCycleDto = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        mockMvc.perform(put("/api/templates/" + newCycleDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newCycleDto))
+                .header("userId", trainerDto.getId().toString()))
+                .andExpect(status().isOk());
+
+    }
+
     /**
      * Test para obtener los ciclos del clientes de un entrenador.
      *

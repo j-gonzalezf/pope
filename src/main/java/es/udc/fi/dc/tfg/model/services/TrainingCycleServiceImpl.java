@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.TrainingCycleDao;
 import es.udc.fi.dc.tfg.model.entities.TrainingCycles;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Clase TrainingCycleServiceImpl.
@@ -30,6 +32,38 @@ public class TrainingCycleServiceImpl implements TrainingCycleService {
     @Override
     public void createCycle(TrainingCycles cycle) {
         cycleDao.save(cycle);
+    }
+
+    /**
+     * Edita un ciclo de entrenamiento.
+     *
+     * @param id El ID del ciclo.
+     * @param name El nombre del ciclo.
+     * @param description La descripción del ciclo.
+     * @param fromDate La fecha de inicio del ciclo.
+     * @param toDate La fecha de fin del ciclo.
+     * @return El objeto TrainingCycles que representa el ciclo actualizado.
+     * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
+     */
+    @Override
+    public TrainingCycles updateCycle(Long id, String name, String description,
+            LocalDate fromDate, LocalDate toDate) throws InstanceNotFoundException {
+
+        Optional<TrainingCycles> Ocycle = cycleDao.findById(id);
+
+        if (!Ocycle.isPresent()) {
+            throw new InstanceNotFoundException("project.entities.trainingCycles", id);
+        }
+
+        TrainingCycles cycle = Ocycle.get();
+
+        cycle.setName(name);
+        cycle.setDescription(description);
+        cycle.setFromDate(fromDate);
+        cycle.setToDate(toDate);
+
+        return cycle;
+
     }
 
     /**

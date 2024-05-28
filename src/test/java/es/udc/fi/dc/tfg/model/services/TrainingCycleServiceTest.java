@@ -54,19 +54,58 @@ public class TrainingCycleServiceTest {
 
     /**
      * Test para crear ciclos de entrenamiento.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
      */
     @Test
-    public void testCreateCycle() {
+    public void testCreateCycle() throws DuplicateInstanceException {
 
         TrainingCycles cycle = createCycle();
         Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
         Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
                 LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
 
+        userService.signUp(trainer);
+        userService.signUp(client);
+
         cycle.setTrainer(trainer);
         cycle.setClient(client);
 
         cycleService.createCycle(cycle);
+
+    }
+
+    /**
+     * Test para editar ciclos de entrenamiento.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
+     */
+    @Test
+    public void testUpdateCycle() throws DuplicateInstanceException, InstanceNotFoundException {
+
+        TrainingCycles cycle = createCycle();
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+        Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
+                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
+
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        cycle.setTrainer(trainer);
+        cycle.setClient(client);
+        cycleService.createCycle(cycle);
+
+        TrainingCycles updatedCycle = cycleService.updateCycle(cycle.getId(),
+                "new Name", "new Description", LocalDate.of(2001, 1, 1),
+                LocalDate.of(2002, 1, 1));
+
+        assertEquals("new Name", updatedCycle.getName());
+        assertEquals("new Description", updatedCycle.getDescription());
+        assertEquals(LocalDate.of(2001, 1, 1), updatedCycle.getFromDate());
+        assertEquals(LocalDate.of(2002, 1, 1), updatedCycle.getToDate());
 
     }
 
