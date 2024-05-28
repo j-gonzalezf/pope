@@ -77,6 +77,8 @@ export default {
     'project.templates.addCycle.title': 'Novo ciclo de adestramento',
     'project.templates.addCycle.button': 'Crear',
     'project.templates.addCycle': 'Crear ciclo',
+    'project.templates.updateCycle': 'Editar',
+    'project.templates.updateCycle.title': 'Actualizar ciclo de adestramento',
 
     'project.global.button.cancel': 'Cancelar',
 

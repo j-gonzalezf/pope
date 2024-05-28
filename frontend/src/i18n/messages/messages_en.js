@@ -77,6 +77,8 @@ export default {
     'project.templates.addCycle.title': 'New training cycle',
     'project.templates.addCycle.button': 'Add',
     'project.templates.addCycle': 'Add training cycle',
+    'project.templates.updateCycle': 'Update',
+    'project.templates.updateCycle.title': 'Update training cycle',
 
     'project.global.button.cancel': 'Cancel',
 

@@ -3,7 +3,8 @@ import { combineReducers } from 'redux';
 import * as actionTypes from './actionTypes';
 
 const initialState = {
-    getCycles: [{}]
+    getCycles: [{}],
+    getCycle: {}
 }
 
 const getCycles = (state = initialState.getCycles, action) => {
@@ -20,8 +21,26 @@ const getCycles = (state = initialState.getCycles, action) => {
 
 }
 
+const getCycle = (state = initialState.getCycle, action) => {
+
+    switch (action.type) {
+
+        case actionTypes.GET_CYCLE_COMPLETED:
+            return action.getCycle;
+
+        case actionTypes.UPDATE_CYCLE_COMPLETED:
+            return action.getCycle;
+
+        default:
+            return state;
+
+    }
+
+}
+
 const reducer = combineReducers({
-    getCycles
+    getCycles,
+    getCycle
 });
 
 export default reducer;

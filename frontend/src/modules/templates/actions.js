@@ -14,6 +14,20 @@ export const createCycle = (cycle, onSuccess, onErrors) => dispatch =>
         onErrors
     );
 
+const updateCycleCompleted = getCycle => ({
+    type: actionTypes.UPDATE_CYCLE_COMPLETED,
+    getCycle
+});
+
+export const updateCycle = (cycle, onSuccess, onErrors) => dispatch =>
+    backend.templateService.updateCycle(cycle,
+        cycle => {
+            dispatch(updateCycleCompleted(cycle));
+            onSuccess();
+        },
+        onErrors
+    );
+
 const getCyclesCompleted = getCycles => ({
     type: actionTypes.GET_CYCLES_COMPLETED,
     getCycles
@@ -23,6 +37,20 @@ export const getCycles = (trainerId, clientId, onSuccess, onErrors) => dispatch 
     backend.templateService.getCycles(trainerId, clientId,
         getCycles => {
             dispatch(getCyclesCompleted(getCycles));
+            onSuccess();
+        },
+        onErrors
+    );
+
+const getCycleCompleted = getCycle => ({
+    type: actionTypes.GET_CYCLE_COMPLETED,
+    getCycle
+});
+
+export const getCycle = (id, onSuccess, onErrors) => dispatch =>
+    backend.templateService.getCycle(id,
+        getCycle => {
+            dispatch(getCycleCompleted(getCycle));
             onSuccess();
         },
         onErrors

@@ -16,9 +16,11 @@
 }
 
 .listItemStyle {
+    position: relative;
     width: 12rem;
     background-color: #f0f0f0;
     padding: 20px;
+    padding-bottom: 5px;
     border: 1px;
     border-radius: 10px;
     border-color: grey;
@@ -51,6 +53,16 @@
 
 .plus {
     padding-top: 5%;
+}
+
+.edit {
+    position: absolute;
+    bottom: 5%;
+}
+
+.editIcon {
+    margin-right: 5px;
+    margin-top: 5%;
 }
 
 .text-center.card-title {
