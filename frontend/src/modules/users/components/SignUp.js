@@ -89,6 +89,7 @@ const SignUp = () => {
         } else {
             setError(null);
             form.classList.add('was-validated');
+            window.scrollTo(0, 0);
         }
     }
 
@@ -104,7 +105,7 @@ const SignUp = () => {
 
         <div fluid className="SignUp">
 
-            <Card className="card bg-light border-dark">
+            <Card className="card signUp">
 
                 <Card.Header as="h3" className="card-header">
                     <FormattedMessage id="project.users.signUp" />
@@ -120,6 +121,7 @@ const SignUp = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="fullName" htmlFor="fullName" className="mb-3">
                                 <FormattedMessage id="project.users.fullName" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="text"
@@ -139,6 +141,7 @@ const SignUp = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="email" htmlFor="email" className="mb-3">
                                 <FormattedMessage id="project.users.email" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="email"
@@ -157,6 +160,7 @@ const SignUp = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="password" htmlFor="password" className="mb-3">
                                 <FormattedMessage id="project.users.password" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="password"
@@ -175,6 +179,7 @@ const SignUp = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="confirmPassword" htmlFor="confirmPassword" className="mb-3">
                                 <FormattedMessage id="project.users.confirmPassword" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 ref={node => confirmPasswordInput = node}
@@ -243,6 +248,9 @@ const SignUp = () => {
                                 value={socialLinks}
                                 onChange={e => setSocialLinks(e.target.value)}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                <FormattedMessage id="project.users.socialLinksPattern" />
+                            </Form.Control.Feedback>
                         </Form.Group>
 
                         <Errors errors={error} onClose={() => setError(null)} />

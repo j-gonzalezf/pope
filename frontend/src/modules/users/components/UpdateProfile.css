@@ -1,0 +1,55 @@
+.UpdateProfile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 5%;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.card.updateProfile {
+    width: 45%;
+    margin: 0;
+    margin-top: 4%;
+    margin-bottom: 7%;
+    border: none;
+    background-color: #191716;
+}
+
+.card-footer {
+    margin-top: 5%;
+    border-top: 2px solid;
+    border-color: white;
+    padding-top: 5%;
+}
+
+.modal-header.deleteProfile {
+    justify-content: start;
+    color: red;
+}
+
+.nav-link.updateProfile {
+    background-color: #e6af2e;
+    color: #191716;
+    font-weight: bold;
+}
+
+.bg-danger.nav-link.deleteProfile {
+    color: #191716;
+    font-weight: bold;
+}
+
+.nav-link.updateProfile:hover,
+.bg-danger.nav-link.deleteProfile:hover {
+    color: white;
+}
+
+.nav-link.updateProfile.active {
+    background-color: #e6af2e;
+    color: #191716;
+    font-weight: bold;
+}

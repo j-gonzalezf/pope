@@ -17,7 +17,7 @@ public interface TrainingCycleDao extends JpaRepository<TrainingCycles, Long> {
      * @param clientId El ID del cliente.
      * @return La lista de objetos TrainingCycles que representa los ciclos.
      */
-    @Query("SELECT tc FROM TrainingCycles tc WHERE tc.trainer.id = :trainerId AND tc.client.id = :clientId")
+    @Query("SELECT tc FROM TrainingCycles tc WHERE tc.trainer.id = :trainerId AND tc.client.id = :clientId ORDER BY tc.fromDate DESC")
     List<TrainingCycles> findCycles(@Param("trainerId") Long trainerId, @Param("clientId") Long clientId);
 
 }

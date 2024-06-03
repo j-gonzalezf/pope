@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import { BsXLg } from "react-icons/bs";
-import './SignUp.css';
+import './AddClient.css';
 
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -90,14 +90,15 @@ const AddClient = () => {
         } else {
             setError(null);
             form.classList.add('was-validated');
+            window.scrollTo(0, 0);
         }
     }
 
     return (
 
-        <div fluid className="SignUp">
+        <div fluid className="AddClient">
 
-            <Card className="card bg-light border-dark">
+            <Card className="card addClient">
 
                 <Card.Header as="h3" className="card-header">
                     <FormattedMessage id="project.users.addClient.title" />
@@ -113,6 +114,7 @@ const AddClient = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="fullName" htmlFor="fullName" className="mb-3">
                                 <FormattedMessage id="project.users.fullName" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="text"
@@ -132,6 +134,7 @@ const AddClient = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="email" htmlFor="email" className="mb-3">
                                 <FormattedMessage id="project.users.email" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="email"
@@ -150,6 +153,7 @@ const AddClient = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="password" htmlFor="password" className="mb-3">
                                 <FormattedMessage id="project.users.passwordClient" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="password"

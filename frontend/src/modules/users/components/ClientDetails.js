@@ -41,34 +41,31 @@ const ClientDetails = () => {
 
             <Errors errors={error} onClose={() => setError(null)} />
 
-            <Row className="listStyle">
+            <Row className="listStyle clientDetails">
 
-                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle" onClick={() => redirectToCyclesList(clientId)}>
+                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle clientDetails" onClick={() => redirectToCyclesList(clientId)}>
                     <div className="align-content-center">
-                        <GiFishingNet size={60} />
+                        <GiFishingNet className='plusIconStyle' size={60} color='#e6af2e' alt="Fishing Net Icon" />
                     </div>
-                    <div>
-                        <br />
-                        <h5><FormattedMessage id="project.users.templates" /></h5>
-                    </div>
+                    <span className='clientDetailsText'>
+                        <b><FormattedMessage id="project.users.templates" /></b>
+                    </span>
                 </Col>
-                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle">
+                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle clientDetails">
                     <div>
-                        <LiaDharmachakraSolid size={60} />
+                        <LiaDharmachakraSolid className='plusIconStyle' size={60} color='#e6af2e' alt="Dharmachakra Icon" />
                     </div>
-                    <div>
-                        <br />
-                        <h5><FormattedMessage id="project.users.tracking" /></h5>
-                    </div>
+                    <span className='clientDetailsText'>
+                        <b><FormattedMessage id="project.users.tracking" /></b>
+                    </span>
                 </Col>
-                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle" onClick={() => redirectToUpdateClient(clientId)}>
+                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle clientDetails" onClick={() => redirectToUpdateClient(clientId)}>
                     <div>
-                        <GiCannedFish size={60} />
+                        <GiCannedFish className='plusIconStyle' size={60} color='#e6af2e' alt="Canned Fish Icon" />
                     </div>
-                    <div>
-                        <br />
-                        <h5><FormattedMessage id="project.users.clientDetails" /></h5>
-                    </div>
+                    <span className='clientDetailsText'>
+                        <b><FormattedMessage id="project.users.clientDetails" /></b>
+                    </span>
                 </Col>
 
             </Row>

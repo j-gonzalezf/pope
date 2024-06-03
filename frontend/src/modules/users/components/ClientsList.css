@@ -1,51 +1,58 @@
 .ClientsList {
     margin: 0;
     padding: 0;
-    padding: 5%;
+    padding-top: 5%;
     width: auto;
-}
-
-.listStyle {
-    list-style: 'none';
-	padding: 0;
-	margin: 0;
-	display: 'flex';
-	flex-wrap: 'wrap';
-	justify-content: 'center';
-	font-family: Georgia, 'Times New Roman', Times, serif;
-}
-
-.listItemStyle {
-    width: 12rem;
-    background-color: #f0f0f0;
-    padding: 20px;
-    border: 1px;
-    border-radius: 10px;
-    border-color: grey;
-    border-style: solid;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-    margin: 10px;
-    cursor: pointer;
+    background-color: #191716;
 }
 
 .smallImageStyle {
     max-width: 120px;
     height: auto;
-    margin-bottom: 10px;
 }
 
-.text-center.card {
-    align-items: center;
-    width: 9rem;
-    padding-bottom: 0%;
+.listItemStyle.add {
+    justify-content: space-between;
 }
 
-.plus {
-    padding-top: 5%;
+.addText {
+    margin-bottom: 25px;
 }
 
-.text-center.card-title {
-    margin-top: 5%;
-    margin-bottom: 5%;
+.plusIconStyle {
+    margin-top: 50%;
+    max-width: 120px;
+    height: auto;
+}
+
+.textoDifuminado {
+    /* Asegura que el texto se mantenga en una sola línea */
+    white-space: nowrap;
+    /* Oculta cualquier contenido que desborde el contenedor */
+    overflow: hidden;
+    /* Establece un ancho máximo para el contenedor del texto */
+    max-width: 100%;
+    /* Posicionamiento relativo para el contenedor del pseudo-elemento */
+    position: relative;
+}
+
+.textoDifuminado.desbordado::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100px;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), #191716 90%);
+}
+
+/* Al pasar el cursor, el texto se muestra completo */
+.listItemStyle:hover .textoDifuminado {
+    overflow: visible;
+    white-space: normal;
+}
+
+/* Oculta el efecto de difuminado al pasar el cursor */
+.listItemStyle:hover .textoDifuminado::after {
+    display: none;
 }

@@ -2,8 +2,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    min-width: 100vw;
+    min-height: 100vh;
+    width: 100%;
     margin: 0 auto;
     padding: 0 auto;
     padding-top: 5%;
@@ -16,37 +16,10 @@
     */
 }
 
-.card.bg-light.border-dark, .card.bg-light.border-dark.login, .card.bg-light.border-dark.cp {
+.card.signUp {
     width: 45%;
     margin: auto;
     margin-bottom: 7%;
-}
-
-.card.bg-light.border-dark.login {
-    margin-top: 7%;
-}
-
-.card.bg-light.border-dark.cp {
-    margin-top: 0;
-}
-
-.card-header {
-    background-color: #296084;
-    color: white;
-}
-
-.mb-3 {
-    padding-top: 1%;
-    font-weight: bold;
-    color: #404040;
-}
-
-.text-center {
-    padding: 1%;
-}
-
-.primary {
-    background-color: #296084;
-    border-color: #296084;
-    align-items: center;
+    border: none;
+    background-color: #191716;
 }

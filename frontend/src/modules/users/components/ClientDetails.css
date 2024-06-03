@@ -1,35 +1,14 @@
 .ClientDetails {
     margin: 0;
     padding: 0;
-    padding: 5%;
+    padding-top: 5%;
     width: auto;
 }
 
-.listStyle {
-    list-style: 'none';
-	padding: 0;
-	margin: 0;
-	display: 'flex';
-	flex-wrap: 'wrap';
-	justify-content: 'center';
-	font-family: 'Hey Comic'; /* No está en discartedFonts??? */
+.listItemStyle.clientDetails {
+    justify-content: space-between;
 }
 
-.listItemStyle {
-    height: 12rem;
-    width: 12rem;
-    background-color: #f0f0f0;
-    padding: 20px;
-    border: 1px;
-    border-radius: 10px;
-    border-color: grey;
-    border-style: solid;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-    margin: 10px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.clientDetailsText {
+    margin-bottom: 25px;
 }

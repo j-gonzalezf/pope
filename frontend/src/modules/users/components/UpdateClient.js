@@ -3,8 +3,8 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Nav from 'react-bootstrap/Nav';
-import { BsPencilSquare, BsTrashFill, BsXLg } from "react-icons/bs";
-import './SignUp.css';
+import { BsInfoSquare, BsPencilSquare, BsTrashFill, BsXLg } from "react-icons/bs";
+import './UpdateProfile.css';
 
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -96,11 +96,20 @@ const UpdateClient = () => {
         } else {
             setError(null);
             form.classList.add('was-validated');
+            window.scrollTo(0, 0);
         }
     }
 
     const handleSelectTab = (selectedTab) => {
+
         setActiveTab(selectedTab);
+
+        // Si se selecciona el tab 'update' o 'profile', 
+        // se mueve el scroll al principio de la página
+        if (selectedTab === 'update' || selectedTab === 'profile') {
+            window.scrollTo(0, 0);
+        }
+
     }
 
     const handleDelete = () => {
@@ -118,31 +127,36 @@ const UpdateClient = () => {
 
     return (
 
-        <div fluid className="SignUp">
+        <div fluid className="UpdateProfile">
 
-            <Card className="card bg-light border-dark">
+            <Card className="card updateProfile">
+
+                <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} className="modal">
+                    <Modal.Header className="modal-header deleteProfile">
+                        <Modal.Title>
+                            <FormattedMessage id="project.users.deleteClient.title" />
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className="modal-body">
+                        <FormattedMessage id="project.users.deleteClient.body" />
+                    </Modal.Body>
+                    <Modal.Footer className="modal-footer">
+                        <Button className="btn" variant="secondary" onClick={() => setShowDeleteModal(false)}>
+                            <FormattedMessage id="project.global.button.cancel" />
+                        </Button>
+                        <Button className="btn" variant="danger" onClick={handleDelete}>
+                            <FormattedMessage id="project.users.deleteAccount.button" />
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
 
                 <Card.Header as="h3" className="card-header">
-                    <FormattedMessage id="project.users.clientProfile" />
-                    <Nav variant="pills" className="justify-content-between" activeKey={activeTab} onSelect={handleSelectTab}>
-                        <Nav.Item>
-                            <Nav.Link className="text-white" eventKey="profile">
-                                <FormattedMessage id="project.users.clientInfo" />
-                            </Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link className="text-white" eventKey="update">
-                                <BsPencilSquare style={{ marginRight: '10px' }} />
-                                <FormattedMessage id="project.users.updateClient" />
-                            </Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item className="text-white">
-                            <Nav.Link className="bg-danger text-white" onClick={() => setShowDeleteModal(true)}>
-                                <BsTrashFill style={{ marginRight: '10px' }} />
-                                <FormattedMessage id="project.users.deleteClient" />
-                            </Nav.Link>
-                        </Nav.Item>
-                    </Nav>
+                    {activeTab === 'profile' && (
+                        <FormattedMessage id="project.users.clientProfile" />
+                    )}
+                    {activeTab === 'update' && (
+                        <FormattedMessage id="project.users.updateClient" />
+                    )}
                 </Card.Header>
 
                 <Card.Body className="card-body">
@@ -155,6 +169,9 @@ const UpdateClient = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="fullName" htmlFor="fullName" className="mb-3">
                                 <FormattedMessage id="project.users.fullName" />
+                                {activeTab === 'update' && (
+                                    <span className='required'>*</span>
+                                )}
                             </Form.Label>
                             <Form.Control
                                 type="text"
@@ -175,6 +192,9 @@ const UpdateClient = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="email" htmlFor="email" className="mb-3">
                                 <FormattedMessage id="project.users.email" />
+                                {activeTab === 'update' && (
+                                    <span className='required'>*</span>
+                                )}
                             </Form.Label>
                             <Form.Control
                                 type="email"
@@ -330,24 +350,32 @@ const UpdateClient = () => {
                     </Form>
                 </Card.Body>
 
-                <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>
-                            <FormattedMessage id="project.users.deleteClient.title" />
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <FormattedMessage id="project.users.deleteClient.body" />
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-                            <FormattedMessage id="project.global.button.cancel" />
-                        </Button>
-                        <Button variant="danger" onClick={handleDelete}>
-                            <FormattedMessage id="project.users.deleteAccount.button" />
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                <Card.Footer className="card-footer">
+                    <Nav variant="pills" className="justify-content-between" activeKey={activeTab} onSelect={handleSelectTab}>
+                        {activeTab === 'profile' && (
+                            <Nav.Item>
+                                <Nav.Link className="nav-link updateProfile" eventKey="update">
+                                    <BsPencilSquare style={{ marginRight: '10px' }} />
+                                    <FormattedMessage id="project.users.updateClient" />
+                                </Nav.Link>
+                            </Nav.Item>
+                        )}
+                        {activeTab === 'update' && (
+                            <Nav.Item>
+                                <Nav.Link className="nav-link updateProfile" eventKey="profile">
+                                    <BsInfoSquare style={{ marginRight: '10px' }} />
+                                    <FormattedMessage id="project.users.clientProfile" />
+                                </Nav.Link>
+                            </Nav.Item>
+                        )}
+                        <Nav.Item>
+                            <Nav.Link className="bg-danger nav-link deleteProfile" onClick={() => setShowDeleteModal(true)}>
+                                <BsTrashFill style={{ marginRight: '10px' }} />
+                                <FormattedMessage id="project.users.deleteClient" />
+                            </Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+                </Card.Footer>
 
             </Card>
 

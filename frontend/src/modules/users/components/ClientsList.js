@@ -1,4 +1,3 @@
-import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
@@ -41,6 +40,17 @@ const ClientsList = () => {
 
     }, [dispatch, user.id]);
 
+    useEffect(() => {
+        // Este useEffect se encarga de aplicar la clase 'desbordado' si el texto es más largo que el contenedor
+        const clientNames = document.querySelectorAll('.textoDifuminado');
+
+        clientNames.forEach(name => {
+            if (name.scrollWidth > name.clientWidth) {
+                name.classList.add('desbordado');
+            }
+        });
+    }, [getClients]); // Se ejecuta cada vez que getClients se actualice
+
     return (
 
         <div fluid className='ClientsList'>
@@ -70,20 +80,20 @@ const ClientsList = () => {
                                 )}
                         </div>
 
-                        <h5>{client.fullName}</h5>
+                        <span className='textoDifuminado' data-text={client.fullName} >
+                            <b>{client.fullName}</b>
+                        </span>
 
                     </Col>
                 )))}
 
-                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle" onClick={redirectToCreateClient}>
-                    <Card className='text-center' >
-                        <BsFillPlusCircleFill className='plus' size={50} color='grey' />
-                        <Card.Body>
-                            <Card.Title className='text-center'>
-                                <b><FormattedMessage id="project.users.addClient" /></b>
-                            </Card.Title>
-                        </Card.Body>
-                    </Card>
+                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle add" onClick={redirectToCreateClient}>
+                    <div className="icon-container">
+                        <BsFillPlusCircleFill className='plusIconStyle' size={60} color='#e6af2e' alt="Add Icon" />
+                    </div>
+                    <span className='addText'>
+                        <b><FormattedMessage id="project.users.addClient" /></b>
+                    </span>
                 </Col>
 
             </Row>

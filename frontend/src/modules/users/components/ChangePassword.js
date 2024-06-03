@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import './SignUp.css';
+import './ChangePassword.css';
 
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -55,9 +55,9 @@ const ChangePassword = () => {
 
     return (
 
-        <div fluid className="SignUp">
+        <div fluid className="ChangePassword">
 
-            <Card className="card bg-light border-dark cp">
+            <Card className="card cp">
 
                 <Card.Header as="h3" className="card-header">
                     <FormattedMessage id="project.users.changePassword" />
@@ -83,6 +83,7 @@ const ChangePassword = () => {
                                 value={oldPassword}
                                 onChange={e => setOldPassword(e.target.value)}
                                 required
+                                autoFocus
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.oldPasswordRequired" />

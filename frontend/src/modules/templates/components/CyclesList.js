@@ -1,16 +1,14 @@
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import Row from 'react-bootstrap/Row';
-import { BsFillPlusCircleFill, BsPencilSquare } from "react-icons/bs";
+import Table from 'react-bootstrap/Table';
+import { BsBoxArrowInRight, BsFillPlusCircleFill, BsPencilSquare } from "react-icons/bs";
 import './CyclesList.css';
 
 import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { Errors } from '../../common';
 import * as actions from '../actions';
@@ -20,7 +18,7 @@ import * as userSelectors from '../../users/selectors';
 const CyclesList = () => {
 
     const dispatch = useDispatch();
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const user = useSelector(userSelectors.getUser);
     const { clientId } = useParams();
@@ -35,7 +33,8 @@ const CyclesList = () => {
     const [showAddCycleModal, setShowAddCycleModal] = useState(false);
     const [showUpdateCycleModal, setShowUpdateCycleModal] = useState(false);
 
-    let form;
+    let formCreate;
+    let formUpdate;
 
     function dateFormat(date) {
         let d = new Date(date);
@@ -48,11 +47,28 @@ const CyclesList = () => {
         return [day, month, year].join('/');
     }
 
+    // Para poder agrandar la fila seleccionada (scale) al pasar el cursor sin que desborde la tabla
+    function addEventListenersToRows() {
+        // Encuentra todos los elementos con la clase 'cycleSelect'
+        const rows = document.querySelectorAll('.cycleSelect');
+        // Añade un 'event listener' para cada fila para el evento 'mouseenter'
+        rows.forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                // Cuando el cursor está sobre la fila, aplica 'overflow-x: hidden' al contenedor
+                document.querySelector('.table-responsive').style.overflowX = 'hidden';
+            });
+            row.addEventListener('mouseleave', () => {
+                // Cuando el cursor sale de la fila, remueve el estilo 'overflow-x'
+                document.querySelector('.table-responsive').style.overflowX = '';
+            });
+        });
+    }
+
     const handleSubmit = event => {
 
         event.preventDefault();
 
-        if (form.checkValidity()) {
+        if (formCreate.checkValidity()) {
 
             dispatch(actions.createCycle(
                 {
@@ -70,7 +86,9 @@ const CyclesList = () => {
                     setFromDate(null);
                     setToDate(null)
                     dispatch(actions.getCycles(user.id, clientId,
-                        () => { },
+                        () => {
+                            setTimeout(addEventListenersToRows, 0);
+                        },
                         errors => setError(errors)));
                 },
                 errors => setError(errors)
@@ -78,7 +96,7 @@ const CyclesList = () => {
 
         } else {
             setError(null);
-            form.classList.add('was-validated');
+            formCreate.classList.add('was-validated');
         }
     }
 
@@ -86,8 +104,8 @@ const CyclesList = () => {
 
         event.preventDefault();
 
-        if (form.checkValidity) {
-            
+        if (formUpdate.checkValidity()) {
+
             dispatch(actions.updateCycle(
                 {
                     id: id,
@@ -113,7 +131,7 @@ const CyclesList = () => {
 
         } else {
             setError(null);
-            form.classList.add('was-validated');
+            formUpdate.classList.add('was-validated');
         }
 
     }
@@ -127,26 +145,45 @@ const CyclesList = () => {
         setShowUpdateCycleModal(true);
     }
 
+    const closeModal = () => {
+        setShowAddCycleModal(false);
+        setShowUpdateCycleModal(false);
+        setId(null);
+        setName('');
+        setDescription(null);
+        setFromDate(null);
+        setToDate(null)
+    }
+
+    const redirectToCycleDetails = cycle => {
+        navigate(`/templates/trainingCycles/${clientId}/trainingCycle/${cycle.id}`);
+    }
+
     useEffect(() => {
 
         dispatch(actions.getCycles(user.id, clientId,
-            () => { },
+            () => {
+                setTimeout(addEventListenersToRows, 0);
+            },
             errors => setError(errors)));
 
     }, [dispatch, user.id, clientId]);
 
     return (
+
         <div fluid className='CyclesList'>
 
             <Modal show={showAddCycleModal} onHide={() => setShowAddCycleModal(false)} className='modal'>
+
                 <Modal.Header className='modal-header'>
                     <Modal.Title as="h3">
                         <FormattedMessage id="project.templates.addCycle.title" />
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+
+                <Modal.Body className='modal-body cycle'>
                     <Form
-                        ref={node => form = node}
+                        ref={node => formCreate = node}
                         className="needs-validation"
                         noValidate
                         onSubmit={e => handleSubmit(e)}
@@ -219,10 +256,10 @@ const CyclesList = () => {
                 </Modal.Body>
 
                 <Modal.Footer className='modal-footer'>
-                    <Button variant="secondary" onClick={() => setShowAddCycleModal(false)}>
+                    <Button variant="secondary" onClick={closeModal}>
                         <FormattedMessage id="project.global.button.cancel" />
                     </Button>
-                    <Button variant="primary" onClick={handleSubmit}>
+                    <Button className="primary cycle" onClick={handleSubmit}>
                         <FormattedMessage id="project.templates.addCycle.button" />
                     </Button>
                 </Modal.Footer>
@@ -230,17 +267,19 @@ const CyclesList = () => {
             </Modal>
 
             <Modal show={showUpdateCycleModal} onHide={() => setShowUpdateCycleModal(false)} className='modal'>
+
                 <Modal.Header className='modal-header'>
                     <Modal.Title as="h3">
                         <FormattedMessage id="project.templates.updateCycle.title" />
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+
+                <Modal.Body className='modal-body cycle'>
                     <Form
-                        ref={node => form = node}
+                        ref={node => formUpdate = node}
                         className="needs-validation"
                         noValidate
-                        onSubmit={e => handleSubmit(e)}
+                        onSubmit={e => handleUpdateCycle(e)}
                     >
                         <Form.Group className="mb-3">
                             <Form.Label>
@@ -309,58 +348,60 @@ const CyclesList = () => {
                 </Modal.Body>
 
                 <Modal.Footer className='modal-footer'>
-                    <Button variant="secondary" onClick={() => setShowUpdateCycleModal(false)}>
+                    <Button variant="secondary" onClick={closeModal}>
                         <FormattedMessage id="project.global.button.cancel" />
                     </Button>
-                    <Button variant="primary" onClick={handleUpdateCycle}>
+                    <Button className="primary cycle" onClick={handleUpdateCycle}>
                         <FormattedMessage id="project.templates.updateCycle" />
                     </Button>
                 </Modal.Footer>
 
             </Modal>
 
-            <Row className="listStyle">
-
-                {getCycles && (getCycles.map((cycle) => (
-
-                    <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle"
-                        key={cycle.id}>
-
-                        <Card className='text-center'>
-                            <Card.Body>
-                                <Card.Title className='text-center'>
-                                    <b>{cycle.name}</b>
-                                </Card.Title>
-                                <Card.Text className='description'>
-                                    {cycle.description}
-                                </Card.Text>
-                                <Card.Text>
-                                    <b>{dateFormat(cycle.fromDate)} - {dateFormat(cycle.toDate)}</b>
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                        <br />
-                        <div className='edit'>
-                            <BsPencilSquare className='editIcon' onClick={() => openUpdateCycleModal(cycle)}
-                                title='Pulsa para editar ciclo' />
-                            <FormattedMessage id="project.templates.updateCycle" />
-                        </div>
-                    </Col>
-                )))}
-
-                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle" onClick={() => setShowAddCycleModal(true)}>
-                    <Card className='text-center'>
-                        <BsFillPlusCircleFill className='plus' size={50} color='grey' />
-                        <Card.Body>
-                            <Card.Title className='text-center'>
-                                <b><FormattedMessage id="project.templates.addCycle" /></b>
-                            </Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <br />
-                </Col>
-
-            </Row>
+            <div class="table-responsive">
+                <Table className="table">
+                    <thead>
+                        <tr>
+                            <th className="customTable"></th>
+                            <th className="customTable underline"><FormattedMessage id="project.templates.cycleName" /></th>
+                            <th className="customTable underline"><FormattedMessage id="project.templates.cycleDescription" /></th>
+                            <th className="customTable underline"><FormattedMessage id="project.templates.cycleFrom" /></th>
+                            <th className="customTable underline"><FormattedMessage id="project.templates.cycleTo" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {getCycles.map((cycle) => (
+                            <tr key={cycle.id} className="cycleSelect" onClick={() => redirectToCycleDetails(cycle)}>
+                                <td className="pointer"><BsBoxArrowInRight size={20} /></td>
+                                <td className="customTable cycleName">{cycle.name}</td>
+                                <td className="customTable">{cycle.description}</td>
+                                <td className="customTable">{dateFormat(cycle.fromDate)}</td>
+                                <td className="customTable">{dateFormat(cycle.toDate)}</td>
+                                <td className="customTable">
+                                    <Link className='link' onClick={() => openUpdateCycleModal(cycle)}
+                                        title='Pulsa para editar ciclo'>
+                                        <BsPencilSquare className="editIconStyle cycle" />
+                                        <span>
+                                            <FormattedMessage id="project.templates.updateCycle" />
+                                        </span>
+                                    </Link>
+                                </td>
+                            </tr>
+                        ))}
+                        <tr>
+                            <td className="customTable"></td>
+                            <td colSpan={4} className="customTable">
+                                <Button className="primary cycle" onClick={() => setShowAddCycleModal(true)}>
+                                    <BsFillPlusCircleFill className="plusIconStyle cycle" />
+                                    <span>
+                                        <b><FormattedMessage id="project.templates.addCycle" /></b>
+                                    </span>
+                                </Button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </Table>
+            </div>
 
             <Errors errors={error} onClose={() => setError(null)} />
 

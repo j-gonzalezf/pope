@@ -28,6 +28,7 @@ const Body = () => {
         {loggedIn && <Route path="/users/updateClient/:id" element={<UpdateClient />} />}
         {loggedIn && <Route path="/users/clientDetails/:clientId" element={<ClientDetails />} />}
         {loggedIn && <Route path="/templates/trainingCycles/:clientId" element={<CyclesList />} />}
+        {loggedIn && <Route path="/templates/trainingCycles/:clientId/trainingCycle/:cycleId" element={<ClientsList />} />}
         {/*<Route path="/notFound" element={<NotFoundPage />} />
         /<Route path="/*" element={<Navigate to="/users/addClient" />} />*/}
       </Routes>

@@ -1,46 +1,71 @@
-.border {
+.Header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     height: 100px;
-    min-width: 100vw;
-    background-color: #296084;
-    border-color: #296084;
+    width: 100%;
     padding: 0;
     margin: 0;
+    border-color: #191716;
+    border-bottom: white solid 2px;
+    background-color: #191716;
+    box-sizing: border-box;
+}
+
+.header-right {
+    margin-right: 3%;
 }
 
 .header-nav {
     max-height: 90px;
 }
 
-.navbar-toggle-custom {
-    border: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
+/* Ajusta el tamaño y el margen de los iconos */
 .anchor-icon {
     max-height: 90px;
     padding: 10%;
+    margin-left: 15%;
 }
 
 .icon-container {
     display: flex;
     justify-content: flex-end;
+    max-height: 90px;
 }
 
 .dropdown-toggle.nav-link {
     display: flex;
     align-items: center;
+    margin-right: 15%;
+    color: white;
+}
+
+.dropdown-toggle.nav-link:focus,
+.dropdown-toggle.nav-link:hover,
+.dropdown-toggle.nav-link:active,
+.dropdown-toggle.nav-link:visited {
+    color: white;
+}
+
+.dropdown-item {
+    color: #191716;
+}
+
+/* Estilos para los elementos dentro del desplegable */
+.dropdown-item:active,
+.dropdown-item:focus {
+    background-color: #e6af2e;
+    color: #191716;
 }
 
 .icon-image-large {
-    width: 7%;
-    height: 7%;
+    max-height: 80px;
 }
 
 .dropdown-menu.show {
     position: relative;
     top: 90%;
-    left: 95%;
+    left: 100%;
+    transform: translateX(-100%);
     z-index: 9999;
 }
