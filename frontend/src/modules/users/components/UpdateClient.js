@@ -6,10 +6,10 @@ import Nav from 'react-bootstrap/Nav';
 import { BsInfoSquare, BsPencilSquare, BsTrashFill, BsXLg } from "react-icons/bs";
 import './UpdateProfile.css';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { Errors } from '../../common';
 import * as actions from '../actions';
@@ -19,6 +19,8 @@ const UpdateClient = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const { clientId } = useParams();
 
     const user = useSelector(selectors.getUser);
     const client = useSelector(selectors.getClientInfo);
@@ -125,6 +127,12 @@ const UpdateClient = () => {
 
     }
 
+    useEffect(() => {
+        dispatch(actions.getClientInfo(clientId,
+            () => { },
+            errors => setError(errors)));
+    }, [dispatch, clientId]);
+
     return (
 
         <div fluid className="UpdateProfile">
@@ -178,7 +186,7 @@ const UpdateClient = () => {
                                 className="form-control"
                                 id="fullName"
                                 name="fullName"
-                                placeholder="Introduzca nombre y apellidos del cliente"
+                                placeholder={activeTab === 'profile' ? '' : "Introduzca nombre y apellidos del cliente"}
                                 value={fullName}
                                 onChange={e => setFullName(e.target.value)}
                                 required
@@ -201,7 +209,7 @@ const UpdateClient = () => {
                                 className="form-control"
                                 id="email"
                                 name="email"
-                                placeholder="Introduzca el correo del cliente"
+                                placeholder={activeTab === 'profile' ? '' : "Introduzca el correo del cliente"}
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
                                 required

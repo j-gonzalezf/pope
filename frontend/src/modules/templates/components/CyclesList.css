@@ -17,35 +17,6 @@
     margin: 0;
 }
 
-.listItemStyle {
-    position: relative;
-}
-
-.card.cycle {
-    align-items: center;
-    border: 2px solid;
-    border-color: white;
-    border-radius: 15px;
-    width: 175px;
-    overflow: hidden;
-    background-color: #191716;
-    color: white;
-    z-index: 2;
-}
-
-.editIcon {
-    margin-right: 5px;
-    margin-top: 5%;
-}
-
-.listItemStyle.add {
-    justify-content: space-between;
-}
-
-.addText {
-    margin-bottom: 25px;
-}
-
 .table-responsive {
     margin-right: 7%;
 }
@@ -72,8 +43,6 @@
 
 .cycleSelect:hover {
     cursor: pointer;
-    transform: scale(1.005);
-    z-index: 1;
 }
 
 .pointer {

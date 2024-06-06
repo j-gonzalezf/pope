@@ -16,6 +16,13 @@
     margin-right: 3%;
 }
 
+.header-left {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
+
 .header-nav {
     max-height: 90px;
 }
@@ -23,8 +30,9 @@
 /* Ajusta el tamaño y el margen de los iconos */
 .anchor-icon {
     max-height: 90px;
-    padding: 10%;
     margin-left: 15%;
+    margin-right: 2rem;
+    padding: 10%;
 }
 
 .icon-container {

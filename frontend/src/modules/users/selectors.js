@@ -9,10 +9,9 @@ export const isLoggedIn = state =>
 export const getIcon = state =>
     getUser(state) ? getUser(state).icon : '';
 
-export const getClients = state => {
-    return getModuleState(state).getClients;
-}
+export const getClients = state =>
+    getModuleState(state).getClients;
 
-export const getClientInfo = state => {
-    return getModuleState(state).getClientInfo;
-}
+
+export const getClientInfo = state =>
+    getModuleState(state).getClientInfo;

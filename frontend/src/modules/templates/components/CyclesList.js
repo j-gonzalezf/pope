@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table';
-import { BsBoxArrowInRight, BsFillPlusCircleFill, BsPencilSquare } from "react-icons/bs";
+import { BsChevronRight, BsFillPlusCircleFill, BsPencilSquare } from "react-icons/bs";
 import './CyclesList.css';
 
 import { useEffect, useState } from 'react';
@@ -47,23 +47,6 @@ const CyclesList = () => {
         return [day, month, year].join('/');
     }
 
-    // Para poder agrandar la fila seleccionada (scale) al pasar el cursor sin que desborde la tabla
-    function addEventListenersToRows() {
-        // Encuentra todos los elementos con la clase 'cycleSelect'
-        const rows = document.querySelectorAll('.cycleSelect');
-        // Añade un 'event listener' para cada fila para el evento 'mouseenter'
-        rows.forEach(row => {
-            row.addEventListener('mouseenter', () => {
-                // Cuando el cursor está sobre la fila, aplica 'overflow-x: hidden' al contenedor
-                document.querySelector('.table-responsive').style.overflowX = 'hidden';
-            });
-            row.addEventListener('mouseleave', () => {
-                // Cuando el cursor sale de la fila, remueve el estilo 'overflow-x'
-                document.querySelector('.table-responsive').style.overflowX = '';
-            });
-        });
-    }
-
     const handleSubmit = event => {
 
         event.preventDefault();
@@ -86,9 +69,7 @@ const CyclesList = () => {
                     setFromDate(null);
                     setToDate(null)
                     dispatch(actions.getCycles(user.id, clientId,
-                        () => {
-                            setTimeout(addEventListenersToRows, 0);
-                        },
+                        () => { },
                         errors => setError(errors)));
                 },
                 errors => setError(errors)
@@ -162,9 +143,7 @@ const CyclesList = () => {
     useEffect(() => {
 
         dispatch(actions.getCycles(user.id, clientId,
-            () => {
-                setTimeout(addEventListenersToRows, 0);
-            },
+            () => { },
             errors => setError(errors)));
 
     }, [dispatch, user.id, clientId]);
@@ -372,13 +351,16 @@ const CyclesList = () => {
                     <tbody>
                         {getCycles.map((cycle) => (
                             <tr key={cycle.id} className="cycleSelect" onClick={() => redirectToCycleDetails(cycle)}>
-                                <td className="pointer"><BsBoxArrowInRight size={20} /></td>
+                                <td className="pointer"><BsChevronRight size={15} /></td>
                                 <td className="customTable cycleName">{cycle.name}</td>
                                 <td className="customTable">{cycle.description}</td>
                                 <td className="customTable">{dateFormat(cycle.fromDate)}</td>
                                 <td className="customTable">{dateFormat(cycle.toDate)}</td>
                                 <td className="customTable">
-                                    <Link className='link' onClick={() => openUpdateCycleModal(cycle)}
+                                    <Link className='link' onClick={(event) => {
+                                        event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
+                                        openUpdateCycleModal(cycle);
+                                    }}
                                         title='Pulsa para editar ciclo'>
                                         <BsPencilSquare className="editIconStyle cycle" />
                                         <span>
