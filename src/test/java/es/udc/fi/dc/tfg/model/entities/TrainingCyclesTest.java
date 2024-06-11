@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package es.udc.fi.dc.tfg.model.entities;
 
 import java.time.LocalDate;
@@ -47,7 +43,7 @@ public class TrainingCyclesTest {
     }
 
     @Test
-    public void testConstructors() {
+    public void testCycleConstructors() {
 
         // Test cycle constructor
         assertNotNull(cycle);
@@ -64,7 +60,7 @@ public class TrainingCyclesTest {
     }
 
     @Test
-    public void testGettersAndSetters() {
+    public void testCycleGettersAndSetters() {
 
         // Test setters
         trainingCycle.setId(3L);
