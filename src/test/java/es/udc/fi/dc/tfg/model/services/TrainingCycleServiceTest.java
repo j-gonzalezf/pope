@@ -41,11 +41,9 @@ public class TrainingCycleServiceTest {
     private TrainingCycleService cycleService;
 
     /**
-     * Crea un cliente.
+     * Crea un ciclo de entrenamiento.
      *
-     * @param email El email del cliente.
-     * @return El objeto Users que representa al cliente con el perfil
-     * actualizado.
+     * @return El objeto TrainingCycles que representa al ciclo
      */
     private TrainingCycles createCycle() {
         return new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
