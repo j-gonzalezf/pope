@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
  * Clase TrainingCycleDto.
  */
 public class TrainingCycleDto {
-    
+
     /**
      * La interfaz AllValidations.
      */
@@ -19,7 +19,7 @@ public class TrainingCycleDto {
      */
     public interface UpdateValidations {
     }
-    
+
     /**
      * Identificador del ciclo de entrenamiento.
      */
@@ -34,7 +34,7 @@ public class TrainingCycleDto {
      * Descripción del ciclo de entrenamiento, puede ser nulo.
      */
     private String description;
-    
+
     /**
      * Fecha de inicio del ciclo de entrenamiento.
      */
@@ -54,16 +54,16 @@ public class TrainingCycleDto {
      * Identificador del cliente asignado al ciclo de entrenamiento.
      */
     private Long clientId;
-    
+
     /**
-     * Instantiates a new user dto.
+     * Instantiates a new cycle dto.
      */
     public TrainingCycleDto() {
     }
-    
+
     /**
      * Constructor de la clase TrainingCycleDto.
-     * 
+     *
      * @param id El identificador del ciclo.
      * @param name El nombre del ciclo.
      * @param description La descripción del ciclo.
@@ -73,8 +73,8 @@ public class TrainingCycleDto {
      * @param clientId El ID del cliente asignado al ciclo.
      */
     public TrainingCycleDto(Long id, String name, String description,
-            String fromDate, String toDate, Long trainerId, Long clientId){
-        
+            String fromDate, String toDate, Long trainerId, Long clientId) {
+
         this.id = id;
         this.name = name;
         this.description = description;
@@ -82,9 +82,9 @@ public class TrainingCycleDto {
         this.toDate = toDate;
         this.trainerId = trainerId;
         this.clientId = clientId;
-        
+
     }
-    
+
     /**
      * Gets the id.
      *
@@ -102,7 +102,7 @@ public class TrainingCycleDto {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     /**
      * Gets the cycle name.
      *
@@ -122,7 +122,7 @@ public class TrainingCycleDto {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     /**
      * Gets the description.
      *
@@ -141,7 +141,7 @@ public class TrainingCycleDto {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     /**
      * Gets the initial date.
      *
@@ -160,7 +160,7 @@ public class TrainingCycleDto {
     public void setFromDate(String fromDate) {
         this.fromDate = fromDate;
     }
-    
+
     /**
      * Gets the end date.
      *
@@ -179,7 +179,7 @@ public class TrainingCycleDto {
     public void setToDate(String toDate) {
         this.toDate = toDate;
     }
-    
+
     /**
      * Gets the trainerId.
      *
@@ -198,7 +198,7 @@ public class TrainingCycleDto {
     public void setTrainerId(Long trainerId) {
         this.trainerId = trainerId;
     }
-    
+
     /**
      * Gets the clientId.
      *
@@ -217,5 +217,5 @@ public class TrainingCycleDto {
     public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
-    
+
 }

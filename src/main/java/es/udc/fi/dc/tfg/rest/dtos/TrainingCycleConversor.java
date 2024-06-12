@@ -22,7 +22,7 @@ public class TrainingCycleConversor {
      *
      * @param cycle el objeto TrainingCycles a convertir
      * @return un nuevo objeto TrainingCycleDto que contiene los mismos datos
-     * que el objeto TrainingCycle proporcionado
+     * que el objeto TrainingCycles proporcionado
      */
     public static final TrainingCycleDto toTrainingCycleDto(TrainingCycles cycle) {
         return new TrainingCycleDto(cycle.getId(), cycle.getName(),

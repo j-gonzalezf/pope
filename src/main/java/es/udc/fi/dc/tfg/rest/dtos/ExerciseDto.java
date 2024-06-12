@@ -1,24 +1,28 @@
-package es.udc.fi.dc.tfg.model.entities;
+package es.udc.fi.dc.tfg.rest.dtos;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.URL;
 
 /**
- * Clase Exercises que representa los ejercicios.
+ * Clase ExerciseDto.
  */
-@Entity
-@Table(name = "Exercises")
-public class Exercises {
+public class ExerciseDto {
 
     /**
-     * Identificador único autogenerado del ejercicio.
+     * La interfaz AllValidations.
+     */
+    public interface AllValidations {
+    }
+
+    /**
+     * La interfaz UpdateValidations.
+     */
+    public interface UpdateValidations {
+    }
+
+    /**
+     * Identificador del ejercicio.
      */
     private Long id;
 
@@ -28,7 +32,7 @@ public class Exercises {
     private String name;
 
     /**
-     * Descripción del ejercicio
+     * Descripción del ejercicio.
      */
     private String description;
 
@@ -48,44 +52,46 @@ public class Exercises {
     private String equipment;
 
     /**
-     * URL a material multimedia que ilustra la correcta realización del
-     * ejercicio, puede ser nulo.
+     * URL de referencia para la correcta realización del ejercicio, puede ser
+     * nulo.
      */
     private String link;
 
     /**
-     * Entrenador creador del ejercio.
+     * Identificador del entrenador creador del ejercicio.
      */
-    private Users trainer;
+    private Long trainerId;
 
     /**
-     * Constructor vacío de la clase Exercises
+     * Instantiates a new exercise dto.
      */
-    public Exercises() {
+    public ExerciseDto() {
     }
 
     /**
-     * Constructor de la clase Exercises
+     * Constructor de la clase ExerciseDto.
      *
+     * @param id El identificador del ejercicio.
      * @param name El nombre del ejercicio.
      * @param description La descripción del ejercicio.
      * @param type La categoría del ejercicio.
-     * @param bodyPart La parte del cuerpo en la que se enfoca el ejercicio.
+     * @param bodyPart La parte del cuerpo que se trabaja con el ejercicio.
      * @param equipment El equipamiento necesario para realizar el ejercicio.
      * @param link La URL de referencia para la correcta realización del
      * ejercicio.
-     * @param trainer El entrenador creador del ejercicio.
+     * @param trainerId El ID del entrenador creador del ejercicio.
      */
-    public Exercises(String name, String description, String type,
-            String bodyPart, String equipment, String link, Users trainer) {
+    public ExerciseDto(Long id, String name, String description, String type,
+            String bodyPart, String equipment, String link, Long trainerId) {
 
+        this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
         this.bodyPart = bodyPart;
         this.equipment = equipment;
         this.link = link;
-        this.trainer = trainer;
+        this.trainerId = trainerId;
 
     }
 
@@ -94,8 +100,6 @@ public class Exercises {
      *
      * @return the id
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -114,7 +118,8 @@ public class Exercises {
      *
      * @return the exercise name
      */
-    @Column(name = "exerciseName")
+    @NotNull(groups = {AllValidations.class, UpdateValidations.class})
+    @Size(min = 1, max = 255, groups = {AllValidations.class, UpdateValidations.class})
     public String getName() {
         return name;
     }
@@ -129,18 +134,20 @@ public class Exercises {
     }
 
     /**
-     * Gets the exercise description.
+     * Gets the description.
      *
-     * @return the exercise description
+     * @return the description
      */
+    @NotNull(groups = {AllValidations.class, UpdateValidations.class})
+    @Size(max = 500, groups = {AllValidations.class, UpdateValidations.class})
     public String getDescription() {
         return description;
     }
 
     /**
-     * Sets the exercise description.
+     * Sets the description.
      *
-     * @param description the new exercise description
+     * @param description the new description
      */
     public void setDescription(String description) {
         this.description = description;
@@ -151,7 +158,8 @@ public class Exercises {
      *
      * @return the exercise type
      */
-    @Column(name = "exerciseType")
+    @NotNull(groups = {AllValidations.class, UpdateValidations.class})
+    @Size(min = 1, max = 255, groups = {AllValidations.class, UpdateValidations.class})
     public String getType() {
         return type;
     }
@@ -202,42 +210,41 @@ public class Exercises {
     }
 
     /**
-     * Gets the exercise link
+     * Gets the link
      *
-     * @return the exercise link
+     * @return the link
      */
-    @Column(name = "exerciseLink")
+    @URL(groups = {AllValidations.class, UpdateValidations.class})
     public String getLink() {
         return link;
     }
 
     /**
-     * Sets the exercise link
+     * Sets the link
      *
-     * @param link the new exercise link
+     * @param link the new link
      */
     public void setLink(String link) {
         this.link = link;
     }
 
     /**
-     * Gets the exercise trainer
+     * Gets the trainerId.
      *
-     * @return the exercise trainer
+     * @return the trainerId
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trainerId")
-    public Users getTrainer() {
-        return trainer;
+    @NotNull(groups = {AllValidations.class, UpdateValidations.class})
+    public Long getTrainerId() {
+        return trainerId;
     }
 
     /**
-     * Sets the exercise trainer
+     * Sets the trainerId.
      *
-     * @param trainer the new exercise trainer
+     * @param trainerId the new trainerId
      */
-    public void setTrainer(Users trainer) {
-        this.trainer = trainer;
+    public void setTrainerId(Long trainerId) {
+        this.trainerId = trainerId;
     }
 
 }
