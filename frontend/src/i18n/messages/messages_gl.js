@@ -6,18 +6,20 @@ export default {
     'project.common.notFoundPage': 'Páxina non encontrada',
     'project.common.notFoundPageMessage': 'Sentímolo, a páxina que buscas non existe.',
 
+    'project.global.button.cancel': 'Cancelar',
+
+    // Users Module
+    // Attributes
     'project.users.trainer': 'Adestrador',
     'project.users.client': 'Cliente',
     'project.users.fullName': 'Nome completo',
     'project.users.fullNameRequired': 'O nome é obrigatorio',
     'project.users.email': 'Correo electrónico',
     'project.users.emailRequired': 'O correo é obrigatorio',
-    //'project.users.emailPlaceholder': 'Introduza o seu correo',
     'project.users.password': 'Contrasinal',
     'project.users.passwordClient': 'Código de acceso',
     'project.users.passwordRequired': 'O contrasinal é obrigatorio',
     'project.users.passwordClientRequired': 'O código de acceso é obrigatorio',
-    //'project.users.passwordPlaceholder': 'Introduza o seu contrasinal',
     'project.users.confirmPassword': 'Confirmar contrasinal',
     'project.users.confirmPasswordPattern': 'Os contrasinais non coinciden',
     'project.users.phone': 'Número de teléfono',
@@ -32,6 +34,9 @@ export default {
     'project.users.height': 'Altura',
     'project.users.heightPattern': 'Formato de altura incorrecto',
 
+    // Actions
+    'project.users.clients.title': 'Clientes',
+    'project.users.clientDetails.title': 'Xestión do cliente',
     'project.users.login': 'Iniciar sesión',
     'project.users.login.button': 'Entrar',
     'project.users.logout': 'Pechar sesión',
@@ -67,6 +72,9 @@ export default {
     'project.users.tracking': 'Seguimiento',
     'project.users.clientDetails': 'Datos do cliente',
 
+
+    // Templates Module
+    // Attributes
     'project.templates.cycleName': 'Nome',
     'project.templates.cycleNameRequired': 'O nome do ciclo é obrigatorio',
     'project.templates.cycleDescription': 'Descripción',
@@ -76,13 +84,27 @@ export default {
     'project.templates.cycleTo': 'Ata',
     'project.templates.cycleToDate': 'Data de fin',
     'project.templates.cycleToDateRequired': 'A data de fin é obrigatorio',
-    
+    'project.templates.exerciseName': 'Nome',
+    'project.templates.exerciseNameRequired': 'O nome do exercicio é obrigatorio',
+    'project.templates.exerciseDescription': 'Descripción',
+    'project.templates.exerciseDescriptionRequired': 'A descripción do exercicio é obrigatoria',
+    'project.templates.exerciseType': 'Tipo',
+    'project.templates.exerciseTypeRequired': 'O tipo de exercicio é obrigatorio',
+    'project.templates.exerciseBodyPart': 'Parte do corpo',
+    'project.templates.exerciseEquipment': 'Equipamento',
+    'project.templates.exerciseLink': 'Fonte',
+    'project.templates.exerciseLinkPattern': 'Formato de enlace incorrecto',
+
+    // Actions
+    'project.templates.cycles.title': 'Ciclos de adestramento',
+    'project.templates.exercisesList.title': 'Exercicios',
     'project.templates.addCycle.title': 'Novo ciclo de adestramento',
     'project.templates.addCycle.button': 'Crear',
     'project.templates.addCycle': 'Crear ciclo',
     'project.templates.updateCycle': 'Editar',
     'project.templates.updateCycle.title': 'Actualizar ciclo de adestramento',
-
-    'project.global.button.cancel': 'Cancelar',
+    'project.templates.addExercise': 'Engadir exercicio',
+    'project.templates.addExercise.title': 'Novo exercicio',
+    'project.templates.addExercise.button': 'Engadir',
 
 }

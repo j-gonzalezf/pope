@@ -6,18 +6,20 @@ export default {
     'project.common.notFoundPage': 'Page not found',
     'project.common.notFoundPageMessage': 'Sorry, the page you are looking for does not exist.',
 
+    'project.global.button.cancel': 'Cancel',
+
+    // Users Module
+    // Attributes
     'project.users.trainer': 'Trainer',
     'project.users.client': 'Client',
     'project.users.fullName': 'Full name',
     'project.users.fullNameRequired': 'Full name is required',
     'project.users.email': 'Email address',
     'project.users.emailRequired': 'Email is required',
-    //'project.users.email.placeholder': 'Enter your email',
     'project.users.password': 'Password',
     'project.users.passwordClient': 'Access key',
     'project.users.passwordRequired': 'Password is required',
     'project.users.passwordClientRequired': 'Access key is required',
-    //'project.users.password.placeholder': 'Enter your password',
     'project.users.confirmPassword': 'Confirm password',
     'project.users.confirmPasswordPattern': 'Passwords do not match',
     'project.users.phone': 'Phone number',
@@ -32,6 +34,9 @@ export default {
     'project.users.height': 'Height',
     'project.users.heightPattern': 'Invalid height',
 
+    // Actions
+    'project.users.clients.title': 'Clients',
+    'project.users.clientDetails.title': 'Client management',
     'project.users.login': 'Login',
     'project.users.login.button': 'Enter',
     'project.users.logout': 'Logout',
@@ -67,6 +72,9 @@ export default {
     'project.users.tracking': 'Tracking',
     'project.users.clientDetails': 'Client details',
 
+
+    // Templates Module
+    // Attributes
     'project.templates.cycleName': 'Name',
     'project.templates.cycleNameRequired': 'Cycle name is required',
     'project.templates.cycleDescription': 'Description',
@@ -76,13 +84,27 @@ export default {
     'project.templates.cycleTo': 'To',
     'project.templates.cycleToDate': 'End date',
     'project.templates.cycleToDateRequired': 'End date is required',
+    'project.templates.exerciseName': 'Name',
+    'project.templates.exerciseNameRequired': 'Exercise name is required',
+    'project.templates.exerciseDescription': 'Description',
+    'project.templates.exerciseDescriptionRequired': 'Exercise description is required',
+    'project.templates.exerciseType': 'Type',
+    'project.templates.exerciseTypeRequired': 'Exercise type is required',
+    'project.templates.exerciseBodyPart': 'Body part',
+    'project.templates.exerciseEquipment': 'Equipment',
+    'project.templates.exerciseLink': 'Link',
+    'project.templates.exerciseLinkPattern': 'Invalid link',
 
+    // Actions
+    'project.templates.cycles.title': 'Training cycles',
+    'project.templates.exercisesList.title': 'Exercises',
     'project.templates.addCycle.title': 'New training cycle',
     'project.templates.addCycle.button': 'Add',
     'project.templates.addCycle': 'Add training cycle',
     'project.templates.updateCycle': 'Update',
     'project.templates.updateCycle.title': 'Update training cycle',
-
-    'project.global.button.cancel': 'Cancel',
+    'project.templates.addExercise': 'Add exercise',
+    'project.templates.addExercise.title': 'New exercise',
+    'project.templates.addExercise.button': 'Add',
 
 }

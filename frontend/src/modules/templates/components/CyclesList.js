@@ -63,11 +63,8 @@ const CyclesList = () => {
                     clientId: clientId
                 },
                 () => {
-                    setShowAddCycleModal(false);
-                    setName('');
-                    setDescription(null);
-                    setFromDate(null);
-                    setToDate(null)
+                    closeModal();
+                    dispatch(actions.clearCycle());
                     dispatch(actions.getCycles(user.id, clientId,
                         () => { },
                         errors => setError(errors)));
@@ -98,11 +95,8 @@ const CyclesList = () => {
                     clientId: clientId
                 },
                 () => {
-                    setShowUpdateCycleModal(false);
-                    setName('');
-                    setDescription(null);
-                    setFromDate(null);
-                    setToDate(null)
+                    closeModal();
+                    dispatch(actions.clearCycle());
                     dispatch(actions.getCycles(user.id, clientId,
                         () => { },
                         errors => setError(errors)));
@@ -152,6 +146,10 @@ const CyclesList = () => {
 
         <div fluid className='CyclesList'>
 
+            <h3 className="title">
+                <FormattedMessage id="project.templates.cycles.title" />
+            </h3>
+
             <Modal show={showAddCycleModal} onHide={() => setShowAddCycleModal(false)} className='modal'>
 
                 <Modal.Header className='modal-header'>
@@ -171,10 +169,11 @@ const CyclesList = () => {
 
                             <Form.Label>
                                 <FormattedMessage id="project.templates.cycleName" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="text"
-                                placeholder="Ingrese el nombre del ciclo de entrenamiento"
+                                placeholder="Introduzca el nombre del ciclo de entrenamiento"
                                 value={name}
                                 onChange={e => setName(e.target.value)}
                                 required
@@ -192,7 +191,7 @@ const CyclesList = () => {
                             <Form.Control
                                 as="textarea"
                                 rows={3}
-                                placeholder="Ingrese una descripción para el ciclo de entrenamiento"
+                                placeholder="Introduzca una descripción para el ciclo de entrenamiento"
                                 value={description}
                                 onChange={e => setDescription(e.target.value)}
                             />
@@ -201,6 +200,7 @@ const CyclesList = () => {
                         <Form.Group className="mb-3">
                             <Form.Label>
                                 <FormattedMessage id="project.templates.cycleFromDate" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="date"
@@ -216,6 +216,7 @@ const CyclesList = () => {
                         <Form.Group className="mb-3">
                             <Form.Label>
                                 <FormattedMessage id="project.templates.cycleToDate" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="date"
@@ -266,7 +267,7 @@ const CyclesList = () => {
                             </Form.Label>
                             <Form.Control
                                 type="text"
-                                placeholder="Ingrese el nombre del ciclo de entrenamiento"
+                                placeholder="Introduzca el nombre del ciclo de entrenamiento"
                                 value={name}
                                 onChange={e => setName(e.target.value)}
                                 required
@@ -284,7 +285,7 @@ const CyclesList = () => {
                             <Form.Control
                                 as="textarea"
                                 rows={3}
-                                placeholder="Ingrese una descripción para el ciclo de entrenamiento"
+                                placeholder="Introduzca una descripción para el ciclo de entrenamiento"
                                 value={description}
                                 onChange={e => setDescription(e.target.value)}
                             />

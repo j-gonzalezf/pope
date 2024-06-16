@@ -39,7 +39,9 @@ const ClientDetails = () => {
 
         <div fluid className='ClientDetails'>
 
-            <Errors errors={error} onClose={() => setError(null)} />
+            <h3 className="title">
+                <FormattedMessage id="project.users.clientDetails.title" />
+            </h3>
 
             <Row className="listStyle clientDetails">
 
@@ -69,6 +71,8 @@ const ClientDetails = () => {
                 </Col>
 
             </Row>
+
+            <Errors errors={error} onClose={() => setError(null)} />
 
         </div>
 

@@ -2,6 +2,7 @@ import Image from 'react-bootstrap/Image';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Navbar from 'react-bootstrap/Navbar';
+import { CgGym } from "react-icons/cg";
 import './Header.css';
 
 import React, { useEffect, useState } from 'react';
@@ -10,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import AnchorIcon from '../../common/images/anchor-logo.webp';
+import Dumbbells from '../../common/images/dumbbells.webp';
 import TrainerIcon from '../../common/images/trainer-logo.webp';
 import templates from '../../templates';
 import users from '../../users';
@@ -39,12 +41,13 @@ const Header = () => {
     }, [location, isLoggedIn]);
 
     useEffect(() => {
-        // URLs to show the header reference
+        // URLs to hide the header reference
         const urlsToHide = [
             '/users/clients',
             '/users/addClient',
             '/users/updateProfile',
-            '/users/changePassword'
+            '/users/changePassword',
+            '/templates/exercises',
         ];
         if (!urlsToHide.includes(location.pathname)) {
             // Establece un breve retraso antes de mostrar displayReference para evitar parpadeo con el anterior
@@ -66,7 +69,7 @@ const Header = () => {
             <Navbar data-testid="header" className="Header">
 
                 <div className="header-left">
-                    <Navbar.Brand as={Link} to="/users/clients">
+                    <Navbar.Brand as={Link} to="/users/clients" title="Clientes">
                         <Image className="anchor-icon" src={AnchorIcon} alt="Logo" />
                     </Navbar.Brand>
 
@@ -75,6 +78,10 @@ const Header = () => {
                     }
 
                 </div>
+
+                <Link className="dumbbells-link" to="/templates/exercises" title="Lista de ejercicios">
+                    <CgGym className="dumbbells-icon" size={55} src={Dumbbells} alt="Lista de ejercicios" />
+                </Link>
 
                 <div className="header-right">
 

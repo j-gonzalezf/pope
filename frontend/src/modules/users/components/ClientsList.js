@@ -55,6 +55,10 @@ const ClientsList = () => {
 
         <div fluid className='ClientsList'>
 
+            <h3 className="title">
+                <FormattedMessage id="project.users.clients.title" />
+            </h3>
+
             <Row className="listStyle">
 
                 {getClients && (getClients.map((client) => (

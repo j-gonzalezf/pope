@@ -31,3 +31,11 @@ export const getCycle = (id, onSuccess, onErrors) =>
         onSuccess,
         onErrors
     );
+
+export const addExercise = (exercise, onSuccess, onErrors) =>
+    appFetch(
+        "/exercises/exercise/add",
+        fetchConfig("POST", exercise),
+        onSuccess,
+        onErrors
+    );

@@ -30,6 +30,9 @@ const getCycle = (state = initialState.getCycle, action) => {
 
         case actionTypes.UPDATE_CYCLE_COMPLETED:
             return action.getCycle;
+        
+        case actionTypes.CLEAR_CYCLE:
+            return {};
 
         default:
             return state;

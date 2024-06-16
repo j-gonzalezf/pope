@@ -55,3 +55,20 @@ export const getCycle = (id, onSuccess, onErrors) => dispatch =>
         },
         onErrors
     );
+
+export const clearCycle = () => ({
+    type: actionTypes.CLEAR_CYCLE
+});
+
+const addExerciseCompleted = () => ({
+    type: actionTypes.ADD_EXERCISE_COMPLETED
+});
+
+export const addExercise = (exercise, onSuccess, onErrors) => dispatch =>
+    backend.templateService.addExercise(exercise,
+        () => {
+            dispatch(addExerciseCompleted());
+            onSuccess();
+        },
+        onErrors
+    );
