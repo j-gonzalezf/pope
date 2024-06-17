@@ -235,10 +235,9 @@ public class UserServiceImpl implements UserService {
      *
      * @param trainerId El ID del entrenador.
      * @return La lista de objetos Users que representa los clientes.
-     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
      */
     @Override
-    public List<Users> getClients(Long trainerId) throws InstanceNotFoundException {
+    public List<Users> getClients(Long trainerId) {
 
         List<Users> clients = userDao.findByTrainerId(trainerId);
         return clients;

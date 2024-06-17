@@ -117,8 +117,7 @@ public interface UserService {
      *
      * @param trainerId El ID del entrenador.
      * @return La lista de objetos Users que representa los clientes.
-     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
      */
-    List<Users> getClients(Long trainerId) throws InstanceNotFoundException;
+    List<Users> getClients(Long trainerId);
 
 }

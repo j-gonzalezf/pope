@@ -124,10 +124,9 @@ public class TrainingCycleServiceTest {
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
-     * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
      */
     @Test
-    public void testGetCycles() throws DuplicateInstanceException, InstanceNotFoundException {
+    public void testGetCycles() throws DuplicateInstanceException {
 
         TrainingCycles cycle1 = createCycle();
         TrainingCycles cycle2 = createCycle();
