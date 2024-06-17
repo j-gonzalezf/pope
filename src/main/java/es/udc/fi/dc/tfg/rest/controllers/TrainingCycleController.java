@@ -101,34 +101,6 @@ public class TrainingCycleController {
     }
 
     /**
-     * Editar ciclo.
-     *
-     * @param userId el ID del usuario que realiza la petición
-     * @param id el ID del ciclo que se va a editar
-     * @param cycleDto el training cycle dto
-     * @return el user dto
-     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
-     * proporcionado
-     * @throws PermissionException si el ID del usuario que realiza la petición
-     * no coincide con el ID del usuario al que se le va a actualizar el perfil
-     */
-    @PutMapping("/{id}")
-    public TrainingCycleDto updateTrainingCycle(@RequestAttribute Long userId, @PathVariable("id") Long id,
-            @Validated({TrainingCycleDto.UpdateValidations.class}) @RequestBody TrainingCycleDto cycleDto)
-            throws InstanceNotFoundException, PermissionException {
-
-        Users trainer = userService.loginFromId(cycleDto.getTrainerId());
-        Users client = userService.loginFromId(cycleDto.getClientId());
-
-        validateUser(userId, trainer, client);
-
-        return toTrainingCycleDto(cycleService.updateCycle(id, cycleDto.getName(),
-                cycleDto.getDescription(), LocalDate.parse(cycleDto.getFromDate()),
-                LocalDate.parse(cycleDto.getToDate())));
-
-    }
-
-    /**
      * Devuelve la lista de ciclos de entrenamiento del cliente de un
      * entrenador.
      *
@@ -168,17 +140,45 @@ public class TrainingCycleController {
      */
     @GetMapping("/cycle/{id}")
     public TrainingCycleDto getClientInfo(@RequestAttribute Long userId,
-            @PathVariable("id") Long cycleId)throws PermissionException, 
+            @PathVariable("id") Long cycleId) throws PermissionException,
             InstanceNotFoundException {
 
         Users trainer = userService.loginFromId(userId);
         TrainingCycles cycle = cycleService.getCycleInfo(cycleId);
 
         if (!trainer.getId().equals(cycle.getTrainer().getId())) {
-                throw new PermissionException();
-            }
+            throw new PermissionException();
+        }
 
         return toTrainingCycleDto(cycle);
+
+    }
+
+    /**
+     * Editar ciclo.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID del ciclo que se va a editar
+     * @param cycleDto el training cycle dto
+     * @return el user dto
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del usuario al que se le va a actualizar el perfil
+     */
+    @PutMapping("/{id}")
+    public TrainingCycleDto updateTrainingCycle(@RequestAttribute Long userId, @PathVariable("id") Long id,
+            @Validated({TrainingCycleDto.UpdateValidations.class}) @RequestBody TrainingCycleDto cycleDto)
+            throws InstanceNotFoundException, PermissionException {
+
+        Users trainer = userService.loginFromId(cycleDto.getTrainerId());
+        Users client = userService.loginFromId(cycleDto.getClientId());
+
+        validateUser(userId, trainer, client);
+
+        return toTrainingCycleDto(cycleService.updateCycle(id, cycleDto.getName(),
+                cycleDto.getDescription(), LocalDate.parse(cycleDto.getFromDate()),
+                LocalDate.parse(cycleDto.getToDate())));
 
     }
 

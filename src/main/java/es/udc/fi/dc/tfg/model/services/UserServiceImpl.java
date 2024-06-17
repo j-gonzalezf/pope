@@ -104,6 +104,20 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * Devuelve una lista con los clientes de un entrenador.
+     *
+     * @param trainerId El ID del entrenador.
+     * @return La lista de objetos Users que representa los clientes.
+     */
+    @Override
+    public List<Users> getClients(Long trainerId) {
+
+        List<Users> clients = userDao.findByTrainerId(trainerId);
+        return clients;
+
+    }
+
+    /**
      * Actualiza el perfil de un entrenador.
      *
      * @param id El ID del entrenador.
@@ -227,20 +241,6 @@ public class UserServiceImpl implements UserService {
         userDao.deleteById(id);
 
         return id;
-
-    }
-
-    /**
-     * Devuelve una lista con los clientes de un entrenador.
-     *
-     * @param trainerId El ID del entrenador.
-     * @return La lista de objetos Users que representa los clientes.
-     */
-    @Override
-    public List<Users> getClients(Long trainerId) {
-
-        List<Users> clients = userDao.findByTrainerId(trainerId);
-        return clients;
 
     }
 

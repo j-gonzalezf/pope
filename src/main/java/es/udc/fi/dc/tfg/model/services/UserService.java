@@ -46,6 +46,14 @@ public interface UserService {
     Users loginFromId(Long id) throws InstanceNotFoundException;
 
     /**
+     * Devuelve una lista con los clientes de un entrenador.
+     *
+     * @param trainerId El ID del entrenador.
+     * @return La lista de objetos Users que representa los clientes.
+     */
+    List<Users> getClients(Long trainerId);
+
+    /**
      * Actualiza el perfil de un entrenador.
      *
      * @param id El ID del entrenador.
@@ -111,13 +119,5 @@ public interface UserService {
      * proporcionado.
      */
     Long deleteUser(Long id) throws InstanceNotFoundException;
-
-    /**
-     * Devuelve una lista con los clientes de un entrenador.
-     *
-     * @param trainerId El ID del entrenador.
-     * @return La lista de objetos Users que representa los clientes.
-     */
-    List<Users> getClients(Long trainerId);
 
 }

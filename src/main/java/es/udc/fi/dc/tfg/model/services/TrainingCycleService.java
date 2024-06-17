@@ -18,20 +18,6 @@ public interface TrainingCycleService {
     void createCycle(TrainingCycles cycle);
 
     /**
-     * Edita un ciclo de entrenamiento.
-     *
-     * @param id El ID del ciclo.
-     * @param name El nombre del ciclo.
-     * @param description La descripción del ciclo.
-     * @param fromDate La fecha de inicio del ciclo.
-     * @param toDate La fecha de fin del ciclo.
-     * @return El objeto TrainingCycles que representa el ciclo actualizado.
-     * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
-     */
-    TrainingCycles updateCycle(Long id, String name, String description,
-            LocalDate fromDate, LocalDate toDate) throws InstanceNotFoundException;
-
-    /**
      * Devuelve una lista con los ciclos del cliente de un entrenador.
      *
      * @param trainerId El ID del entrenador.
@@ -48,5 +34,19 @@ public interface TrainingCycleService {
      * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
      */
     public TrainingCycles getCycleInfo(Long cycleId) throws InstanceNotFoundException;
+
+    /**
+     * Edita un ciclo de entrenamiento.
+     *
+     * @param id El ID del ciclo.
+     * @param name El nombre del ciclo.
+     * @param description La descripción del ciclo.
+     * @param fromDate La fecha de inicio del ciclo.
+     * @param toDate La fecha de fin del ciclo.
+     * @return El objeto TrainingCycles que representa el ciclo actualizado.
+     * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
+     */
+    TrainingCycles updateCycle(Long id, String name, String description,
+            LocalDate fromDate, LocalDate toDate) throws InstanceNotFoundException;
 
 }

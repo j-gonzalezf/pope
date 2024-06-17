@@ -141,7 +141,7 @@ public class UserController {
     }
 
     // Método para validar un entrenador si id es trainer
-    private void validateForTrainer(Long userId, Long id) 
+    private void validateForTrainer(Long userId, Long id)
             throws PermissionException {
         if (!id.equals(userId)) {
             throw new PermissionException();
@@ -149,7 +149,7 @@ public class UserController {
     }
 
     // Método para validar un entrenador si id es client
-    private void validateForClient(Long userId, Users user) 
+    private void validateForClient(Long userId, Users user)
             throws PermissionException {
         if (!user.getTrainer().getId().equals(userId)) {
             throw new PermissionException();
@@ -237,12 +237,12 @@ public class UserController {
      * no coincide con el ID del entrenador del cliente que se va a crear
      */
     @PostMapping("/addClient")
-    public ResponseEntity<UserDto> addClient(@RequestAttribute Long userId, 
+    public ResponseEntity<UserDto> addClient(@RequestAttribute Long userId,
             @Validated({UserDto.AllValidations.class}) @RequestBody UserDto userDto)
             throws DuplicateInstanceException, InstanceNotFoundException, PermissionException {
 
         validateForTrainer(userId, userDto.getTrainerId());
-        
+
         Users user = createUser(userDto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -260,7 +260,7 @@ public class UserController {
      * @throws IncorrectLoginException the incorrect login exception
      */
     @PostMapping("/login")
-    public AuthenticatedUserDto login(@Validated @RequestBody LoginParamsDto params) 
+    public AuthenticatedUserDto login(@Validated @RequestBody LoginParamsDto params)
             throws IncorrectLoginException {
 
         Users user = userService.login(params.getEmail(), params.getPassword());
@@ -285,6 +285,51 @@ public class UserController {
         Users user = userService.loginFromId(userId);
 
         return toAuthenticatedUserDto(serviceToken, user);
+
+    }
+
+    /**
+     * Devuelve la lista de clientes de un entrenador.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID del entrenador
+     * @return una lista de clientes
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente
+     */
+    @GetMapping("/{id}/clients")
+    public List<UserDto> getClients(@RequestAttribute Long userId, @PathVariable("id") Long id)
+            throws PermissionException, InstanceNotFoundException {
+
+        validateForTrainer(userId, id);
+
+        List<Users> clients = userService.getClients(id);
+
+        return toUsersDto(clients);
+
+    }
+
+    /**
+     * Devuelve el cliente de un entrenador a partir de su ID.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param clientId el ID del cliente
+     * @return un cliente
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el trainer ID del cliente que se solicita
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
+     */
+    @GetMapping("/client/{clientId}")
+    public UserDto getClientInfo(@RequestAttribute Long userId,
+            @PathVariable("clientId") Long clientId)
+            throws PermissionException, InstanceNotFoundException {
+
+        Users client = userService.loginFromId(clientId);
+
+        validateForClient(userId, client);
+
+        return toUserDto(client);
 
     }
 
@@ -360,7 +405,7 @@ public class UserController {
             throws PermissionException, InstanceNotFoundException, IncorrectPasswordException {
 
         validateUser(userId, id);
-        
+
         userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
 
     }
@@ -381,53 +426,8 @@ public class UserController {
             throws PermissionException, InstanceNotFoundException {
 
         validateUser(userId, id);
-        
+
         return userService.deleteUser(id);
-
-    }
-
-    /**
-     * Devuelve la lista de clientes de un entrenador.
-     *
-     * @param userId el ID del usuario que realiza la petición
-     * @param id el ID del entrenador
-     * @return una lista de clientes
-     * @throws PermissionException si el ID del usuario que realiza la petición
-     * no coincide con el ID del entrenador
-     * @throws InstanceNotFoundException si no se encuentra ningún cliente
-     */
-    @GetMapping("/{id}/clients")
-    public List<UserDto> getClients(@RequestAttribute Long userId, @PathVariable("id") Long id)
-            throws PermissionException, InstanceNotFoundException {
-
-        validateForTrainer(userId, id);
-
-        List<Users> clients = userService.getClients(id);
-
-        return toUsersDto(clients);
-
-    }
-
-    /**
-     * Devuelve el cliente de un entrenador a partir de su ID.
-     *
-     * @param userId el ID del usuario que realiza la petición
-     * @param clientId el ID del cliente
-     * @return un cliente
-     * @throws PermissionException si el ID del usuario que realiza la petición
-     * no coincide con el trainer ID del cliente que se solicita
-     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
-     */
-    @GetMapping("/client/{clientId}")
-    public UserDto getClientInfo(@RequestAttribute Long userId,
-            @PathVariable("clientId") Long clientId)
-            throws PermissionException, InstanceNotFoundException {
-
-        Users client = userService.loginFromId(clientId);
-
-        validateForClient(userId, client);
-
-        return toUserDto(client);
 
     }
 
