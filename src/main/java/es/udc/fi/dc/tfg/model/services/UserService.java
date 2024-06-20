@@ -5,6 +5,8 @@ import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
+import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
+import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -13,6 +15,20 @@ import java.util.List;
  * Interfaz UserService.
  */
 public interface UserService {
+
+    /**
+     * Valida un usuario.
+     *
+     * @param userId el ID del usuario que realiza la petición.
+     * @param id el ID del usuario al que se va a realizar una acción CRUD.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     * @throws PermissionException si el usuario que realiza la petición no
+     * tiene permiso para realizar la acción.
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    public void validateUser(Long userId, Long id)
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException;
 
     /**
      * Crea un nuevo usuario.

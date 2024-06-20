@@ -1,7 +1,7 @@
 package es.udc.fi.dc.tfg.model.services.exceptions;
 
 /**
- * Clase PermissionException.
+ * Clase InvalidRoleException.
  */
 @SuppressWarnings("serial")
-public class PermissionException extends Exception {}
+public class InvalidRoleException extends Exception {}

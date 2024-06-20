@@ -11,6 +11,8 @@ import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.entities.UserDao;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
+import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
+import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -40,6 +42,58 @@ public class UserServiceImpl implements UserService {
      */
     @Autowired
     private UserDao userDao;
+
+    // Método para validar un entrenador si id es trainer
+    private void validateForTrainer(Long userId, Long id) throws PermissionException {
+        if (!id.equals(userId)) {
+            throw new PermissionException();
+        }
+    }
+
+    // Método para validar un entrenador si id es client
+    private void validateForClient(Long userId, Users user) throws PermissionException {
+        if (!user.getTrainer().getId().equals(userId)) {
+            throw new PermissionException();
+        }
+    }
+
+    /**
+     * Valida un usuario.
+     *
+     * @param userId el ID del usuario que realiza la petición.
+     * @param id el ID del usuario al que se va a realizar una acción CRUD.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     * @throws PermissionException si el usuario que realiza la petición no
+     * tiene permiso para realizar la acción.
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    @Override
+    public void validateUser(Long userId, Long id)
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        permissionChecker.checkUserExists(id);
+
+        Users user = loginFromId(id);
+        String role = user.getUserRole().toString();
+
+        switch (role) {
+            // En caso de CRUD a un trainer, comprobamos que el que realiza la 
+            // petición y el trainer a actualizar son el mismo user
+            case "TRAINER":
+                validateForTrainer(userId, id);
+                break;
+
+            // En caso de CRUD a un client, comprobamos si el que realiza la 
+            // petición y el trainer del client a actualizar son el mismo user
+            case "CLIENT":
+                validateForClient(userId, user);
+                break;
+
+            default:
+                throw new InvalidRoleException();
+        }
+    }
 
     /**
      * Crea un nuevo usuario.
@@ -232,11 +286,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long deleteUser(Long id) throws InstanceNotFoundException {
 
-        Optional<Users> user = userDao.findById(id);
-
-        if (user.isEmpty()) {
-            throw new InstanceNotFoundException("project.entitites.user", id);
-        }
+        permissionChecker.checkUserExists(id);
 
         userDao.deleteById(id);
 

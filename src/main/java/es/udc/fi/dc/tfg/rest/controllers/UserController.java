@@ -33,6 +33,7 @@ import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
+import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 import es.udc.fi.dc.tfg.model.services.UserService;
 import es.udc.fi.dc.tfg.rest.common.ErrorsDto;
@@ -59,11 +60,6 @@ public class UserController {
      * La constante INCORRECT_PASSWORD_EXCEPTION_CODE.
      */
     private static final String INCORRECT_PASS_EXCEPTION_CODE = "project.exceptions.IncorrectPasswordException";
-
-    /**
-     * La constante ILLEGAL_ARGUMENT_EXCEPTION
-     */
-    private static final String ILLEGAL_ARGUMENT_EXCEPTION = "project.exceptions.IllegalArgumentException";
 
     /**
      * El message source.
@@ -121,75 +117,9 @@ public class UserController {
 
     }
 
-    /**
-     * Maneja la excepción de rol inválido.
-     *
-     * @param exception la excepción de rol inválido
-     * @param locale la ubicación geográfica del usuario
-     * @return un objeto ErrorsDto con el mensaje de error
-     */
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ErrorsDto handleIllegalArgumentException(IllegalArgumentException exception, Locale locale) {
-
-        String errorMessage = messageSource.getMessage(ILLEGAL_ARGUMENT_EXCEPTION, null,
-                ILLEGAL_ARGUMENT_EXCEPTION, locale);
-
-        return new ErrorsDto(errorMessage);
-
-    }
-
-    // Método para validar un entrenador si id es trainer
-    private void validateForTrainer(Long userId, Long id)
-            throws PermissionException {
-        if (!id.equals(userId)) {
-            throw new PermissionException();
-        }
-    }
-
-    // Método para validar un entrenador si id es client
-    private void validateForClient(Long userId, Users user)
-            throws PermissionException {
-        if (!user.getTrainer().getId().equals(userId)) {
-            throw new PermissionException();
-        }
-    }
-
-    // Método para validar un usuario, userId siempre es un TRAINER
-    private void validateUser(Long userId, Long id)
-            throws InstanceNotFoundException, PermissionException {
-
-        Users user = userService.loginFromId(id);
-        String role = user.getUserRole().toString();
-
-        switch (role) {
-            // En caso de CRUD a un trainer, comprobamos que el que realiza la 
-            // petición y el trainer a actualizar son el mismo user
-            case "TRAINER":
-                validateForTrainer(userId, id);
-                break;
-
-            // En caso de CRUD a un client, comprobamos si el que realiza la 
-            // petición y el trainer del client a actualizar son el mismo user
-            case "CLIENT":
-                validateForClient(userId, user);
-                break;
-
-            default:
-                throw new IllegalArgumentException("Invalid role: " + role);
-        }
-    }
-
     // Método común para registrar un usuario
-    private Users createUser(UserDto userDto)
-            throws DuplicateInstanceException, InstanceNotFoundException {
-
-        Users trainer = null;
-
-        if (userDto.getTrainerId() != null) {
-            trainer = userService.loginFromId(userDto.getTrainerId());
-        }
+    private Users createUser(UserDto userDto, Users trainer)
+            throws DuplicateInstanceException {
 
         Users user = toUser(userDto, trainer);
 
@@ -206,15 +136,12 @@ public class UserController {
      * @return una ResponseEntity que contiene un AuthenticatedUserDto
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
-     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
-     * proporcionado.
      */
     @PostMapping("/signUp")
-    public ResponseEntity<AuthenticatedUserDto> signUp(
-            @Validated({UserDto.AllValidations.class}) @RequestBody UserDto userDto)
-            throws DuplicateInstanceException, InstanceNotFoundException {
+    public ResponseEntity<AuthenticatedUserDto> signUp(@Validated({UserDto.AllValidations.class})
+            @RequestBody UserDto userDto) throws DuplicateInstanceException {
 
-        Users user = createUser(userDto);
+        Users user = createUser(userDto, null);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(user.getId()).toUri();
@@ -231,19 +158,23 @@ public class UserController {
      * @return una ResponseEntity que contiene un UserDto
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
-     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
-     * proporcionado.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el
+     * trainerId proporcionado.
      * @throws PermissionException si el ID del usuario que realiza la petición
-     * no coincide con el ID del entrenador del cliente que se va a crear
+     * no coincide con el ID del entrenador del cliente que se va a crear.
+     * @throws InvalidRoleException si el cliente que se va a crear no tiene rol
      */
     @PostMapping("/addClient")
     public ResponseEntity<UserDto> addClient(@RequestAttribute Long userId,
             @Validated({UserDto.AllValidations.class}) @RequestBody UserDto userDto)
-            throws DuplicateInstanceException, InstanceNotFoundException, PermissionException {
+            throws DuplicateInstanceException, InstanceNotFoundException,
+            PermissionException, InvalidRoleException {
 
-        validateForTrainer(userId, userDto.getTrainerId());
+        Users trainer = userService.loginFromId(userDto.getTrainerId());
 
-        Users user = createUser(userDto);
+        userService.validateUser(userId, trainer.getId());
+
+        Users user = createUser(userDto, trainer);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(user.getId()).toUri();
@@ -294,15 +225,17 @@ public class UserController {
      * @param userId el ID del usuario que realiza la petición
      * @param id el ID del entrenador
      * @return una lista de clientes
+     * @throws InstanceNotFoundException si no se encuentra ningún entrenador
+     * con ese ID
      * @throws PermissionException si el ID del usuario que realiza la petición
      * no coincide con el ID del entrenador
-     * @throws InstanceNotFoundException si no se encuentra ningún cliente
+     * @throws InvalidRoleException si el entrenador no tiene rol
      */
     @GetMapping("/{id}/clients")
     public List<UserDto> getClients(@RequestAttribute Long userId, @PathVariable("id") Long id)
-            throws PermissionException, InstanceNotFoundException {
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
 
-        validateForTrainer(userId, id);
+        userService.validateUser(userId, id);
 
         List<Users> clients = userService.getClients(id);
 
@@ -316,18 +249,19 @@ public class UserController {
      * @param userId el ID del usuario que realiza la petición
      * @param clientId el ID del cliente
      * @return un cliente
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente
      * @throws PermissionException si el ID del usuario que realiza la petición
      * no coincide con el trainer ID del cliente que se solicita
-     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
+     * @throws InvalidRoleException si el cliente no tiene rol
      */
     @GetMapping("/client/{clientId}")
     public UserDto getClientInfo(@RequestAttribute Long userId,
             @PathVariable("clientId") Long clientId)
-            throws PermissionException, InstanceNotFoundException {
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        userService.validateUser(userId, clientId);
 
         Users client = userService.loginFromId(clientId);
-
-        validateForClient(userId, client);
 
         return toUserDto(client);
 
@@ -346,26 +280,26 @@ public class UserController {
      * proporcionado
      * @throws PermissionException si el ID del usuario que realiza la petición
      * no coincide con el ID del usuario al que se le va a actualizar el perfil
+     * @throws InvalidRoleException si el usuario no tiene rol
      */
     @PutMapping("/{id}")
     public UserDto updateProfile(@RequestAttribute Long userId, @PathVariable("id") Long id,
             @Validated({UserDto.UpdateValidations.class}) @RequestBody UserDto userDto)
-            throws DuplicateInstanceException, InstanceNotFoundException, PermissionException {
+            throws DuplicateInstanceException, InstanceNotFoundException,
+            PermissionException, InvalidRoleException {
+
+        userService.validateUser(userId, id);
 
         Users user = userService.loginFromId(id);
         String role = user.getUserRole().toString();
 
         if (Users.RoleType.TRAINER.toString().equals(role)) {
 
-            validateForTrainer(userId, id);
-
             return toUserDto(userService.updateProfile(id, userDto.getEmail(),
                     userDto.getFullName(), userDto.getPhone(),
                     userDto.getIcon(), userDto.getSocialLinks()));
 
         } else if (Users.RoleType.CLIENT.toString().equals(role)) {
-
-            validateForClient(userId, user);
 
             LocalDate birthdate = null;
 
@@ -379,7 +313,7 @@ public class UserController {
                     birthdate, userDto.getInjuries(), userDto.getGoals(), userDto.getHeight()));
 
         } else {
-            throw new IllegalArgumentException("Invalid role: " + role);
+            throw new InvalidRoleException();
         }
 
     }
@@ -391,10 +325,11 @@ public class UserController {
      * @param id el ID del usuario al que se le va a cambiar la contraseña
      * @param params los parámetros de cambio de contraseña, que incluyen la
      * contraseña antigua y la nueva
-     * @throws PermissionException si el ID del usuario que realiza la petición
-     * no coincide con el ID del usuario al que se le va a cambiar la contraseña
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del usuario al que se le va a cambiar la contraseña
+     * @throws InvalidRoleException si el usuario no tiene rol
      * @throws IncorrectPasswordException si la contraseña antigua proporcionada
      * no coincide con la contraseña actual del usuario
      */
@@ -402,9 +337,10 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changePassword(@RequestAttribute Long userId, @PathVariable Long id,
             @Validated @RequestBody ChangePasswordParamsDto params)
-            throws PermissionException, InstanceNotFoundException, IncorrectPasswordException {
+            throws InstanceNotFoundException, PermissionException,
+            InvalidRoleException, IncorrectPasswordException {
 
-        validateUser(userId, id);
+        userService.validateUser(userId, id);
 
         userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
 
@@ -416,16 +352,17 @@ public class UserController {
      * @param userId el ID del usuario que realiza la petición
      * @param id el ID del usuario al que se le va a eliminar la cuenta
      * @return el ID del usuario que ha sido eliminado
-     * @throws PermissionException si el ID del usuario que realiza la petición
-     * no coincide con el ID del usuario al que se le va a cambiar la contraseña
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del usuario al que se va a eliminar
+     * @throws InvalidRoleException si el usuario no tiene rol
      */
     @DeleteMapping("/{id}/delete")
     public Long deleteUser(@RequestAttribute Long userId, @PathVariable("id") Long id)
-            throws PermissionException, InstanceNotFoundException {
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
 
-        validateUser(userId, id);
+        userService.validateUser(userId, id);
 
         return userService.deleteUser(id);
 

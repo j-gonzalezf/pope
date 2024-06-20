@@ -272,6 +272,7 @@ public class UserDto {
      *
      * @return the role
      */
+    @NotNull(groups = {AllValidations.class, UpdateValidations.class})
     public String getRole() {
         return role;
     }

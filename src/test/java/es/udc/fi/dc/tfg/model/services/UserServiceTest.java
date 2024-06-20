@@ -20,6 +20,8 @@ import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
+import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
+import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -68,6 +70,99 @@ public class UserServiceTest {
     private Users createClient(String email) {
         return new Users(email, "password2", "fullName2", "123456789", "",
                 LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), null);
+    }
+
+    /**
+     * Test para validar un usuario.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     * @throws PermissionException si el usuario que realiza la petición no
+     * tiene permiso para realizar la acción.
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    @Test
+    public void testValidateUser() throws DuplicateInstanceException,
+            InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        Users trainer = createTrainer("trainer@trainer.com");
+        Users client = createClient("client@client.com");
+        client.setTrainer(trainer);
+
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        // Test para validar un entrenador
+        userService.validateUser(trainer.getId(), trainer.getId());
+
+        // Test para validar un cliente
+        userService.validateUser(trainer.getId(), client.getId());
+
+    }
+
+    /**
+     * Test para validar un usuario inexistente.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     * @throws PermissionException si el usuario que realiza la petición no
+     * tiene permiso para realizar la acción.
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    @Test
+    public void testValidateUserNonExistentId() throws DuplicateInstanceException,
+            InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        Users trainer = createTrainer("trainer@trainer.com");
+        userService.signUp(trainer);
+
+        assertThrows(InstanceNotFoundException.class, () -> {
+            userService.validateUser(trainer.getId(), NON_EXISTENT_ID);
+        });
+
+    }
+
+    /**
+     * Test para validar un usuario sin permiso.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     * @throws PermissionException si el usuario que realiza la petición no
+     * tiene permiso para realizar la acción.
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    @Test
+    public void testValidateUserNonPermission() throws DuplicateInstanceException,
+            InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        Users trainer = createTrainer("trainer@trainer.com");
+        userService.signUp(trainer);
+
+        // Un entrenador intenta validar a otro entrenador
+        // (userId != id)
+        Users anotherTrainer = createTrainer("anotherTrainer@trainer.com");
+        userService.signUp(anotherTrainer);
+
+        assertThrows(PermissionException.class, () -> {
+            userService.validateUser(trainer.getId(), anotherTrainer.getId());
+        });
+
+        // Un entrenador intenta validar a un cliente que no es suyo
+        // (userId != id.trainerId)
+        Users anotherClient = createClient("anotherClient@client.com");
+        anotherClient.setTrainer(anotherTrainer);
+        userService.signUp(anotherClient);
+
+        assertThrows(PermissionException.class, () -> {
+            userService.validateUser(trainer.getId(), anotherClient.getId());
+        });
+
     }
 
     /**
@@ -199,6 +294,174 @@ public class UserServiceTest {
     }
 
     /**
+     * Test para obtener la lista de clientes de un entrenador.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
+     */
+    @Test
+    public void testGetClients() throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Users trainer = createTrainer("trainer@trainer.com");
+
+        userService.signUp(trainer);
+
+        Users client1 = createClient("client1@client.com");
+        client1.setTrainer(trainer);
+        userService.signUp(client1);
+
+        Users client2 = createClient("client2@client.com");
+        client2.setTrainer(trainer);
+        userService.signUp(client2);
+
+        List<Users> clients = userService.getClients(trainer.getId());
+
+        assertEquals(2, clients.size());
+        assertTrue(clients.contains(client1));
+        assertTrue(clients.contains(client2));
+
+    }
+
+    /**
+     * Test para actualizar perfil de entrenador.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testUpdateProfile() throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Users trainer = createTrainer("trainer@trainer.com");
+
+        userService.signUp(trainer);
+
+        Users updatedTrainer = userService.updateProfile(trainer.getId(), "new@new.com",
+                "newFullName1", "192837465", null, "https://linktr.ee");
+
+        assertEquals("new@new.com", updatedTrainer.getEmail());
+        assertEquals("newFullName1", updatedTrainer.getFullName());
+        assertEquals("192837465", updatedTrainer.getPhone());
+        assertNull(updatedTrainer.getIcon());
+        assertEquals("https://linktr.ee", updatedTrainer.getSocialLinks());
+
+    }
+
+    /**
+     * Test para actualizar perfil de entrenador con un ID inexistente.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testUpdateProfileWithNonExistentId()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> userService.updateProfile(NON_EXISTENT_ID, "new@new.com",
+                        "newFullName1", "192837465", null, "https://linktr.ee"));
+    }
+
+    /**
+     * Test para actualizar perfil de entrenador con un email existente.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testUpdateProfileDuplicatedEmail()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Users trainer = createTrainer("trainer@trainer.com");
+        Users client = createClient("client@client.com");
+
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        assertThrows(DuplicateInstanceException.class,
+                () -> userService.updateProfile(trainer.getId(),
+                        "client@client.com", "newFullName1", null, null, null));
+
+    }
+
+    /**
+     * Test para actualizar perfil de cliente.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testUpdateClient() throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Users client = createClient("client@client.com");
+
+        userService.signUp(client);
+
+        Users updatedClient = userService.updateClient(client.getId(),
+                "new@new.es", "newFullName2", "192837460", null,
+                LocalDate.of(2001, 1, 1), "Asma", "No", new BigDecimal("180"));
+
+        assertEquals("new@new.es", updatedClient.getEmail());
+        assertEquals("newFullName2", updatedClient.getFullName());
+        assertEquals("192837460", updatedClient.getPhone());
+        assertNull(updatedClient.getIcon());
+        assertEquals(LocalDate.of(2001, 1, 1), updatedClient.getBirthdate());
+        assertEquals("Asma", updatedClient.getInjuries());
+        assertEquals("No", updatedClient.getGoals());
+        assertEquals(new BigDecimal("180"), updatedClient.getHeight());
+
+    }
+
+    /**
+     * Test para actualizar perfil de cliente con un ID inexistente.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testUpdateClientWithNonExistentId()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> userService.updateClient(NON_EXISTENT_ID, "new@new.es",
+                        "newFullName2", "192837460", null, LocalDate.of(2001, 1, 1),
+                        "Asma", "No", new BigDecimal("180")));
+    }
+
+    /**
+     * Test para actualizar perfil de cliente con un email existente.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testUpdateClientDuplicatedEmail()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Users trainer = createTrainer("trainer@trainer.com");
+        Users client = createClient("client@client.com");
+
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        assertThrows(DuplicateInstanceException.class,
+                () -> userService.updateClient(client.getId(),
+                        "trainer@trainer.com", "newFullName2", "192837460", null,
+                        LocalDate.of(2001, 1, 1), "Asma", "No", null));
+
+    }
+
+    /**
      * Test para cambiar contraseña.
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
@@ -279,95 +542,6 @@ public class UserServiceTest {
     }
 
     /**
-     * Test para actualizar perfil de entrenador.
-     *
-     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
-     * email.
-     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
-     * proporcionado.
-     */
-    @Test
-    public void testUpdateProfile() throws DuplicateInstanceException, InstanceNotFoundException {
-
-        Users trainer = createTrainer("trainer@trainer.com");
-
-        userService.signUp(trainer);
-
-        Users updatedTrainer = userService.updateProfile(trainer.getId(), "new@new.com",
-                "newFullName1", "192837465", null, "https://linktr.ee");
-
-        assertEquals("new@new.com", updatedTrainer.getEmail());
-        assertEquals("newFullName1", updatedTrainer.getFullName());
-        assertEquals("192837465", updatedTrainer.getPhone());
-        assertNull(updatedTrainer.getIcon());
-        assertEquals("https://linktr.ee", updatedTrainer.getSocialLinks());
-
-    }
-
-    /**
-     * Test para actualizar perfil de entrenador con un ID inexistente.
-     *
-     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
-     * email.
-     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
-     * proporcionado.
-     */
-    @Test
-    public void testUpdateProfileWithNonExistentId()
-            throws DuplicateInstanceException, InstanceNotFoundException {
-        assertThrows(InstanceNotFoundException.class,
-                () -> userService.updateProfile(NON_EXISTENT_ID, "new@new.com",
-                        "newFullName1", "192837465", null, "https://linktr.ee"));
-    }
-
-    /**
-     * Test para actualizar perfil de cliente.
-     *
-     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
-     * email.
-     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
-     * proporcionado.
-     */
-    @Test
-    public void testUpdateClient() throws DuplicateInstanceException, InstanceNotFoundException {
-
-        Users client = createClient("client@client.com");
-
-        userService.signUp(client);
-
-        Users updatedClient = userService.updateClient(client.getId(),
-                "new@new.es", "newFullName2", "192837460", null,
-                LocalDate.of(2001, 1, 1), "Asma", "No", new BigDecimal("180"));
-
-        assertEquals("new@new.es", updatedClient.getEmail());
-        assertEquals("newFullName2", updatedClient.getFullName());
-        assertEquals("192837460", updatedClient.getPhone());
-        assertNull(updatedClient.getIcon());
-        assertEquals(LocalDate.of(2001, 1, 1), updatedClient.getBirthdate());
-        assertEquals("Asma", updatedClient.getInjuries());
-        assertEquals("No", updatedClient.getGoals());
-        assertEquals(new BigDecimal("180"), updatedClient.getHeight());
-
-    }
-
-    /**
-     * Test para actualizar perfil de cliente con un ID inexistente.
-     *
-     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
-     * email.
-     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
-     * proporcionado.
-     */
-    @Test
-    public void testUpdateClientWithNonExistentId()
-            throws DuplicateInstanceException, InstanceNotFoundException {
-        assertThrows(InstanceNotFoundException.class,
-                () -> userService.updateClient(NON_EXISTENT_ID, "new@new.es",
-                        "newFullName2", "192837460", null, LocalDate.of(2001, 1, 1),
-                        "Asma", "No", new BigDecimal("180")));
-    }
-
-    /**
      * Test para eliminar usuario.
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
@@ -402,36 +576,6 @@ public class UserServiceTest {
             throws DuplicateInstanceException, InstanceNotFoundException {
         assertThrows(InstanceNotFoundException.class,
                 () -> userService.deleteUser(NON_EXISTENT_ID));
-    }
-
-    /**
-     * Test para obtener la lista de clientes de un entrenador.
-     *
-     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
-     * email.
-     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
-     */
-    @Test
-    public void testGetClients() throws DuplicateInstanceException, InstanceNotFoundException {
-
-        Users trainer = createTrainer("trainer@trainer.com");
-
-        userService.signUp(trainer);
-
-        Users client1 = createClient("client1@client.com");
-        client1.setTrainer(trainer);
-        userService.signUp(client1);
-
-        Users client2 = createClient("client2@client.com");
-        client2.setTrainer(trainer);
-        userService.signUp(client2);
-
-        List<Users> clients = userService.getClients(trainer.getId());
-
-        assertEquals(2, clients.size());
-        assertTrue(clients.contains(client1));
-        assertTrue(clients.contains(client2));
-
     }
 
 }
