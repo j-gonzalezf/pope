@@ -43,14 +43,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
-    // Método para validar un entrenador si id es trainer
+    // Método para validar un entrenador cuando id es un TRAINER
     private void validateForTrainer(Long userId, Long id) throws PermissionException {
         if (!id.equals(userId)) {
             throw new PermissionException();
         }
     }
 
-    // Método para validar un entrenador si id es client
+    // Método para validar un entrenador cuando id es un CLIENT
     private void validateForClient(Long userId, Users user) throws PermissionException {
         if (!user.getTrainer().getId().equals(userId)) {
             throw new PermissionException();
@@ -78,19 +78,16 @@ public class UserServiceImpl implements UserService {
         String role = user.getUserRole().toString();
 
         switch (role) {
-            // En caso de CRUD a un trainer, comprobamos que el que realiza la 
+            // En caso de CRUD a un trainer, comprobamos que el que realiza la
             // petición y el trainer a actualizar son el mismo user
-            case "TRAINER":
+            case "TRAINER" ->
                 validateForTrainer(userId, id);
-                break;
-
-            // En caso de CRUD a un client, comprobamos si el que realiza la 
+            // En caso de CRUD a un client, comprobamos si el que realiza la
             // petición y el trainer del client a actualizar son el mismo user
-            case "CLIENT":
+            case "CLIENT" ->
                 validateForClient(userId, user);
-                break;
 
-            default:
+            default ->
                 throw new InvalidRoleException();
         }
     }

@@ -293,27 +293,30 @@ public class UserController {
         Users user = userService.loginFromId(id);
         String role = user.getUserRole().toString();
 
-        if (Users.RoleType.TRAINER.toString().equals(role)) {
+        switch (role) {
 
-            return toUserDto(userService.updateProfile(id, userDto.getEmail(),
-                    userDto.getFullName(), userDto.getPhone(),
-                    userDto.getIcon(), userDto.getSocialLinks()));
-
-        } else if (Users.RoleType.CLIENT.toString().equals(role)) {
-
-            LocalDate birthdate = null;
-
-            // Comprobamos si la fecha es nula para que no falle .parse
-            if (userDto.getBirthdate() != null && !userDto.getBirthdate().isEmpty()) {
-                birthdate = LocalDate.parse(userDto.getBirthdate());
+            case "TRAINER" -> {
+                return toUserDto(userService.updateProfile(id, userDto.getEmail(),
+                        userDto.getFullName(), userDto.getPhone(),
+                        userDto.getIcon(), userDto.getSocialLinks()));
             }
 
-            return toUserDto(userService.updateClient(id, userDto.getEmail(),
-                    userDto.getFullName(), userDto.getPhone(), userDto.getIcon(),
-                    birthdate, userDto.getInjuries(), userDto.getGoals(), userDto.getHeight()));
+            case "CLIENT" -> {
+                LocalDate birthdate = null;
 
-        } else {
-            throw new InvalidRoleException();
+                // Comprobamos si la fecha es nula para que no falle .parse
+                if (userDto.getBirthdate() != null && !userDto.getBirthdate().isEmpty()) {
+                    birthdate = LocalDate.parse(userDto.getBirthdate());
+                }
+
+                return toUserDto(userService.updateClient(id, userDto.getEmail(),
+                        userDto.getFullName(), userDto.getPhone(), userDto.getIcon(),
+                        birthdate, userDto.getInjuries(), userDto.getGoals(), userDto.getHeight()));
+            }
+
+            default ->
+                throw new InvalidRoleException();
+
         }
 
     }

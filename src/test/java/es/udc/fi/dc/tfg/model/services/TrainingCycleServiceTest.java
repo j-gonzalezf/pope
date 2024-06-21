@@ -1,6 +1,7 @@
 package es.udc.fi.dc.tfg.model.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -27,6 +28,8 @@ import java.util.List;
 @ActiveProfiles("test")
 @Transactional
 public class TrainingCycleServiceTest {
+
+    private final Long NON_EXISTENT_ID = Long.valueOf(-1);
 
     /**
      * El user service.
@@ -87,39 +90,6 @@ public class TrainingCycleServiceTest {
     }
 
     /**
-     * Test para editar ciclos de entrenamiento.
-     *
-     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
-     * email.
-     * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
-     */
-    @Test
-    public void testUpdateCycle() throws DuplicateInstanceException, InstanceNotFoundException {
-
-        TrainingCycles cycle = createCycle();
-        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
-        Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
-                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
-
-        userService.signUp(trainer);
-        userService.signUp(client);
-
-        cycle.setTrainer(trainer);
-        cycle.setClient(client);
-        cycleService.createCycle(cycle);
-
-        TrainingCycles updatedCycle = cycleService.updateCycle(cycle.getId(),
-                "new Name", "new Description", LocalDate.of(2001, 1, 1),
-                LocalDate.of(2002, 1, 1));
-
-        assertEquals("new Name", updatedCycle.getName());
-        assertEquals("new Description", updatedCycle.getDescription());
-        assertEquals(LocalDate.of(2001, 1, 1), updatedCycle.getFromDate());
-        assertEquals(LocalDate.of(2002, 1, 1), updatedCycle.getToDate());
-
-    }
-
-    /**
      * Test para obtener los ciclos del cliente de un entrenador.
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
@@ -151,6 +121,66 @@ public class TrainingCycleServiceTest {
         assertTrue(cycles.contains(cycle1));
         assertTrue(cycles.contains(cycle2));
 
+    }
+
+    /**
+     * Test para obtener un ciclo con un ID inexistente.
+     *
+     * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testGetCycleWithNonExistentId() throws InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> cycleService.getCycleInfo(NON_EXISTENT_ID));
+    }
+
+    /**
+     * Test para editar ciclos de entrenamiento.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
+     */
+    @Test
+    public void testUpdateCycle()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+
+        TrainingCycles cycle = createCycle();
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+        Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
+                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
+
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        cycle.setTrainer(trainer);
+        cycle.setClient(client);
+        cycleService.createCycle(cycle);
+
+        TrainingCycles updatedCycle = cycleService.updateCycle(cycle.getId(),
+                "new Name", "new Description", LocalDate.of(2001, 1, 1),
+                LocalDate.of(2002, 1, 1));
+
+        assertEquals("new Name", updatedCycle.getName());
+        assertEquals("new Description", updatedCycle.getDescription());
+        assertEquals(LocalDate.of(2001, 1, 1), updatedCycle.getFromDate());
+        assertEquals(LocalDate.of(2002, 1, 1), updatedCycle.getToDate());
+
+    }
+
+    /**
+     * Test para actualizar un ciclo con un ID inexistente.
+     *
+     * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testUpdateCycleWithNonExistentId() throws InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> cycleService.updateCycle(NON_EXISTENT_ID, "new Name",
+                        "new Description", LocalDate.of(2001, 1, 1),
+                        LocalDate.of(2002, 1, 1)));
     }
 
 }

@@ -73,11 +73,13 @@ public class TrainingCycleControllerTest {
      * El authenticated user dto.
      */
     private AuthenticatedUserDto authTrainer;
+    private AuthenticatedUserDto authTrainer2;
     private AuthenticatedUserDto authClient;
 
     @Before
     public void createEntities() throws IncorrectLoginException {
         authTrainer = createAuthenticatedTrainer("trainer@user.com");
+        authTrainer2 = createAuthenticatedTrainer("trainer2@user.com");
         authClient = createAuthenticatedClient("client@user.com");
     }
 
@@ -167,6 +169,292 @@ public class TrainingCycleControllerTest {
     }
 
     /**
+     * Test para crear un ciclo de entrenamiento sin definir un nombre.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testCreateTrainingCycle_NotName() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, null, null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para crear un ciclo de entrenamiento sin definir una fecha de inici.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testCreateTrainingCycle_NotFromDate() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                null, "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para crear un ciclo de entrenamiento sin definir una fecha de fin.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testCreateTrainingCycle_NotToDate() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", null, trainerDto.getId(), clientDto.getId());
+
+        mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para crear un ciclo de entrenamiento con un usuario inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testCreateTrainingCycle_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleWithNoTrainer = new TrainingCycleDto(null, "cycleName",
+                null, "2001-09-25", "2002-09-25", incorrectUserId, clientDto.getId());
+
+        TrainingCycleDto cycleWithNoClient = new TrainingCycleDto(null, "cycleName",
+                null, "2001-09-25", "2002-09-25", trainerDto.getId(), incorrectUserId);
+
+        // Crear un ciclo con un entrenador que no existe
+        mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleWithNoTrainer)))
+                .andExpect(status().isNotFound());
+
+        // Crear un ciclo con un cliente que no existe
+        mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleWithNoClient)))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para crear un ciclo de entrenamiento sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testCreateTrainingCycle_PermissionException() throws Exception {
+
+        UserDto trainerDto = authTrainer2.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para crear un ciclo de entrenamiento con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testCreateTrainingCycle_InvalidRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authClient.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para obtener los ciclos del cliente de un entrenador.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTrainingCycles() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        mockMvc.perform(get("/api/templates/" + trainerDto.getId() + "/clients/" + clientDto.getId() + "/cycles")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para obtener los ciclos del cliente de un entrenador con un usuario
+     * inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTrainingCycles_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        // Solicitar la obtención de un ciclo con un entrenador que no existe
+        mockMvc.perform(get("/api/templates/" + incorrectUserId + "/clients/" + clientDto.getId() + "/cycles")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+        // Solicitar la obtención de un ciclo con un cliente que no existe
+        mockMvc.perform(get("/api/templates/" + trainerDto.getId() + "/clients/" + incorrectUserId + "/cycles")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para obtener los ciclos del cliente de un entrenador sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTrainingCycles_PermissionException() throws Exception {
+
+        UserDto trainerDto = authTrainer2.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        mockMvc.perform(get("/api/templates/" + trainerDto.getId() + "/clients/" + clientDto.getId() + "/cycles")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para obtener los ciclos del cliente de un entrenador con un rol de
+     * cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTrainingCycles_InvalidRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        mockMvc.perform(get("/api/templates/" + trainerDto.getId() + "/clients/" + clientDto.getId() + "/cycles")
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para obtener un ciclo a partir de ID inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetCycle_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+
+        mockMvc.perform(get("/api/templates/cycle/" + incorrectUserId)
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para obtener un ciclo a partir de ID sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetCycle_PermissionException() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        mockMvc.perform(get("/api/templates/cycle/" + createdCycle.getId())
+                .header("Authorization", "Bearer " + authTrainer2.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para obtener un ciclo a partir de su ID con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetCycle_InvalidRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        mockMvc.perform(get("/api/templates/cycle/" + createdCycle.getId())
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
      * Test para editar un ciclo de entrenamiento.
      *
      * @throws Exception la excepción
@@ -190,26 +478,171 @@ public class TrainingCycleControllerTest {
 
         mockMvc.perform(put("/api/templates/" + newCycleDto.getId())
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newCycleDto))
-                .header("userId", trainerDto.getId().toString()))
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newCycleDto)))
                 .andExpect(status().isOk());
 
     }
 
     /**
-     * Test para obtener los ciclos del clientes de un entrenador.
+     * Test para editar un ciclo de entrenamiento sin definir un nombre.
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testGetTrainingCycles() throws Exception {
+    public void testUpdateTrainingCycle_NotName() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
 
-        mockMvc.perform(get("/api/templates/" + trainerDto.getId() + "/clients/" + clientDto.getId() + "/cycles")
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
-                .andExpect(status().isOk());
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto updatedCycleDto = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+        updatedCycleDto.setName(null);
+
+        mockMvc.perform(put("/api/templates/" + updatedCycleDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedCycleDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para crear un editar de entrenamiento sin definir una fecha de
+     * inici.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateTrainingCycle_NotFromDate() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto updatedCycleDto = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+        updatedCycleDto.setFromDate(null);
+
+        mockMvc.perform(put("/api/templates/" + updatedCycleDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedCycleDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para editar un ciclo de entrenamiento sin definir una fecha de fin.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateTrainingCycle_NotToDate() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto updatedCycleDto = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+        updatedCycleDto.setToDate(null);
+
+        mockMvc.perform(put("/api/templates/" + updatedCycleDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedCycleDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para editar un ciclo de entrenamiento inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateTrainingCycle_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName",
+                null, "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        mockMvc.perform(put("/api/templates/" + incorrectUserId)
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para editar un ciclo de entrenamiento sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateTrainingCycle_PermissionException() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto updatedCycleDto = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        mockMvc.perform(put("/api/templates/" + updatedCycleDto.getId())
+                .header("Authorization", "Bearer " + authTrainer2.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedCycleDto)))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para editar un ciclo de entrenamiento con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateTrainingCycle_InvalidRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authClient.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isForbidden());
 
     }
 
