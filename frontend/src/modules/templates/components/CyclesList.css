@@ -33,6 +33,7 @@
     min-width: 130px;
     background-color: #191716 !important;
     color: white !important;
+    align-content: center;
     text-align: justify;
 }
 
@@ -48,10 +49,10 @@
 }
 
 .pointer {
-    padding-top: 20px !important;
     border: #191716;
     background-color: #191716 !important;
     color: #191716 !important;
+    align-content: center;
     text-align: end;
 }
 
@@ -63,10 +64,38 @@
     color: #e6af2e !important;
 }
 
-.editIconStyle.cycle {
+.customTable.edit {
+    padding-left: 2rem !important;
+    padding-right: 0 !important;
+    width: 0% !important;
+    text-align: left !important;
+}
+
+.primary.edit {
+    margin: 0;
+    padding: 0;
+    border: none;
+    color: #e6af2e !important;
+    background-color: #191716 !important;
+}
+
+.editIconStyle.cycle,
+.deleteIconStyle.cycle {
     margin: 0;
     margin-right: 0.5rem;
-    margin-left: 0.5rem;
+}
+
+.customTable.delete {
+    padding-left: 0.5rem !important;
+    text-align: left !important;
+}
+
+.primary.delete {
+    margin: 0;
+    padding: 0;
+    border: none;
+    color: red;
+    background-color: #191716 !important;
 }
 
 .plusIconStyle.cycle {

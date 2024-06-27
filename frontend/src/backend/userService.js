@@ -23,6 +23,8 @@ export const login = (email, password, onSuccess, onErrors, reauthenticationCall
     onErrors
   );
 
+export const logout = () => removeServiceToken();
+
 export const tryLoginFromServiceToken = (onSuccess, reauthenticationCallback) => {
   const serviceToken = getServiceToken();
 
@@ -51,7 +53,6 @@ export const signUp = (user, onSuccess, onErrors, reauthenticationCallback) =>
     onErrors
   );
 
-
 export const addClient = (user, onSuccess, onErrors) =>
   appFetch(
     "/users/addClient",
@@ -60,7 +61,21 @@ export const addClient = (user, onSuccess, onErrors) =>
     onErrors
   );
 
-export const logout = () => removeServiceToken();
+export const getClients = (id, onSuccess, onErrors) =>
+  appFetch(
+    `/users/${id}/clients`,
+    fetchConfig("GET"),
+    onSuccess,
+    onErrors
+  );
+
+export const getClientInfo = (clientId, onSuccess, onErrors) =>
+  appFetch(
+    `/users/client/${clientId}`,
+    fetchConfig("GET"),
+    onSuccess,
+    onErrors
+  );
 
 export const updateProfile = (user, onSuccess, onErrors) =>
   appFetch(
@@ -81,22 +96,6 @@ export const changePassword = (id, oldPassword, newPassword, onSuccess, onErrors
 export const deleteUser = (id, onSuccess, onErrors) =>
   appFetch(
     `/users/${id}/delete`, fetchConfig("DELETE"),
-    onSuccess,
-    onErrors
-  );
-
-export const getClients = (id, onSuccess, onErrors) =>
-  appFetch(
-    `/users/${id}/clients`,
-    fetchConfig("GET"),
-    onSuccess,
-    onErrors
-  );
-
-export const getClientInfo = (clientId, onSuccess, onErrors) =>
-  appFetch(
-    `/users/client/${clientId}`,
-    fetchConfig("GET"),
     onSuccess,
     onErrors
   );

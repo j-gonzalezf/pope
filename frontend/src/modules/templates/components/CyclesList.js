@@ -2,13 +2,13 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table';
-import { BsChevronRight, BsFillPlusCircleFill, BsPencilSquare } from "react-icons/bs";
+import { BsChevronRight, BsFillPlusCircleFill, BsPencilSquare, BsTrash } from "react-icons/bs";
 import './CyclesList.css';
 
 import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { Errors } from '../../common';
 import * as actions from '../actions';
@@ -109,6 +109,17 @@ const CyclesList = () => {
             formUpdate.classList.add('was-validated');
         }
 
+    }
+
+    const deleteCycle = cycle => {
+        dispatch(actions.deleteCycle(cycle.id,
+            () => {
+                dispatch(actions.getCycles(user.id, clientId,
+                    () => { },
+                    errors => setError(errors)));
+            },
+            errors => setError(errors)
+        ));
     }
 
     const openUpdateCycleModal = cycle => {
@@ -357,8 +368,8 @@ const CyclesList = () => {
                                 <td className="customTable">{cycle.description}</td>
                                 <td className="customTable">{dateFormat(cycle.fromDate)}</td>
                                 <td className="customTable">{dateFormat(cycle.toDate)}</td>
-                                <td className="customTable">
-                                    <Link className='link' onClick={(event) => {
+                                <td className="customTable edit">
+                                    <Button className="primary edit" onClick={(event) => {
                                         event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
                                         openUpdateCycleModal(cycle);
                                     }}
@@ -367,7 +378,19 @@ const CyclesList = () => {
                                         <span>
                                             <FormattedMessage id="project.templates.updateCycle" />
                                         </span>
-                                    </Link>
+                                    </Button>
+                                </td>
+                                <td className="customTable delete">
+                                    <Button className="primary delete" onClick={(event) => {
+                                        event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
+                                        deleteCycle(cycle);
+                                    }}
+                                        title='Pulsa para eliminar ciclo'>
+                                        <BsTrash className="deleteIconStyle cycle" />
+                                        <span>
+                                            <FormattedMessage id="project.templates.deleteCycle" />
+                                        </span>
+                                    </Button>
                                 </td>
                             </tr>
                         ))}

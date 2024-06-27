@@ -14,20 +14,6 @@ export const createCycle = (cycle, onSuccess, onErrors) => dispatch =>
         onErrors
     );
 
-const updateCycleCompleted = getCycle => ({
-    type: actionTypes.UPDATE_CYCLE_COMPLETED,
-    getCycle
-});
-
-export const updateCycle = (cycle, onSuccess, onErrors) => dispatch =>
-    backend.templateService.updateCycle(cycle,
-        cycle => {
-            dispatch(updateCycleCompleted(cycle));
-            onSuccess();
-        },
-        onErrors
-    );
-
 const getCyclesCompleted = getCycles => ({
     type: actionTypes.GET_CYCLES_COMPLETED,
     getCycles
@@ -59,6 +45,33 @@ export const getCycle = (id, onSuccess, onErrors) => dispatch =>
 export const clearCycle = () => ({
     type: actionTypes.CLEAR_CYCLE
 });
+
+const updateCycleCompleted = getCycle => ({
+    type: actionTypes.UPDATE_CYCLE_COMPLETED,
+    getCycle
+});
+
+export const updateCycle = (cycle, onSuccess, onErrors) => dispatch =>
+    backend.templateService.updateCycle(cycle,
+        cycle => {
+            dispatch(updateCycleCompleted(cycle));
+            onSuccess();
+        },
+        onErrors
+    );
+
+const deleteCycleCompleted = () => ({
+    type: actionTypes.DELETE_CYCLE_COMPLETED
+});
+
+export const deleteCycle = (id, onSuccess, onErrors) => dispatch =>
+    backend.templateService.deleteCycle(id,
+        () => {
+            dispatch(deleteCycleCompleted());
+            onSuccess();
+        },
+        onErrors
+    );
 
 const addExerciseCompleted = () => ({
     type: actionTypes.ADD_EXERCISE_COMPLETED

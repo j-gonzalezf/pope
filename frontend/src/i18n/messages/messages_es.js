@@ -103,6 +103,7 @@ export default {
     'project.templates.addCycle': 'Crear ciclo',
     'project.templates.updateCycle': 'Editar',
     'project.templates.updateCycle.title': 'Actualizar ciclo de entrenamiento',
+    'project.templates.deleteCycle': 'Borrar',
     'project.templates.addExercise': 'Añadir ejercicio',
     'project.templates.addExercise.title': 'Nuevo ejercicio',
     'project.templates.addExercise.button': 'Añadir',
