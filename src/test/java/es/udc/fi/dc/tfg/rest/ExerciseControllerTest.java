@@ -1,6 +1,7 @@
 package es.udc.fi.dc.tfg.rest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
@@ -118,6 +119,22 @@ public class ExerciseControllerTest {
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(exerciseDto)))
                 .andExpect(status().isCreated()).andReturn();
+
+    }
+
+    /**
+     * Test para obtener los ejercicios añadidos por un entrenador.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetExercises() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        mockMvc.perform(get("/api/exercises/" + trainerDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
 
     }
 

@@ -21,3 +21,8 @@
 .arrowIconStyle:hover {
     cursor: pointer;
 }
+
+.react-spreadsheet__cell {
+    background-color: #191716;
+    color: white;
+  }

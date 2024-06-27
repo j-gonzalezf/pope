@@ -14,6 +14,6 @@ public interface ExerciseDao extends JpaRepository<Exercises, Long> {
      * @param trainerId El ID del entrenador.
      * @return La lista de objetos Exercises que representa los ejercicios.
      */
-    List<Exercises> findByTrainerId(Long trainerId);
+    List<Exercises> findByTrainerIdOrderByNameAsc(Long trainerId);
     
 }

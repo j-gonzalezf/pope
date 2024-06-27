@@ -72,3 +72,17 @@ export const addExercise = (exercise, onSuccess, onErrors) => dispatch =>
         },
         onErrors
     );
+
+const getExercisesCompleted = getExercises => ({
+    type: actionTypes.GET_EXERCISES_COMPLETED,
+    getExercises
+});
+
+export const getExercises = (trainerId, onSuccess, onErrors) => dispatch =>
+    backend.templateService.getExercises(trainerId,
+        getExercises => {
+            dispatch(getExercisesCompleted(getExercises));
+            onSuccess();
+        },
+        onErrors
+    );

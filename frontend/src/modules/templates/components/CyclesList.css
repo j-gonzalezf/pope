@@ -39,6 +39,8 @@
 .customTable.underline {
     border-bottom: 2px solid white !important;
     color: #e6af2e !important;
+    align-content: end;
+    text-align: start;
 }
 
 .cycleSelect:hover {

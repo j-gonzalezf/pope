@@ -2,6 +2,8 @@ package es.udc.fi.dc.tfg.rest.dtos;
 
 import es.udc.fi.dc.tfg.model.entities.Exercises;
 import es.udc.fi.dc.tfg.model.entities.Users;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Clase ExerciseConversor.
@@ -25,6 +27,19 @@ public class ExerciseConversor {
         return new ExerciseDto(exercise.getId(), exercise.getName(),
                 exercise.getDescription(), exercise.getType(), exercise.getBodyPart(),
                 exercise.getEquipment(), exercise.getLink(), exercise.getTrainer().getId());
+    }
+
+    /**
+     * Convierte una lista de objetos Exercises a objetos ExerciseDto.
+     *
+     * @param exercises la lista de objetos Exercises a convertir
+     * @return una nueva lista de objetos ExerciseDto que contiene los mismos
+     * datos que la lista de objetos Exercises proporcionada
+     */
+    public static final List<ExerciseDto> toExercisesDto(List<Exercises> exercises) {
+        return exercises.stream().map(exercise -> {
+            return toExerciseDto(exercise);
+        }).collect(Collectors.toList());
     }
 
     /**

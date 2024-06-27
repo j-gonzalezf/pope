@@ -39,3 +39,11 @@ export const addExercise = (exercise, onSuccess, onErrors) =>
         onSuccess,
         onErrors
     );
+
+export const getExercises = (trainerId, onSuccess, onErrors) =>
+    appFetch(
+        `/exercises/${trainerId}`,
+        fetchConfig("GET"),
+        onSuccess,
+        onErrors
+    );

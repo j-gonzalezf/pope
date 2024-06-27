@@ -7,3 +7,7 @@ export const getCycles = state => {
 export const getCycle = state => {
     return getModuleState(state).getCycle;
 }
+
+export const getExercises = state => {
+    return getModuleState(state).getExercises;
+}

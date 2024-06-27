@@ -40,7 +40,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     @Override
     public List<Exercises> getExercises(Long trainerId) {
 
-        List<Exercises> exercises = exerciseDao.findByTrainerId(trainerId);
+        List<Exercises> exercises = exerciseDao.findByTrainerIdOrderByNameAsc(trainerId);
         return exercises;
 
     }

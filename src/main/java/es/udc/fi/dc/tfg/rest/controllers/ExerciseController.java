@@ -1,6 +1,7 @@
 package es.udc.fi.dc.tfg.rest.controllers;
 
 import static es.udc.fi.dc.tfg.rest.dtos.ExerciseConversor.toExerciseDto;
+import static es.udc.fi.dc.tfg.rest.dtos.ExerciseConversor.toExercisesDto;
 import static es.udc.fi.dc.tfg.rest.dtos.ExerciseConversor.toExercises;
 import java.net.URI;
 
@@ -21,6 +22,9 @@ import es.udc.fi.dc.tfg.model.services.ExerciseService;
 import es.udc.fi.dc.tfg.model.services.UserService;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 import es.udc.fi.dc.tfg.rest.dtos.ExerciseDto;
+import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * Clase ExerciseController.
@@ -74,6 +78,31 @@ public class ExerciseController {
                 .buildAndExpand(exercise.getId()).toUri();
 
         return ResponseEntity.created(location).body(toExerciseDto(exercise));
+
+    }
+
+    /**
+     * Devuelve la lista de ejercicios añadidos por un entrenador.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param trainerId el ID del entrenador
+     * @return una lista de ejercicios
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador
+     * @throws InstanceNotFoundException si no se encuentra el entrenador
+     */
+    @GetMapping("/{trainerId}")
+    public List<ExerciseDto> getTrainingCycles(@RequestAttribute Long userId,
+            @PathVariable("trainerId") Long trainerId)
+            throws PermissionException, InstanceNotFoundException {
+
+        Users trainer = userService.loginFromId(trainerId);
+
+        validateUser(userId, trainer);
+
+        List<Exercises> exercises = exerciseService.getExercises(trainerId);
+
+        return toExercisesDto(exercises);
 
     }
 

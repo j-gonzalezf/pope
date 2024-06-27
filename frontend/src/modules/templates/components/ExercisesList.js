@@ -1,22 +1,25 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import Table from 'react-bootstrap/Table';
 import { BsArrowUpCircleFill, BsFillPlusCircleFill } from "react-icons/bs";
 import './ExercisesList.css';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Errors } from '../../common';
 import * as actions from '../actions';
 import * as userSelectors from '../../users/selectors';
+import * as selectors from '../selectors';
 
 const ExercisesList = () => {
 
     const dispatch = useDispatch();
 
     const user = useSelector(userSelectors.getUser);
+    const getExercises = useSelector(selectors.getExercises);
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState(null);
@@ -54,6 +57,9 @@ const ExercisesList = () => {
                     setEquipment(null);
                     setLink(null);
                     setError(null);
+                    dispatch(actions.getExercises(user.id,
+                        () => { },
+                        errors => setError(errors)));
                 },
                 errors => setError(errors)
             ));
@@ -67,6 +73,12 @@ const ExercisesList = () => {
     const scrollToTop = () => {
         window.scrollTo(0, 0);
     }
+
+    useEffect(() => {
+        dispatch(actions.getExercises(user.id,
+            () => { },
+            errors => setError(errors)));
+    }, [dispatch, user.id]);
 
     return (
 
@@ -202,16 +214,56 @@ const ExercisesList = () => {
 
             </Modal>
 
-                    
-            <Button className="primary exercise" onClick={() => setShowAddExerciseModal(true)} >
-                <BsFillPlusCircleFill className="plusIconStyle exercise" />
-                <span>
-                    <b><FormattedMessage id="project.templates.addExercise" /></b>
-                </span>
-            </Button>
-            <br />
+            <div class="table-responsive">
+                <Table className="table">
+                    <thead>
+                        <tr>
+                            <th className="customTable underline"><FormattedMessage id="project.templates.exerciseName" /></th>
+                            <th className="customTable underline"><FormattedMessage id="project.templates.exerciseDescription" /></th>
+                            <th className="customTable underline"><FormattedMessage id="project.templates.exerciseType" /></th>
+                            <th className="customTable underline"><FormattedMessage id="project.templates.exerciseBodyPart" /></th>
+                            <th className="customTable underline"><FormattedMessage id="project.templates.exerciseEquipment" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {getExercises.map((exercise) => (
+                            <tr key={exercise.id} >
+                                <td className="customTable">
+                                    {exercise.link ? (
+                                        /* Target hace que el enlace aparezca en una nueva pestaña
+                                        *  y rel se usa como un atributo de seguridad 
+                                        */
+                                        <a className="link"href={exercise.link} target="_blank" rel="noopener noreferrer">
+                                            {exercise.name}
+                                        </a>
+                                    ) : (
+                                        exercise.name
+                                    )}
+                                </td>
+                                <td className="customTable">{exercise.description}</td>
+                                <td className="customTable">{exercise.type}</td>
+                                <td className="customTable">{exercise.bodyPart}</td>
+                                <td className="customTable">{exercise.equipment}</td>
+                            </tr>
+                        ))}
+                        <tr>
+                            <td colSpan={6} className="customTable">
+                                <Button className="primary exercise" onClick={() => setShowAddExerciseModal(true)} >
+                                    <BsFillPlusCircleFill className="plusIconStyle exercise" />
+                                    <span>
+                                        <b><FormattedMessage id="project.templates.addExercise" /></b>
+                                    </span>
+                                </Button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </Table>
 
-            <BsArrowUpCircleFill className="arrowIconStyle" size={30} onClick={scrollToTop} title="Volver arriba" />
+                <BsArrowUpCircleFill className="arrowIconStyle" size={30} onClick={scrollToTop} title="Volver arriba" />
+
+            </div>
+
+            <Errors errors={error} onClose={() => setError(null)} />
 
         </div>
 
