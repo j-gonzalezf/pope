@@ -1,5 +1,6 @@
 package es.udc.fi.dc.tfg.rest;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -639,9 +640,117 @@ public class TrainingCycleControllerTest {
         TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
                 "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
 
-        mockMvc.perform(post("/api/templates/cycle/create")
-                .header("Authorization", "Bearer " + authClient.getServiceToken())
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto updatedCycleDto = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        mockMvc.perform(put("/api/templates/" + updatedCycleDto.getId())
+                .header("Authorization", "Bearer " + authClient.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedCycleDto)))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para eliminar un ciclo.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteCycle() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        mockMvc.perform(delete("/api/templates/" + createdCycle.getId() + "/delete")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para eliminar un ciclo inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteCycle_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+
+        mockMvc.perform(delete("/api/templates/" + incorrectUserId + "/delete")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para eliminar un ciclo sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteCycle_PermissionException() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        mockMvc.perform(delete("/api/templates/" + createdCycle.getId() + "/delete")
+                .header("Authorization", "Bearer " + authTrainer2.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para eliminar un ciclo con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteCycle_InvalidRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        mockMvc.perform(delete("/api/templates/" + createdCycle.getId() + "/delete")
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
                 .andExpect(status().isForbidden());
 
     }

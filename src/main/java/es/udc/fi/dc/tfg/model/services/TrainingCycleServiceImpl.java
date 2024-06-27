@@ -102,4 +102,27 @@ public class TrainingCycleServiceImpl implements TrainingCycleService {
 
     }
 
+    /**
+     * Elimina un ciclo de entrenamiento.
+     *
+     * @param id El ID del ciclo.
+     * @return El ID del ciclo que ha sido eliminado.
+     * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
+     * proporcionado.
+     */
+    @Override
+    public Long deleteCycle(Long id) throws InstanceNotFoundException {
+
+        Optional<TrainingCycles> Ocycle = cycleDao.findById(id);
+
+        if (!Ocycle.isPresent()) {
+            throw new InstanceNotFoundException("project.entities.trainingCycles", id);
+        }
+
+        cycleDao.deleteById(id);
+
+        return id;
+
+    }
+
 }

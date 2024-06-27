@@ -183,4 +183,48 @@ public class TrainingCycleServiceTest {
                         LocalDate.of(2002, 1, 1)));
     }
 
+    /**
+     * Test para eliminar un ciclo.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testDeleteCycle()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+
+        TrainingCycles cycle = createCycle();
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+        Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
+                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
+
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        cycle.setTrainer(trainer);
+        cycle.setClient(client);
+
+        cycleService.createCycle(cycle);
+
+        Long deletedCycleId = cycleService.deleteCycle(cycle.getId());
+
+        // Comprobar que el ID del usuario eliminado es el correcto
+        assertEquals(cycle.getId(), deletedCycleId);
+
+    }
+
+    /**
+     * Test para eliminar un ciclo con un ID inexistente.
+     *
+     * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testDeleteCycleWithNonExistentId() throws InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> cycleService.deleteCycle(NON_EXISTENT_ID));
+    }
+
 }

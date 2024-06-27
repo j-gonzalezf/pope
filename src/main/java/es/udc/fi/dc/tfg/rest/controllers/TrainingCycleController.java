@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,7 +61,7 @@ public class TrainingCycleController {
     }
 
     /**
-     * Crear un nuevo ciclo de entrenamiento.
+     * Crea un nuevo ciclo de entrenamiento.
      *
      * @param userId el ID del usuario que realiza la petición
      * @param cycleDto el DTO del ciclo
@@ -148,7 +149,7 @@ public class TrainingCycleController {
     }
 
     /**
-     * Editar ciclo.
+     * Edita un ciclo.
      *
      * @param userId el ID del usuario que realiza la petición
      * @param id el ID del ciclo que se va a editar
@@ -173,6 +174,30 @@ public class TrainingCycleController {
         return toTrainingCycleDto(cycleService.updateCycle(id, cycleDto.getName(),
                 cycleDto.getDescription(), LocalDate.parse(cycleDto.getFromDate()),
                 LocalDate.parse(cycleDto.getToDate())));
+
+    }
+
+    /**
+     * Elimina un ciclo.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID del ciclo que se va a eliminar
+     * @return el ID del ciclo que ha sido eliminado
+     * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
+     * proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del ciclo que se va a eliminar
+     * @throws InvalidRoleException si el usuario no tiene rol
+     */
+    @DeleteMapping("/{id}/delete")
+    public Long deleteCycle(@RequestAttribute Long userId, @PathVariable("id") Long id)
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        TrainingCycles cycle = cycleService.getCycleInfo(id);
+
+        validateCycleUser(userId, cycle.getTrainer(), cycle.getClient());
+
+        return cycleService.deleteCycle(id);
 
     }
 

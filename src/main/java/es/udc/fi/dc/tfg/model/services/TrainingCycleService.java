@@ -49,4 +49,14 @@ public interface TrainingCycleService {
     TrainingCycles updateCycle(Long id, String name, String description,
             LocalDate fromDate, LocalDate toDate) throws InstanceNotFoundException;
 
+    /**
+     * Elimina un ciclo de entrenamiento.
+     *
+     * @param id El ID del ciclo.
+     * @return El ID del ciclo que ha sido eliminado.
+     * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
+     * proporcionado.
+     */
+    public Long deleteCycle(Long id) throws InstanceNotFoundException;
+
 }
