@@ -5,6 +5,7 @@ export default {
 
     'project.common.notFoundPage': 'Páxina non encontrada',
     'project.common.notFoundPageMessage': 'Sentímolo, a páxina que buscas non existe.',
+    'project.common.requiredFields': 'Os campos obrigatorios márcanse cun asterisco',
 
     'project.global.button.cancel': 'Cancelar',
 

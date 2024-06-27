@@ -23,3 +23,14 @@
     border: none;
     background-color: #191716;
 }
+
+.mb-3.required {
+    margin-bottom: 0 !important;
+}
+
+.required.text {
+    color: #e6af2e;
+    margin-top: 0.5rem;
+    margin-left: 0;
+    font-style: italic;
+}

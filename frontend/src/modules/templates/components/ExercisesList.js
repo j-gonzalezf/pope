@@ -197,6 +197,13 @@ const ExercisesList = () => {
                             </Form.Control.Feedback>
                         </Form.Group>
 
+                        <Form.Group className="mb-3 required">
+                            <Form.Label data-testid="requiredFields" htmlFor="requiredFields" className='required text'>
+                                <FormattedMessage id="project.common.requiredFields" />
+                                <span className='required'>*</span>
+                            </Form.Label>
+                        </Form.Group>
+
                     </Form>
 
                     <Errors errors={error} onClose={() => setError(null)} />
@@ -233,7 +240,7 @@ const ExercisesList = () => {
                                         /* Target hace que el enlace aparezca en una nueva pestaña
                                         *  y rel se usa como un atributo de seguridad 
                                         */
-                                        <a className="link"href={exercise.link} target="_blank" rel="noopener noreferrer">
+                                        <a className="link" href={exercise.link} target="_blank" rel="noopener noreferrer">
                                             {exercise.name}
                                         </a>
                                     ) : (

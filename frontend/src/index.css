@@ -44,6 +44,7 @@ body {
 .required {
   color: #e6af2e;
   margin-left: 5px;
+  font-weight: normal;
 }
 
 /* Modals */
@@ -70,6 +71,7 @@ body {
 }
 
 .modal-footer {
+  padding-top: 0;
   border: 2px solid;
   border-top: none;
   border-color: white;
@@ -103,7 +105,7 @@ body {
 }
 
 .primary {
-  margin-top: 4%;
+  margin-top: 3%;
   border-color: #e6af2e;
   background-color: #e6af2e;
   color: #191716;
@@ -137,7 +139,6 @@ body {
   padding: 0;
   margin: 0;
   align-content: center;
-
 }
 
 .listItemStyle {

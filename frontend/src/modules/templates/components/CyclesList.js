@@ -240,6 +240,13 @@ const CyclesList = () => {
                             </Form.Control.Feedback>
                         </Form.Group>
 
+                        <Form.Group className="mb-3 required">
+                            <Form.Label data-testid="requiredFields" htmlFor="requiredFields" className='required text'>
+                                <FormattedMessage id="project.common.requiredFields" />
+                                <span className='required'>*</span>
+                            </Form.Label>
+                        </Form.Group>
+
                     </Form>
 
                     <Errors errors={error} onClose={() => setError(null)} />
