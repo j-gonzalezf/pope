@@ -155,7 +155,7 @@ public class TrainingCycleController {
      * @param id el ID del ciclo que se va a editar
      * @param cycleDto el training cycle dto
      * @return el user dto
-     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
      * proporcionado
      * @throws PermissionException si el ID del usuario que realiza la petición
      * no coincide con el ID del usuario al que se le va a actualizar el perfil

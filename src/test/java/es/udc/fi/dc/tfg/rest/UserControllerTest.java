@@ -168,7 +168,7 @@ public class UserControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testSignUp_NotEmail() throws Exception {
+    public void testSignUp_NoEmail() throws Exception {
 
         UserDto trainerDto = new UserDto(null, null, "trainer",
                 "123456789", "", "TRAINER", "https://google.es", null, null,
@@ -188,7 +188,7 @@ public class UserControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testSignUp_NotPassword() throws Exception {
+    public void testSignUp_NoPassword() throws Exception {
 
         UserDto trainerDto = new UserDto(null, "trainer@trainer.com", "trainer",
                 "123456789", "", "TRAINER", "https://google.es", null, null,
@@ -206,7 +206,7 @@ public class UserControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testSignUp_NotName() throws Exception {
+    public void testSignUp_NoName() throws Exception {
 
         UserDto trainerDto = new UserDto(null, "trainer@trainer.com", null,
                 "123456789", "", "TRAINER", "https://google.es", null, null,
@@ -226,7 +226,7 @@ public class UserControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testSignUp_NotRole() throws Exception {
+    public void testSignUp_NoRole() throws Exception {
 
         UserDto trainerDto = new UserDto(null, "trainer@trainer.com", "trainer",
                 "123456789", "", null, "https://google.es", null, null, null,
@@ -291,6 +291,96 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/users/client/" + createdClient.getId())
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
                 .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para registrar un cliente sin definir un email.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient_NoEmail() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        UserDto clientDto = new UserDto(null, null, "client",
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para registrar un cliente sin definir una clave de acceso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient_NoPassword() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        UserDto clientDto = new UserDto(null, "client@client.com", "client",
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para registrar un cliente sin definir un nombre.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient_NoName() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        UserDto clientDto = new UserDto(null, "client@client.com", null,
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para registrar un cliente sin definir un rol.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient_NoRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        UserDto clientDto = new UserDto(null, "client@client.com", "client",
+                "987654321", null, null, null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isBadRequest());
 
     }
 
@@ -627,7 +717,7 @@ public class UserControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testUpdateProfile_NotEmail() throws Exception {
+    public void testUpdateProfile_NoEmail() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
 
@@ -646,7 +736,7 @@ public class UserControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testUpdateProfile_NotName() throws Exception {
+    public void testUpdateProfile_NoName() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
 
@@ -665,7 +755,7 @@ public class UserControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testUpdateProfile_NotRole() throws Exception {
+    public void testUpdateProfile_NoRole() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
 
@@ -799,7 +889,7 @@ public class UserControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testChangePassword_NotPassword() throws Exception {
+    public void testChangePassword_NoPassword() throws Exception {
 
         UserDto userDto = authTrainer.getUserDto();
         userDto.setPassword(PASSWORD);

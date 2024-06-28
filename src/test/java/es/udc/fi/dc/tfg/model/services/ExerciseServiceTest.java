@@ -1,6 +1,7 @@
 package es.udc.fi.dc.tfg.model.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -25,6 +26,8 @@ import java.util.List;
 @ActiveProfiles("test")
 @Transactional
 public class ExerciseServiceTest {
+
+    private final Long NON_EXISTENT_ID = Long.valueOf(-1);
 
     /**
      * El user service.
@@ -95,6 +98,49 @@ public class ExerciseServiceTest {
         assertTrue(exercises.contains(exercise1));
         assertTrue(exercises.contains(exercise2));
 
+    }
+
+    /**
+     * Test para editar ejercicios.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra ningún ejercicio.
+     */
+    @Test
+    public void testUpdateExercise()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Exercises exercise = addExercise();
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+
+        userService.signUp(trainer);
+
+        exercise.setTrainer(trainer);
+        exerciseService.addExercise(exercise);
+
+        Exercises updatedExercise = exerciseService.updateExercise(
+                exercise.getId(), "new Name", "new Description", "new exerciseType",
+                null, null, null);
+
+        assertEquals("new Name", updatedExercise.getName());
+        assertEquals("new Description", updatedExercise.getDescription());
+        assertEquals("new exerciseType", updatedExercise.getType());
+
+    }
+
+    /**
+     * Test para actualizar un ejercicio con un ID inexistente.
+     *
+     * @throws InstanceNotFoundException si no se encuentra un ejercicio con el
+     * ID proporcionado.
+     */
+    @Test
+    public void testUpdateCycleWithNonExistentId() throws InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> exerciseService.updateExercise(NON_EXISTENT_ID, "new Name",
+                        "new Description", "new exerciseType",
+                        null, null, null));
     }
 
 }

@@ -175,7 +175,7 @@ public class TrainingCycleControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testCreateTrainingCycle_NotName() throws Exception {
+    public void testCreateTrainingCycle_NoName() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
@@ -196,7 +196,7 @@ public class TrainingCycleControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testCreateTrainingCycle_NotFromDate() throws Exception {
+    public void testCreateTrainingCycle_NoFromDate() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
@@ -217,7 +217,7 @@ public class TrainingCycleControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testCreateTrainingCycle_NotToDate() throws Exception {
+    public void testCreateTrainingCycle_NoToDate() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
@@ -490,7 +490,7 @@ public class TrainingCycleControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testUpdateTrainingCycle_NotName() throws Exception {
+    public void testUpdateTrainingCycle_NoName() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
@@ -515,13 +515,13 @@ public class TrainingCycleControllerTest {
     }
 
     /**
-     * Test para crear un editar de entrenamiento sin definir una fecha de
+     * Test para editar un ciclo de entrenamiento sin definir una fecha de
      * inici.
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testUpdateTrainingCycle_NotFromDate() throws Exception {
+    public void testUpdateTrainingCycle_NoFromDate() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
@@ -551,7 +551,7 @@ public class TrainingCycleControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testUpdateTrainingCycle_NotToDate() throws Exception {
+    public void testUpdateTrainingCycle_NoToDate() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
