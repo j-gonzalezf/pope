@@ -108,5 +108,6 @@ export default {
     'project.templates.addExercise': 'Engadir exercicio',
     'project.templates.addExercise.title': 'Novo exercicio',
     'project.templates.addExercise.button': 'Engadir',
+    'project.templates.updateExercise.title': 'Actualizar exercicio',
 
 }

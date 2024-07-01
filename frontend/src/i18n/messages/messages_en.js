@@ -108,5 +108,6 @@ export default {
     'project.templates.addExercise': 'Add exercise',
     'project.templates.addExercise.title': 'New exercise',
     'project.templates.addExercise.button': 'Add',
+    'project.templates.updateExercise.title': 'Update exercise',
 
 }

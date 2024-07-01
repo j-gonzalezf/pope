@@ -161,7 +161,7 @@ const CyclesList = () => {
                 <FormattedMessage id="project.templates.cycles.title" />
             </h3>
 
-            <Modal show={showAddCycleModal} onHide={() => setShowAddCycleModal(false)} className='modal'>
+            <Modal show={showAddCycleModal} onHide={closeModal} className='modal'>
 
                 <Modal.Header className='modal-header'>
                     <Modal.Title as="h3">
@@ -264,7 +264,7 @@ const CyclesList = () => {
 
             </Modal>
 
-            <Modal show={showUpdateCycleModal} onHide={() => setShowUpdateCycleModal(false)} className='modal'>
+            <Modal show={showUpdateCycleModal} onHide={closeModal} className='modal'>
 
                 <Modal.Header className='modal-header'>
                     <Modal.Title as="h3">

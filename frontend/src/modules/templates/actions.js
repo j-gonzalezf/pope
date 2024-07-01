@@ -99,3 +99,21 @@ export const getExercises = (trainerId, onSuccess, onErrors) => dispatch =>
         },
         onErrors
     );
+
+export const clearExercise = () => ({
+    type: actionTypes.CLEAR_EXERCISE
+});
+
+const updateExerciseCompleted = getExercise => ({
+    type: actionTypes.UPDATE_EXERCISE_COMPLETED,
+    getExercise
+});
+
+export const updateExercise = (exercise, onSuccess, onErrors) => dispatch =>
+    backend.templateService.updateExercise(exercise,
+        exercise => {
+            dispatch(updateExerciseCompleted(exercise));
+            onSuccess();
+        },
+        onErrors
+    );

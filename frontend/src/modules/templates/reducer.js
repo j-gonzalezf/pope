@@ -5,7 +5,8 @@ import * as actionTypes from './actionTypes';
 const initialState = {
     getCycles: [{}],
     getCycle: {},
-    getExercises: [{}]
+    getExercises: [{}],
+    getExercise: {}
 }
 
 const getCycles = (state = initialState.getCycles, action) => {
@@ -56,10 +57,28 @@ const getExercises = (state = initialState.getExercises, action) => {
 
 }
 
+const getExercise = (state = initialState.getExercise, action) => {
+
+    switch (action.type) {
+
+        case actionTypes.UPDATE_EXERCISE_COMPLETED:
+            return action.getExercise;
+
+        case actionTypes.CLEAR_EXERCISE:
+            return {};
+
+        default:
+            return state;
+
+    }
+
+}
+
 const reducer = combineReducers({
     getCycles,
     getCycle,
-    getExercises
+    getExercises,
+    getExercise
 });
 
 export default reducer;

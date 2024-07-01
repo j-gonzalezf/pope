@@ -11,3 +11,7 @@ export const getCycle = state => {
 export const getExercises = state => {
     return getModuleState(state).getExercises;
 }
+
+export const getExercise = state => {
+    return getModuleState(state).getExercise;
+}

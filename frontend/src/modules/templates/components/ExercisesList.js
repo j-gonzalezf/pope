@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table';
-import { BsArrowUpCircleFill, BsFillPlusCircleFill } from "react-icons/bs";
+import { BsArrowUpCircleFill, BsPencilSquare, BsFillPlusCircleFill } from "react-icons/bs";
 import './ExercisesList.css';
 
 import { useState, useEffect } from 'react';
@@ -21,6 +21,7 @@ const ExercisesList = () => {
     const user = useSelector(userSelectors.getUser);
     const getExercises = useSelector(selectors.getExercises);
 
+    const [id, setId] = useState(null);
     const [name, setName] = useState('');
     const [description, setDescription] = useState(null);
     const [type, setType] = useState(null);
@@ -29,14 +30,16 @@ const ExercisesList = () => {
     const [link, setLink] = useState(null);
     const [error, setError] = useState(null);
     const [showAddExerciseModal, setShowAddExerciseModal] = useState(false);
+    const [showUpdateExerciseModal, setShowUpdateExerciseModal] = useState(false);
 
-    let form;
+    let formCreate;
+    let formUpdate;
 
     const handleSubmit = event => {
 
         event.preventDefault();
 
-        if (form.checkValidity()) {
+        if (formCreate.checkValidity()) {
 
             dispatch(actions.addExercise(
                 {
@@ -49,14 +52,8 @@ const ExercisesList = () => {
                     trainerId: user.id
                 },
                 () => {
-                    setShowAddExerciseModal(false);
-                    setName('');
-                    setDescription(null);
-                    setType(null);
-                    setBodyPart(null);
-                    setEquipment(null);
-                    setLink(null);
-                    setError(null);
+                    closeModal();
+                    dispatch(actions.clearExercise());
                     dispatch(actions.getExercises(user.id,
                         () => { },
                         errors => setError(errors)));
@@ -66,8 +63,66 @@ const ExercisesList = () => {
 
         } else {
             setError(null);
-            form.classList.add('was-validated');
+            formCreate.classList.add('was-validated');
         }
+    }
+
+    const handleUpdateExercise = event => {
+
+        event.preventDefault();
+
+        if (formUpdate.checkValidity()) {
+
+            dispatch(actions.updateExercise(
+                {
+                    id: id,
+                    name: name.trim(),
+                    description: description,
+                    type: type,
+                    bodyPart: bodyPart,
+                    equipment: equipment,
+                    link: link,
+                    trainerId: user.id
+                },
+                () => {
+                    closeModal();
+                    dispatch(actions.clearExercise());
+                    dispatch(actions.getExercises(user.id,
+                        () => { },
+                        errors => setError(errors)));
+                },
+                errors => setError(errors)
+            ));
+
+        } else {
+            setError(null);
+            formUpdate.classList.add('was-validated');
+        }
+
+    }
+
+    const openUpdateExerciseModal = exercise => {
+        setId(exercise.id);
+        setName(exercise.name);
+        setDescription(exercise.description);
+        setType(exercise.type);
+        setBodyPart(exercise.bodyPart);
+        setEquipment(exercise.equipment);
+        setLink(exercise.link);
+        setShowUpdateExerciseModal(true);
+    }
+
+    const closeModal = () => {
+        setShowAddExerciseModal(false);
+        setShowUpdateExerciseModal(false);
+        setId(null);
+        setName('');
+        setDescription(null);
+        setType(null);
+        setBodyPart(null);
+        setEquipment(null);
+        setLink(null);
+        setError(null);
     }
 
     const scrollToTop = () => {
@@ -88,7 +143,7 @@ const ExercisesList = () => {
                 <FormattedMessage id="project.templates.exercisesList.title" />
             </h3>
 
-            <Modal show={showAddExerciseModal} onHide={() => setShowAddExerciseModal(false)} >
+            <Modal show={showAddExerciseModal} onHide={closeModal} >
 
                 <Modal.Header className="modal-header">
                     <Modal.Title>
@@ -99,7 +154,7 @@ const ExercisesList = () => {
                 <Modal.Body className="modal-body exercise">
 
                     <Form
-                        ref={node => form = node}
+                        ref={node => formCreate = node}
                         noValidate
                         onSubmit={handleSubmit}
                     >
@@ -211,11 +266,135 @@ const ExercisesList = () => {
                 </Modal.Body>
 
                 <Modal.Footer className="modal-footer">
-                    <Button variant="secondary" onClick={() => setShowAddExerciseModal(false)}>
+                    <Button variant="secondary" onClick={closeModal}>
                         <FormattedMessage id="project.global.button.cancel" />
                     </Button>
                     <Button className="primary cycle" onClick={handleSubmit}>
                         <FormattedMessage id="project.templates.addExercise.button" />
+                    </Button>
+                </Modal.Footer>
+
+            </Modal>
+
+            <Modal show={showUpdateExerciseModal} onHide={closeModal} className='modal'>
+
+                <Modal.Header className='modal-header'>
+                    <Modal.Title as="h3">
+                        <FormattedMessage id="project.templates.updateExercise.title" />
+                    </Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body className='modal-body cycle'>
+                    <Form
+                        ref={node => formUpdate = node}
+                        className="needs-validation"
+                        noValidate
+                        onSubmit={e => handleUpdateExercise(e)}
+                    >
+                        <Form.Group className="mb-3" controlId="name">
+                            <Form.Label>
+                                <FormattedMessage id="project.templates.exerciseName" />
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Introduzca el nombre del ejercicio"
+                                value={name}
+                                onChange={e => setName(e.target.value)}
+                                required
+                                autoFocus
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                <FormattedMessage id="project.templates.exerciseNameRequired" />
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="description">
+                            <Form.Label>
+                                <FormattedMessage id="project.templates.exerciseDescription" />
+                            </Form.Label>
+                            <Form.Control
+                                as="textarea" rows={3}
+                                placeholder="Introduzca una descripción para el ejercicio"
+                                value={description}
+                                onChange={e => setDescription(e.target.value)}
+                                required
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                <FormattedMessage id="project.templates.exerciseDescriptionRequired" />
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="type">
+                            <Form.Label>
+                                <FormattedMessage id="project.templates.exerciseType" />
+                                <span className='required'>*</span>
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Introduzca la categoría de ejercicio"
+                                value={type}
+                                onChange={e => setType(e.target.value)}
+                                required
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                <FormattedMessage id="project.templates.exerciseTypeRequired" />
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="bodyPart">
+                            <Form.Label>
+                                <FormattedMessage id="project.templates.exerciseBodyPart" />
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                title="Introduzca la parte del cuerpo en la que se enfoca el ejercicio"
+                                placeholder="Introduzca la parte del cuerpo en la que se enfoca el e..."
+                                value={bodyPart}
+                                onChange={e => setBodyPart(e.target.value)}
+                            />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="equipment">
+                            <Form.Label>
+                                <FormattedMessage id="project.templates.exerciseEquipment" />
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                title="Introduzca el equipamiento necesario para realizar el ejercicio"
+                                placeholder="Introduzca el equipamiento necesario para realizar el e..."
+                                value={equipment}
+                                onChange={e => setEquipment(e.target.value)}
+                            />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="link">
+                            <Form.Label>
+                                <FormattedMessage id="project.templates.exerciseLink" />
+                            </Form.Label>
+                            <Form.Control
+                                type="url"
+                                title="Introduzca un enlace de referencia para la correcta realización del ejercicio"
+                                placeholder="Introduzca un enlace de referencia para la correcta rea..."
+                                value={link}
+                                onChange={e => setLink(e.target.value)}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                <FormattedMessage id="project.templates.exerciseLinkPattern" />
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                    </Form>
+
+                    <Errors errors={error} onClose={() => setError(null)} />
+
+                </Modal.Body>
+
+                <Modal.Footer className='modal-footer'>
+                    <Button variant="secondary" onClick={closeModal}>
+                        <FormattedMessage id="project.global.button.cancel" />
+                    </Button>
+                    <Button className="primary cycle" onClick={handleUpdateExercise}>
+                        <FormattedMessage id="project.templates.updateCycle" />
                     </Button>
                 </Modal.Footer>
 
@@ -251,6 +430,18 @@ const ExercisesList = () => {
                                 <td className="customTable">{exercise.type}</td>
                                 <td className="customTable">{exercise.bodyPart}</td>
                                 <td className="customTable">{exercise.equipment}</td>
+                                <td className="customTable edit">
+                                    <Button className="primary edit" onClick={(event) => {
+                                        event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
+                                        openUpdateExerciseModal(exercise);
+                                    }}
+                                        title='Pulsa para editar ejeercicio'>
+                                        <BsPencilSquare className="editIconStyle cycle" />
+                                        <span>
+                                            <FormattedMessage id="project.templates.updateCycle" />
+                                        </span>
+                                    </Button>
+                                </td>
                             </tr>
                         ))}
                         <tr>
