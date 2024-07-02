@@ -117,3 +117,16 @@ export const updateExercise = (exercise, onSuccess, onErrors) => dispatch =>
         },
         onErrors
     );
+
+const deleteExerciseCompleted = () => ({
+    type: actionTypes.DELETE_EXERCISE_COMPLETED
+});
+
+export const deleteExercise = (id, onSuccess, onErrors) => dispatch =>
+    backend.templateService.deleteExercise(id,
+        () => {
+            dispatch(deleteExerciseCompleted());
+            onSuccess();
+        },
+        onErrors
+    );

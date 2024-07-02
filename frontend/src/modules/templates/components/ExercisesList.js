@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table';
-import { BsArrowUpCircleFill, BsPencilSquare, BsFillPlusCircleFill } from "react-icons/bs";
+import { BsArrowUpCircleFill, BsFillPlusCircleFill, BsPencilSquare, BsTrash } from "react-icons/bs";
 import './ExercisesList.css';
 
 import { useState, useEffect } from 'react';
@@ -99,6 +99,17 @@ const ExercisesList = () => {
             formUpdate.classList.add('was-validated');
         }
 
+    }
+
+    const deleteExercise = exercise => {
+        dispatch(actions.deleteExercise(exercise.id,
+            () => {
+                dispatch(actions.getExercises(user.id,
+                    () => { },
+                    errors => setError(errors)));
+            },
+            errors => setError(errors)
+        ));
     }
 
     const openUpdateExerciseModal = exercise => {
@@ -439,6 +450,18 @@ const ExercisesList = () => {
                                         <BsPencilSquare className="editIconStyle cycle" />
                                         <span>
                                             <FormattedMessage id="project.templates.updateCycle" />
+                                        </span>
+                                    </Button>
+                                </td>
+                                <td className="customTable delete">
+                                    <Button className="primary delete" onClick={(event) => {
+                                        event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
+                                        deleteExercise(exercise);
+                                    }}
+                                        title='Pulsa para eliminar ejercicio'>
+                                        <BsTrash className="deleteIconStyle cycle" />
+                                        <span>
+                                            <FormattedMessage id="project.templates.deleteCycle" />
                                         </span>
                                     </Button>
                                 </td>

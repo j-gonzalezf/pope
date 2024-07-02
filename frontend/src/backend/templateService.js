@@ -62,3 +62,11 @@ export const updateExercise = (exercise, onSuccess, onErrors) =>
         onSuccess,
         onErrors
     );
+
+export const deleteExercise = (id, onSuccess, onErrors) =>
+    appFetch(
+        `/exercises/${id}/delete`,
+        fetchConfig("DELETE"),
+        onSuccess,
+        onErrors
+    );
