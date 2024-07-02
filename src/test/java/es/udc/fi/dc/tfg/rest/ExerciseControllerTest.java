@@ -1,5 +1,6 @@
 package es.udc.fi.dc.tfg.rest;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -533,6 +534,103 @@ public class ExerciseControllerTest {
         mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId())
                 .header("Authorization", "Bearer " + authClient.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newExerciseDto)))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para eliminar un ejercicio.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteExercise() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        ExerciseDto exerciseDto = new ExerciseDto(null, "exerciseName", "description",
+                "exerciseType", null, null, null, trainerDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/exercises/exercise/add")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(exerciseDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        ExerciseDto newExerciseDto = new ObjectMapper().readValue(content, ExerciseDto.class);
+
+        mockMvc.perform(delete("/api/exercises/" + newExerciseDto.getId() + "/delete")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para eliminar un ejercicio inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteExercise_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+
+        mockMvc.perform(delete("/api/exercises/" + incorrectUserId + "/delete")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para eliminar un ejercicio sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteExercise_PermissionException() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        ExerciseDto exerciseDto = new ExerciseDto(null, "exerciseName", "description",
+                "exerciseType", null, null, null, trainerDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/exercises/exercise/add")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(exerciseDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        ExerciseDto newExerciseDto = new ObjectMapper().readValue(content, ExerciseDto.class);
+
+        mockMvc.perform(delete("/api/exercises/" + newExerciseDto.getId() + "/delete")
+                .header("Authorization", "Bearer " + authTrainer2.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para eliminar un ejercicio con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteExercise_InvalidRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        ExerciseDto exerciseDto = new ExerciseDto(null, "exerciseName", "description",
+                "exerciseType", null, null, null, trainerDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/exercises/exercise/add")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(exerciseDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        ExerciseDto newExerciseDto = new ObjectMapper().readValue(content, ExerciseDto.class);
+
+        mockMvc.perform(delete("/api/exercises/" + newExerciseDto.getId() + "/delete")
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
                 .andExpect(status().isForbidden());
 
     }

@@ -210,7 +210,7 @@ public class TrainingCycleServiceTest {
 
         Long deletedCycleId = cycleService.deleteCycle(cycle.getId());
 
-        // Comprobar que el ID del usuario eliminado es el correcto
+        // Comprobar que el ID del ciclo eliminado es el correcto
         assertEquals(cycle.getId(), deletedCycleId);
 
     }

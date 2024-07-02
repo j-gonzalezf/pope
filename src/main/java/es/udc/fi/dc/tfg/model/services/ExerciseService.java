@@ -23,6 +23,17 @@ public interface ExerciseService {
      * @return La lista de objetos Exercises que representa los ejercicios.
      */
     List<Exercises> getExercises(Long trainerId);
+    
+    
+
+    /**
+     * Devuelve un ejercicio a partir de su ID.
+     *
+     * @param exerciseId El ID del ejercicio.
+     * @return El objeto Exercises que representa el ejercicio solicitado.
+     * @throws InstanceNotFoundException si no se encuentra ningún ejercicio.
+     */
+    public Exercises getExerciseInfo(Long exerciseId) throws InstanceNotFoundException;
 
     /**
      * Edita un ejercicio.
@@ -40,5 +51,15 @@ public interface ExerciseService {
     Exercises updateExercise(Long id, String name, String description,
             String type, String bodyPart, String equipment, String link)
             throws InstanceNotFoundException;
+
+    /**
+     * Elimina un ejercicio.
+     *
+     * @param id El ID del ejercicio.
+     * @return El ID del ejercicio que ha sido eliminado.
+     * @throws InstanceNotFoundException si no se encuentra un ejercicio con el
+     * ID proporcionado.
+     */
+    public Long deleteExercise(Long id) throws InstanceNotFoundException;
 
 }

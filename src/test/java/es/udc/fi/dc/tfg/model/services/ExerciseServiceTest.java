@@ -52,13 +52,15 @@ public class ExerciseServiceTest {
     }
 
     /**
-     * Test para crear ejercicios.
+     * Test para crear ejercicios y obtenerlo a partir de su ID.
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws InstanceNotFoundException si no se encuentra ningún ejercicio.
      */
     @Test
-    public void testAddExercise() throws DuplicateInstanceException {
+    public void testAddExerciseAndGetExerciseInfo()
+            throws DuplicateInstanceException, InstanceNotFoundException {
 
         Exercises exercise = addExercise();
         Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
@@ -68,6 +70,17 @@ public class ExerciseServiceTest {
         exercise.setTrainer(trainer);
 
         exerciseService.addExercise(exercise);
+
+        Exercises getExercise = exerciseService.getExerciseInfo(exercise.getId());
+
+        assertEquals(exercise.getId(), getExercise.getId());
+        assertEquals(exercise.getName(), getExercise.getName());
+        assertEquals(exercise.getDescription(), getExercise.getDescription());
+        assertEquals(exercise.getType(), getExercise.getType());
+        assertEquals(exercise.getBodyPart(), getExercise.getBodyPart());
+        assertEquals(exercise.getEquipment(), getExercise.getEquipment());
+        assertEquals(exercise.getLink(), getExercise.getLink());
+        assertEquals(exercise.getTrainer(), getExercise.getTrainer());
 
     }
 
@@ -98,6 +111,18 @@ public class ExerciseServiceTest {
         assertTrue(exercises.contains(exercise1));
         assertTrue(exercises.contains(exercise2));
 
+    }
+
+    /**
+     * Test para obtener un ejercicio con un ID inexistente.
+     *
+     * @throws InstanceNotFoundException si no se encuentra un ejercicio con el
+     * ID proporcionado.
+     */
+    @Test
+    public void testGetExerciseWithNonExistentId() throws InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> exerciseService.getExerciseInfo(NON_EXISTENT_ID));
     }
 
     /**
@@ -141,6 +166,45 @@ public class ExerciseServiceTest {
                 () -> exerciseService.updateExercise(NON_EXISTENT_ID, "new Name",
                         "new Description", "new exerciseType",
                         null, null, null));
+    }
+
+    /**
+     * Test para eliminar un ejercicio.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra un ejercicio con el
+     * ID proporcionado.
+     */
+    @Test
+    public void testDeleteExercise()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Exercises exercise = addExercise();
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+
+        userService.signUp(trainer);
+
+        exercise.setTrainer(trainer);
+        exerciseService.addExercise(exercise);
+
+        Long deletedExerciseId = exerciseService.deleteExercise(exercise.getId());
+
+        // Comprobar que el ID del ejercicio eliminado es el correcto
+        assertEquals(exercise.getId(), deletedExerciseId);
+
+    }
+
+    /**
+     * Test para eliminar un ejercicio con un ID inexistente.
+     *
+     * @throws InstanceNotFoundException si no se encuentra un ejercicio con el
+     * ID proporcionado.
+     */
+    @Test
+    public void testDeleteExerciseWithNonExistentId() throws InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> exerciseService.deleteExercise(NON_EXISTENT_ID));
     }
 
 }

@@ -27,6 +27,7 @@ import es.udc.fi.dc.tfg.model.services.UserService;
 import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 import es.udc.fi.dc.tfg.rest.dtos.ExerciseDto;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 /**
  * Clase ExerciseController.
@@ -132,6 +133,30 @@ public class ExerciseController {
         return toExerciseDto(exerciseService.updateExercise(id, exerciseDto.getName(),
                 exerciseDto.getDescription(), exerciseDto.getType(), exerciseDto.getBodyPart(),
                 exerciseDto.getEquipment(), exerciseDto.getLink()));
+
+    }
+
+    /**
+     * Elimina un ejercicio.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID del ejercicio que se va a eliminar
+     * @return el ID del ejercicio que ha sido eliminado
+     * @throws InstanceNotFoundException si no se encuentra un ejercicio con el
+     * ID proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del ejercicio que se va a eliminar
+     * @throws InvalidRoleException si el usuario no tiene rol
+     */
+    @DeleteMapping("/{id}/delete")
+    public Long deleteExercise(@RequestAttribute Long userId, @PathVariable("id") Long id)
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        Exercises exercise = exerciseService.getExerciseInfo(id);
+
+        validateUser(userId, exercise.getTrainer());
+
+        return exerciseService.deleteExercise(id);
 
     }
 
