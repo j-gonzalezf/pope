@@ -27,7 +27,7 @@ public interface UserService {
      * tiene permiso para realizar la acción.
      * @throws InvalidRoleException si el usuario que se va validar no tiene rol
      */
-    public void validateUser(Long userId, Long id)
+    void validateUser(Long userId, Long id)
             throws InstanceNotFoundException, PermissionException, InvalidRoleException;
 
     /**
