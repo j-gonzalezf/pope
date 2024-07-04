@@ -24,17 +24,17 @@ public class TemplateRows {
     private Long id;
 
     /**
-     * Series del ejercicio.
+     * Series del ejercicio, puede ser nulo.
      */
     private Integer series;
 
     /**
-     * Repeticiones del ejercicio.
+     * Repeticiones del ejercicio, puede ser nulo.
      */
     private Integer repetitions;
 
     /**
-     * Peso a levantar en el ejercicio.
+     * Peso a levantar en el ejercicio, puede ser nulo.
      */
     private BigDecimal weight;
 

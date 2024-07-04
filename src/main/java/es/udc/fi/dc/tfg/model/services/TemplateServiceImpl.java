@@ -1,9 +1,11 @@
 package es.udc.fi.dc.tfg.model.services;
 
+import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Templates;
 import es.udc.fi.dc.tfg.model.entities.TemplateDao;
 import es.udc.fi.dc.tfg.model.entities.TemplateRowDao;
 import es.udc.fi.dc.tfg.model.entities.TemplateRows;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +48,28 @@ public class TemplateServiceImpl implements TemplateService {
     @Override
     public void addTemplateRow(TemplateRows templateRow) {
         templateRowDao.save(templateRow);
+    }
+
+    /**
+     * Devuelve una plantilla a partir de su ID.
+     *
+     * @param templateId El ID de la plantilla.
+     * @return El objeto Templates que representa la plantilla solicitada.
+     * @throws InstanceNotFoundException si no se encuentra ninguna plantilla.
+     */
+    @Override
+    public Templates getTemplateInfo(Long templateId) throws InstanceNotFoundException {
+
+        Optional<Templates> Otemplate = templateDao.findById(templateId);
+
+        if (!Otemplate.isPresent()) {
+            throw new InstanceNotFoundException("project.entities.templates", templateId);
+        }
+
+        Templates template = Otemplate.get();
+
+        return template;
+
     }
 
 }

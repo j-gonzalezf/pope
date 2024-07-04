@@ -68,6 +68,7 @@ public class TrainingCycleServiceImpl implements TrainingCycleService {
         TrainingCycles cycle = Ocycle.get();
 
         return cycle;
+
     }
 
     /**

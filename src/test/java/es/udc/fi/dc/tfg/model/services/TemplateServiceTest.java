@@ -12,11 +12,13 @@ import es.udc.fi.dc.tfg.model.entities.Templates;
 import es.udc.fi.dc.tfg.model.entities.TrainingCycles;
 import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.common.exceptions.DuplicateInstanceException;
+import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Exercises;
 import es.udc.fi.dc.tfg.model.entities.TemplateRows;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Clase TemplateServiceTest.
@@ -71,13 +73,15 @@ public class TemplateServiceTest {
     }
 
     /**
-     * Test para crear plantillas de entrenamiento.
+     * Test para crear plantillas de entrenamiento y obtenerlas a partir del ID.
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws InstanceNotFoundException si no se encuentra ninguna plantilla.
      */
     @Test
-    public void testCreateTemplate() throws DuplicateInstanceException {
+    public void testCreateTemplateAndGetTemplateInfo()
+            throws DuplicateInstanceException, InstanceNotFoundException {
 
         Templates template = createTemplate();
         Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
@@ -98,6 +102,13 @@ public class TemplateServiceTest {
         template.setCycle(cycle);
 
         templateService.createTemplate(template);
+
+        Templates getTemplate = templateService.getTemplateInfo(template.getId());
+
+        assertEquals(template.getId(), getTemplate.getId());
+        assertEquals(template.getName(), getTemplate.getName());
+        assertEquals(template.getCreationDate(), getTemplate.getCreationDate());
+        assertEquals(template.getCycle(), getTemplate.getCycle());
 
     }
 
