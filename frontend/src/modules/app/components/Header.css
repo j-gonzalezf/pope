@@ -27,6 +27,15 @@
     max-height: 90px;
 }
 
+.link.h {
+    color: white;
+    text-decoration: none;
+}
+
+.link.h:hover {
+    text-decoration: underline;
+}
+
 /* Ajusta el tamaño y el margen de los iconos */
 .anchor-icon {
     max-height: 90px;

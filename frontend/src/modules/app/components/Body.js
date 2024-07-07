@@ -1,13 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import users, {
   AddClient, ChangePassword, ClientDetails, ClientsList,
   Login, Logout, SignUp, UpdateClient, UpdateProfile
 } from "../../users";
-import { CyclesList, ExercisesList } from "../../templates";
+import { CyclesList, ExercisesList, TemplatesList, TemplateView } from "../../templates";
 import Home from "./Home";
+import NotFoundPage from "./NotFoundPage";
 
 const Body = () => {
 
@@ -28,10 +29,11 @@ const Body = () => {
         {loggedIn && <Route path="/users/updateClient/:clientId" element={<UpdateClient />} />}
         {loggedIn && <Route path="/users/clientDetails/:clientId" element={<ClientDetails />} />}
         {loggedIn && <Route path="/templates/trainingCycles/:clientId" element={<CyclesList />} />}
-        {loggedIn && <Route path="/templates/trainingCycles/:clientId/trainingCycle/:cycleId" element={<ClientsList />} />}
+        {loggedIn && <Route path="/templates/:clientId/trainingCycle/:cycleId" element={<TemplatesList />} />}
+        {loggedIn && <Route path="/templates/:clientId/trainingCycle/:cycleId/template/:templateId" element={<TemplateView />} />}
         {loggedIn && <Route path="/templates/exercises" element={<ExercisesList />} />}
-        {/*<Route path="/notFound" element={<NotFoundPage />} />
-        /<Route path="/*" element={<Navigate to="/users/addClient" />} />*/}
+        <Route path="/notFound" element={<NotFoundPage />} />
+        <Route path="/*" element={<Navigate to="/notFound" />} />
       </Routes>
     </div >
 

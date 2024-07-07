@@ -109,5 +109,9 @@ export default {
     'project.templates.addExercise.title': 'Novo exercicio',
     'project.templates.addExercise.button': 'Engadir',
     'project.templates.updateExercise.title': 'Actualizar exercicio',
+    'project.templates.templatesList.title': 'Modelos',
+    'project.templates.templatesList.empty': 'Non existen modelos',
+    'project.templates.templateView.title': 'Vista de modelo',
+    'project.templates.addTemplate': 'Engadir modelo',
 
 }

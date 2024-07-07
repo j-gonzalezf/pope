@@ -1,0 +1,50 @@
+.TemplateView {
+    margin: 0;
+    padding: 0;
+    width: auto;
+}
+
+.comment,
+.template {
+    padding-top: 4.5%;
+}
+
+.comment {
+    border-left: 2px solid white;
+    height: 635px;
+}
+
+.title.templates {
+    padding-left: 25%;
+}
+
+.title.comments {
+    text-align: end;
+}
+
+.addTemplate {
+    text-align: center;
+}
+
+.addTemplate:hover {
+    cursor: pointer;
+}
+
+/* Media query para dispositivos móviles */
+@media (max-width: 767px) {
+
+    .comment {
+        height: auto;
+        border-left: none;
+        text-align: center;
+    }
+
+    .title.templates {
+        padding-left: 0;
+    }
+
+    .title.comments {
+        text-align: center;
+    }
+
+}

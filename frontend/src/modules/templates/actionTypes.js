@@ -10,3 +10,5 @@ export const GET_EXERCISES_COMPLETED = "project/exercises/getExercisesCompleted"
 export const UPDATE_EXERCISE_COMPLETED = "project/exercises/updateExerciseCompleted";
 export const CLEAR_EXERCISE = "project/exercises/clearExercise";
 export const DELETE_EXERCISE_COMPLETED = "project/exercises/deleteExerciseCompleted";
+
+export const CREATE_TEMPLATE_COMPLETED = "project/templates/createTemplateCompleted";

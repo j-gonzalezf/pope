@@ -70,3 +70,19 @@ export const deleteExercise = (id, onSuccess, onErrors) =>
         onSuccess,
         onErrors
     );
+
+export const createTemplate = (template, onSuccess, onErrors) =>
+    appFetch(
+        "/templates/create",
+        fetchConfig("POST", template),
+        onSuccess,
+        onErrors
+    );
+
+export const addTemplateRow = (row, onSuccess, onErrors) =>
+    appFetch(
+        "/templates/addRow",
+        fetchConfig("POST", row),
+        onSuccess,
+        onErrors
+    );

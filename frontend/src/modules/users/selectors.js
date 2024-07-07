@@ -12,6 +12,5 @@ export const getIcon = state =>
 export const getClients = state =>
     getModuleState(state).getClients;
 
-
 export const getClientInfo = state =>
     getModuleState(state).getClientInfo;

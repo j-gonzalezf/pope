@@ -109,5 +109,9 @@ export default {
     'project.templates.addExercise.title': 'New exercise',
     'project.templates.addExercise.button': 'Add',
     'project.templates.updateExercise.title': 'Update exercise',
+    'project.templates.templatesList.title': 'Templates',
+    'project.templates.templatesList.empty': 'No templates found',
+    'project.templates.templateView.title': 'Template view',
+    'project.templates.addTemplate': 'Add template',
 
 }

@@ -130,3 +130,16 @@ export const deleteExercise = (id, onSuccess, onErrors) => dispatch =>
         },
         onErrors
     );
+
+const createTemplateCompleted = () => ({
+    type: actionTypes.CREATE_TEMPLATE_COMPLETED
+});
+
+export const createTemplate = (template, onSuccess, onErrors) => dispatch =>
+    backend.templateService.createTemplate(template,
+        () => {
+            dispatch(createTemplateCompleted());
+            onSuccess();
+        },
+        onErrors
+    );

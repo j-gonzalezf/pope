@@ -142,7 +142,7 @@ const CyclesList = () => {
     }
 
     const redirectToCycleDetails = cycle => {
-        navigate(`/templates/trainingCycles/${clientId}/trainingCycle/${cycle.id}`);
+        navigate(`/templates/${clientId}/trainingCycle/${cycle.id}`);
     }
 
     useEffect(() => {

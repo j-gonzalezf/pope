@@ -7,7 +7,7 @@ import './Header.css';
 
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import AnchorIcon from '../../common/images/anchor-logo.webp';
@@ -19,7 +19,10 @@ import users from '../../users';
 const Header = () => {
 
     const location = useLocation();
+    const dispatch = useDispatch();
+
     const isLoggedIn = useSelector(users.selectors.isLoggedIn);
+    const clientId = useSelector(users.selectors.getClientInfo)?.id;
     const clientName = useSelector(users.selectors.getClientInfo)?.fullName;
     const cycleName = useSelector(templates.selectors.getCycle)?.name;
     const icon = useSelector(users.selectors.getIcon);
@@ -27,13 +30,28 @@ const Header = () => {
     const [showHeader, setShowHeader] = useState(false);
     const [showReference, setShowReference] = useState(false);
 
+    const urlsToHideCycleName = [
+        '/users/clientDetails/' + clientId,
+        '/templates/trainingCycles/' + clientId
+    ];
+
     const displayReference = () => {
-        if (clientName && cycleName) {
-            return `${clientName} - ${cycleName}`;
+        if (clientName && cycleName && !urlsToHideCycleName.includes(location.pathname)) {
+            return (
+                <>
+                    <Link to={`/users/clients`} className='link h'>{clientName}</Link>
+                    <span className='required'>/ </span>
+                    <Link to={`/templates/trainingCycles/${clientId}`} className='link h'>{cycleName}</Link>
+                </>
+            );
         } else if (clientName) {
-            return clientName;
+            return <Link to={`/users/clients`} className='link h'>{clientName}</Link>;
         }
         return '';
+    };
+
+    const clearCycle = () => {
+        dispatch(templates.actions.clearCycle());
     }
 
     useEffect(() => {
@@ -41,6 +59,7 @@ const Header = () => {
     }, [location, isLoggedIn]);
 
     useEffect(() => {
+        displayReference();
         // URLs to hide the header reference
         const urlsToHide = [
             '/users/clients',
@@ -69,7 +88,7 @@ const Header = () => {
             <Navbar data-testid="header" className="Header">
 
                 <div className="header-left">
-                    <Navbar.Brand as={Link} to="/users/clients" title="Clientes">
+                    <Navbar.Brand as={Link} to="/users/clients" title="Clientes" onClick={clearCycle}>
                         <Image className="anchor-icon" src={AnchorIcon} alt="Logo" />
                     </Navbar.Brand>
 

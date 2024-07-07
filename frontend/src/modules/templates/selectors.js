@@ -1,17 +1,13 @@
 const getModuleState = state => state.templates;
 
-export const getCycles = state => {
-    return getModuleState(state).getCycles;
-}
+export const getCycles = state =>
+    getModuleState(state).getCycles;
 
-export const getCycle = state => {
-    return getModuleState(state).getCycle;
-}
+export const getCycle = state =>
+    getModuleState(state).getCycle;
 
-export const getExercises = state => {
-    return getModuleState(state).getExercises;
-}
+export const getExercises = state =>
+    getModuleState(state).getExercises;
 
-export const getExercise = state => {
-    return getModuleState(state).getExercise;
-}
+export const getExercise = state =>
+    getModuleState(state).getExercise;

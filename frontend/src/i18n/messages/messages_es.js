@@ -109,5 +109,9 @@ export default {
     'project.templates.addExercise.title': 'Nuevo ejercicio',
     'project.templates.addExercise.button': 'Añadir',
     'project.templates.updateExercise.title': 'Actualizar ejercicio',
+    'project.templates.templatesList.title': 'Plantillas',
+    'project.templates.templatesList.empty': 'Todavía no hay plantillas',
+    'project.templates.templateView.title': 'Vista de plantilla',
+    'project.templates.addTemplate': 'Añadir plantilla',
 
 }
