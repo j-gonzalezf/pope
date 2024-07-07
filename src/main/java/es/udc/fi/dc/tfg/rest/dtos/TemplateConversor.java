@@ -5,6 +5,8 @@ import es.udc.fi.dc.tfg.model.entities.TemplateRows;
 import es.udc.fi.dc.tfg.model.entities.Templates;
 import es.udc.fi.dc.tfg.model.entities.TrainingCycles;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Clase TemplateConversor.
@@ -27,6 +29,19 @@ public class TemplateConversor {
     public static final TemplateDto toTemplateDto(Templates template) {
         return new TemplateDto(template.getId(), template.getName(),
                 template.getCreationDate().toString(), template.getCycle().getId());
+    }
+
+    /**
+     * Convierte una lista de objetos Templates a objetos TemplateDto.
+     *
+     * @param templates la lista de objetos Templates a convertir
+     * @return una nueva lista de objetos TemplateDto que contiene los mismos
+     * datos que la lista de objetos Templates proporcionada
+     */
+    public static final List<TemplateDto> toTemplatesDto(List<Templates> templates) {
+        return templates.stream().map(template -> {
+            return toTemplateDto(template);
+        }).collect(Collectors.toList());
     }
 
     /**

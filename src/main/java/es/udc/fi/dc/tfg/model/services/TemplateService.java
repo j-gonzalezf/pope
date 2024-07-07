@@ -3,6 +3,7 @@ package es.udc.fi.dc.tfg.model.services;
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.TemplateRows;
 import es.udc.fi.dc.tfg.model.entities.Templates;
+import java.util.List;
 
 /**
  * Interfaz TemplateService.
@@ -23,6 +24,14 @@ public interface TemplateService {
      * a la plantilla.
      */
     void addTemplateRow(TemplateRows templateRow);
+
+    /**
+     * Devuelve una lista con las plantillas de un ciclo.
+     *
+     * @param cycleId El ID del ciclo.
+     * @return La lista de objetos Templlates que representa las plantillas.
+     */
+    List<Templates> getTemplates(Long cycleId);
 
     /**
      * Devuelve una plantilla a partir de su ID.

@@ -5,6 +5,7 @@ import es.udc.fi.dc.tfg.model.entities.Templates;
 import es.udc.fi.dc.tfg.model.entities.TemplateDao;
 import es.udc.fi.dc.tfg.model.entities.TemplateRowDao;
 import es.udc.fi.dc.tfg.model.entities.TemplateRows;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,20 @@ public class TemplateServiceImpl implements TemplateService {
     @Override
     public void addTemplateRow(TemplateRows templateRow) {
         templateRowDao.save(templateRow);
+    }
+    
+    /**
+     * Devuelve una lista con las plantillas de un ciclo.
+     *
+     * @param cycleId El ID del ciclo.
+     * @return La lista de objetos Templlates que representa las plantillas.
+     */
+    @Override
+    public List<Templates> getTemplates(Long cycleId) {
+
+        List<Templates> templates = templateDao.findTemplates(cycleId);
+        return templates;
+
     }
 
     /**

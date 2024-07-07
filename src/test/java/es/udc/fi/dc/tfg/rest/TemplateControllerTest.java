@@ -326,6 +326,106 @@ public class TemplateControllerTest {
     }
 
     /**
+     * Test para obtener las plantillas de un ciclo.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTemplates() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        mockMvc.perform(get("/api/templates/fromCycle/" + createdCycle.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para obtener las plantillas de un ciclo con un ciclo inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTemplates_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+
+        mockMvc.perform(get("/api/templates/fromCycle/" + incorrectUserId)
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para obtener las plantillas de un ciclo sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTemplates_PermissionException() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        mockMvc.perform(get("/api/templates/fromCycle/" + createdCycle.getId())
+                .header("Authorization", "Bearer " + authTrainer2.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para obtener las plantillas de un ciclo con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTemplates_InvalidRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        mockMvc.perform(get("/api/templates/fromCycle/" + createdCycle.getId())
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
      * Test para añadir una fila en una plantilla de entrenamiento.
      *
      * @throws Exception la excepción

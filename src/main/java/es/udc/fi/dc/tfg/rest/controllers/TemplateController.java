@@ -1,14 +1,18 @@
 package es.udc.fi.dc.tfg.rest.controllers;
 
 import static es.udc.fi.dc.tfg.rest.dtos.TemplateConversor.toTemplateDto;
+import static es.udc.fi.dc.tfg.rest.dtos.TemplateConversor.toTemplatesDto;
 import static es.udc.fi.dc.tfg.rest.dtos.TemplateConversor.toTemplates;
 import static es.udc.fi.dc.tfg.rest.dtos.TemplateConversor.toTemplateRowDto;
 import static es.udc.fi.dc.tfg.rest.dtos.TemplateConversor.toTemplateRows;
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -128,6 +132,33 @@ public class TemplateController {
                 .buildAndExpand(templateRow.getId()).toUri();
 
         return ResponseEntity.created(location).body(toTemplateRowDto(templateRow));
+
+    }
+
+    /**
+     * Devuelve la lista de plantillas de un ciclo.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param cycleId el ID del ciclo
+     * @return una lista de plantillas
+     * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
+     * proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador de los ciclos a obtener
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    @GetMapping("/fromCycle/{cycleId}")
+    public List<TemplateDto> getTemplates(@RequestAttribute Long userId,
+            @PathVariable("cycleId") Long cycleId) throws InstanceNotFoundException,
+            PermissionException, InvalidRoleException {
+
+        TrainingCycles cycle = cycleService.getCycleInfo(cycleId);
+
+        validateTemplateUser(userId, cycle);
+
+        List<Templates> templates = templateService.getTemplates(cycleId);
+
+        return toTemplatesDto(templates);
 
     }
 

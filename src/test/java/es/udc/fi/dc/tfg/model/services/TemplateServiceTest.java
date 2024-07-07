@@ -18,7 +18,10 @@ import es.udc.fi.dc.tfg.model.entities.TemplateRows;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Clase TemplateServiceTest.
@@ -28,6 +31,8 @@ import static org.junit.Assert.assertEquals;
 @ActiveProfiles("test")
 @Transactional
 public class TemplateServiceTest {
+
+    private final Long NON_EXISTENT_ID = Long.valueOf(-1);
 
     /**
      * El user service.
@@ -148,6 +153,58 @@ public class TemplateServiceTest {
         templateRow.setExercise(exercise);
         templateService.addTemplateRow(templateRow);
 
+    }
+
+    /**
+     * Test para obtener las plantillas de un ciclo.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     */
+    @Test
+    public void testGetTemplates() throws DuplicateInstanceException {
+
+        Templates template1 = createTemplate();
+        Templates template2 = createTemplate();
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+        Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
+                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
+
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
+                LocalDate.of(2001, 1, 1), trainer, client);
+
+        cycle.setTrainer(trainer);
+        cycle.setClient(client);
+
+        cycleService.createCycle(cycle);
+
+        template1.setCycle(cycle);
+        template2.setCycle(cycle);
+
+        templateService.createTemplate(template1);
+        templateService.createTemplate(template2);
+
+        List<Templates> templates = templateService.getTemplates(cycle.getId());
+
+        assertEquals(2, templates.size());
+        assertTrue(templates.contains(template1));
+        assertTrue(templates.contains(template2));
+
+    }
+
+    /**
+     * Test para obtener una plantilla con un ID inexistente.
+     *
+     * @throws InstanceNotFoundException si no se encuentra una plantilla con el
+     * ID proporcionado.
+     */
+    @Test
+    public void testGetTemplateWithNonExistentId() throws InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> templateService.getTemplateInfo(NON_EXISTENT_ID));
     }
 
 }
