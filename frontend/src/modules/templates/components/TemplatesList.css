@@ -15,13 +15,16 @@
 
 .mb-3.template {
     display: flex;
+    margin-bottom: 0 !important;
     margin-left: 4rem;
+    padding-top: 0;
     align-items: center;
 }
 
 .form-buttons {
     display: flex;
     align-items: center;
+    align-content: center;
     margin-left: auto;
     text-align: center;
 }
@@ -36,4 +39,33 @@
 .primary.template:focus {
     border-color: white;
     box-shadow: 0 0 0 0.2rem white;
-  }
+}
+
+.listItemStyle.template {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    height: auto;
+    width: 13rem;
+}
+
+.text-item {
+    margin: 0;
+}
+
+.listItemStyle.template.add {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    border-color: transparent;
+    transition: none;
+}
+
+.listItemStyle.template.add:hover {
+    border-color: transparent;
+    transform: none;
+}

@@ -11,3 +11,6 @@ export const getExercises = state =>
 
 export const getExercise = state =>
     getModuleState(state).getExercise;
+
+export const getTemplates = state =>
+    getModuleState(state).getTemplates;

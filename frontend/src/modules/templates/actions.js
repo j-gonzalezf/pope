@@ -143,3 +143,17 @@ export const createTemplate = (template, onSuccess, onErrors) => dispatch =>
         },
         onErrors
     );
+
+const getTemplatesCompleted = getTemplates => ({
+    type: actionTypes.GET_TEMPLATES_COMPLETED,
+    getTemplates
+});
+
+export const getTemplates = (cycleId, onSuccess, onErrors) => dispatch =>
+    backend.templateService.getTemplates(cycleId,
+        getTemplates => {
+            dispatch(getTemplatesCompleted(getTemplates));
+            onSuccess();
+        },
+        onErrors
+    );

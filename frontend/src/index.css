@@ -166,3 +166,12 @@ body {
   color: #e6af2e;
   transform: scale(1.05);
 }
+
+/* Media query para dispositivos móviles */
+@media (max-width: 767px) {
+
+  .listStyle {
+    justify-content: center;
+  }
+
+}

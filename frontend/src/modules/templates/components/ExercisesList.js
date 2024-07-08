@@ -415,6 +415,7 @@ const ExercisesList = () => {
                 <Table className="table">
                     <thead>
                         <tr>
+                            <th className="customTable"></th>
                             <th className="customTable underline"><FormattedMessage id="project.templates.exerciseName" /></th>
                             <th className="customTable underline"><FormattedMessage id="project.templates.exerciseDescription" /></th>
                             <th className="customTable underline"><FormattedMessage id="project.templates.exerciseType" /></th>
@@ -425,6 +426,7 @@ const ExercisesList = () => {
                     <tbody>
                         {getExercises.map((exercise) => (
                             <tr key={exercise.id} >
+                                <td className="customTable"></td>
                                 <td className="customTable">
                                     {exercise.link ? (
                                         /* Target hace que el enlace aparezca en una nueva pestaña
@@ -468,6 +470,7 @@ const ExercisesList = () => {
                             </tr>
                         ))}
                         <tr>
+                            <td className="customTable"></td>
                             <td colSpan={6} className="customTable">
                                 <Button className="primary exercise" onClick={() => setShowAddExerciseModal(true)} >
                                     <BsFillPlusCircleFill className="plusIconStyle exercise" />

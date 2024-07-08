@@ -15,7 +15,7 @@ const AddTemplate = ({ name, setName, error, setError }) => {
 
     const dispatch = useDispatch();
     const { cycleId } = useParams();
-    
+
     const [showInput, setShowInput] = useState(false);
 
     let form;
@@ -32,6 +32,9 @@ const AddTemplate = ({ name, setName, error, setError }) => {
                 () => {
                     setShowInput(false);
                     setName('');
+                    dispatch(actions.getTemplates(cycleId,
+                        () => { },
+                        errors => setError(errors)));
                 },
                 errors => setError(errors)));
         }
@@ -72,18 +75,12 @@ const AddTemplate = ({ name, setName, error, setError }) => {
 
             </Form>
         ) : (
-            <div>
-                <p className='text-white'>
-                    <FormattedMessage id="project.templates.templatesList.empty" />
-                </p>
-
-                <Button className="primary cycle" onClick={() => setShowInput(true)} >
-                    <BsFillPlusCircleFill className="plusIconStyle cycle" />
-                    <span>
-                        <b><FormattedMessage id="project.templates.addTemplate" /></b>
-                    </span>
-                </Button>
-            </div>
+            <Button className="primary cycle" onClick={() => setShowInput(true)} >
+                <BsFillPlusCircleFill className="plusIconStyle cycle" />
+                <span>
+                    <b><FormattedMessage id="project.templates.addTemplate" /></b>
+                </span>
+            </Button>
         )
     );
 

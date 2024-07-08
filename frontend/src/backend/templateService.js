@@ -86,3 +86,11 @@ export const addTemplateRow = (row, onSuccess, onErrors) =>
         onSuccess,
         onErrors
     );
+
+export const getTemplates = (cycleId, onSuccess, onErrors) =>
+    appFetch(
+        `/templates/fromCycle/${cycleId}`,
+        fetchConfig("GET"),
+        onSuccess,
+        onErrors
+    );

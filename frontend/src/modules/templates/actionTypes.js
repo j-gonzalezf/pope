@@ -12,3 +12,4 @@ export const CLEAR_EXERCISE = "project/exercises/clearExercise";
 export const DELETE_EXERCISE_COMPLETED = "project/exercises/deleteExerciseCompleted";
 
 export const CREATE_TEMPLATE_COMPLETED = "project/templates/createTemplateCompleted";
+export const GET_TEMPLATES_COMPLETED = "project/templates/getTemplatesCompleted";
