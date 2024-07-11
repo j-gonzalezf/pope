@@ -365,11 +365,18 @@ const CyclesList = () => {
                             <th className="customTable underline"><FormattedMessage id="project.templates.cycleDescription" /></th>
                             <th className="customTable underline"><FormattedMessage id="project.templates.cycleFrom" /></th>
                             <th className="customTable underline"><FormattedMessage id="project.templates.cycleTo" /></th>
+                            <th className="customTable"></th>
                         </tr>
                     </thead>
                     <tbody>
                         {getCycles.map((cycle) => (
-                            <tr key={cycle.id} className="cycleSelect" onClick={() => redirectToCycleDetails(cycle)}>
+                            <tr key={cycle.id} className="cycleSelect" tabIndex="0"
+                                onClick={() => redirectToCycleDetails(cycle)}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter') {
+                                        redirectToCycleDetails(cycle);
+                                    }
+                                }}>
                                 <td className="pointer"><BsChevronRight size={15} /></td>
                                 <td className="customTable cycleName">{cycle.name}</td>
                                 <td className="customTable">{cycle.description}</td>

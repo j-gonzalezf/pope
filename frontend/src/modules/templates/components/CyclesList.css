@@ -13,18 +13,26 @@
     padding-bottom: 0;
 }
 
+.btn.btn-secondary:focus {
+    border-color: #191716 !important;
+    box-shadow: 0 0 0 0.2rem white !important;
+}
+
 .primary.cycle {
     margin: 0;
 }
 
 .table-responsive {
+    overflow: visible;
     margin-right: 7%;
+    height: auto;
 }
 
 .table {
     position: relative;
     overflow: visible;
     margin-bottom: 5%;
+    height: auto;
 }
 
 .customTable {
@@ -44,7 +52,9 @@
     text-align: start;
 }
 
-.cycleSelect:hover {
+.cycleSelect:hover,
+.cycleSelect:focus {
+    outline: none;
     cursor: pointer;
 }
 
@@ -56,12 +66,15 @@
     text-align: end;
 }
 
-.cycleSelect:hover .pointer {
+.cycleSelect:hover .pointer,
+.cycleSelect:focus .pointer {
     color: #e6af2e !important;
 }
 
-.cycleSelect:hover .customTable.cycleName {
+.cycleSelect:hover .customTable.cycleName,
+.cycleSelect:focus .customTable.cycleName {
     color: #e6af2e !important;
+    font-weight: bold;
 }
 
 .customTable.edit {
@@ -74,9 +87,16 @@
 .primary.edit {
     margin: 0;
     padding: 0;
+    padding-left: 5px;
+    padding-right: 5px;
     border: none;
     color: #e6af2e !important;
     background-color: #191716 !important;
+}
+
+.primary.edit:focus {
+    box-shadow: 0 0 0 0.2rem white !important;
+    color: #e6af2e !important;
 }
 
 .editIconStyle.cycle,
@@ -93,9 +113,16 @@
 .primary.delete {
     margin: 0;
     padding: 0;
+    padding-left: 5px;
+    padding-right: 5px;
     border: none;
     color: red;
     background-color: #191716 !important;
+}
+
+.primary.delete:focus {
+    box-shadow: 0 0 0 0.2rem white !important;
+    color: red !important;
 }
 
 .plusIconStyle.cycle {

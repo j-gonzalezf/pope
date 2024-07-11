@@ -63,41 +63,44 @@ const ClientsList = () => {
 
                 {getClients && (getClients.map((client) => (
 
-                    <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle"
-                        key={client.id} onClick={() => redirectToClientDetails(client.id)}>
+                    <Col xs={12} sm={6} md={4} lg={3} key={client.id} className="listColStyle" >
 
-                        <div className="image-container">
-                            {client.icon ? (client.icon.map((icon, index) => (
-                                <Image
-                                    key={index}
-                                    src={"data:image/png;base64," + icon.base64}
-                                    alt={icon.name}
-                                    className="smallImageStyle"
-                                />
-                            )))
-                                : (
+                        <button className="listItemStyle" onClick={() => redirectToClientDetails(client.id)}>
+                            <div className="image-container">
+                                {client.icon ? (client.icon.map((icon, index) => (
                                     <Image
-                                        src={DefaultIcon}
-                                        alt="Default Icon"
+                                        key={index}
+                                        src={"data:image/png;base64," + icon.base64}
+                                        alt={icon.name}
                                         className="smallImageStyle"
                                     />
-                                )}
-                        </div>
+                                )))
+                                    : (
+                                        <Image
+                                            src={DefaultIcon}
+                                            alt="Default Icon"
+                                            className="smallImageStyle"
+                                        />
+                                    )}
+                            </div>
 
-                        <span className='textoDifuminado' data-text={client.fullName} >
-                            <b>{client.fullName}</b>
-                        </span>
+                            <span className='textoDifuminado' data-text={client.fullName} >
+                                <b>{client.fullName}</b>
+                            </span>
+                        </button>
 
                     </Col>
                 )))}
 
-                <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle add" onClick={redirectToCreateClient}>
-                    <div className="icon-container">
-                        <BsFillPlusCircleFill className='plusIconStyle' size={60} color='#e6af2e' alt="Add Icon" />
-                    </div>
-                    <span className='addText'>
-                        <b><FormattedMessage id="project.users.addClient" /></b>
-                    </span>
+                <Col xs={12} sm={6} md={4} lg={3} className="listColStyle" >
+                    <button className="listItemStyle add" onClick={redirectToCreateClient}>
+                        <div className="icon-container">
+                            <BsFillPlusCircleFill className='plusIconStyle' size={60} color='#e6af2e' alt="Add Icon" />
+                        </div>
+                        <span className='addText'>
+                            <b><FormattedMessage id="project.users.addClient" /></b>
+                        </span>
+                    </button>
                 </Col>
 
             </Row>

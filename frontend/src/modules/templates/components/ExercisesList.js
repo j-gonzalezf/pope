@@ -421,6 +421,7 @@ const ExercisesList = () => {
                             <th className="customTable underline"><FormattedMessage id="project.templates.exerciseType" /></th>
                             <th className="customTable underline"><FormattedMessage id="project.templates.exerciseBodyPart" /></th>
                             <th className="customTable underline"><FormattedMessage id="project.templates.exerciseEquipment" /></th>
+                            <th className="customTable"></th>
                         </tr>
                     </thead>
                     <tbody>

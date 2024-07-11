@@ -47,12 +47,14 @@
 }
 
 /* Al pasar el cursor, el texto se muestra completo */
-.listItemStyle:hover .textoDifuminado {
+.listItemStyle:hover .textoDifuminado,
+.listItemStyle:focus .textoDifuminado {
     overflow: visible;
     white-space: normal;
 }
 
 /* Oculta el efecto de difuminado al pasar el cursor */
-.listItemStyle:hover .textoDifuminado::after {
+.listItemStyle:hover .textoDifuminado::after,
+.listItemStyle:focus .textoDifuminado::after {
     display: none;
 }
