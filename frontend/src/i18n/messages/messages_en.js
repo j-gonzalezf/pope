@@ -95,6 +95,12 @@ export default {
     'project.templates.exerciseEquipment': 'Equipment',
     'project.templates.exerciseLink': 'Link',
     'project.templates.exerciseLinkPattern': 'Invalid link',
+    'project.templates.exerciseNotFound': 'This exercise doesnt exist.',
+    'project.templates.exerciseNotFound.link': 'Press to create it.',
+    'project.templates.templateView.exercise': 'Exercise',
+    'project.templates.templateView.series': 'Series',
+    'project.templates.templateView.reps': 'Repetitions',
+    'project.templates.templateView.weight': 'Weight',
 
     // Actions
     'project.templates.cycles.title': 'Training cycles',
@@ -112,6 +118,7 @@ export default {
     'project.templates.templatesList.title': 'Templates',
     'project.templates.templatesList.empty': 'No templates found',
     'project.templates.templateView.title': 'Template view',
-    'project.templates.addTemplate': 'Add template',
+    'project.templates.addTemplate': 'Create template',
+    'project.templates.addTemplateRow': 'Add row',
 
 }

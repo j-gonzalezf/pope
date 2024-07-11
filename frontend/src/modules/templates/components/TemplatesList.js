@@ -21,7 +21,6 @@ const TemplatesList = () => {
     const { cycleId } = useParams();
 
     const getTemplates = useSelector(selectors.getTemplates);
-    const [name, setName] = useState('');
     const [error, setError] = useState(null);
 
     const redirectToTemplateView = (templateId) => {
@@ -49,17 +48,16 @@ const TemplatesList = () => {
             {getTemplates && getTemplates.length > 0 ? (
                 <Row className="listStyle">
                     {getTemplates.map((template) => (
-                        <Col xs={12} sm={6} md={4} lg={3} className="listItemStyle template"
-                            key={template.id} onClick={() => redirectToTemplateView(template.id)}>
-                            <div className="template-item">
-                                <p className='text-item'>{template.name}</p>
-                            </div>
+                        <Col xs={12} sm={6} md={4} lg={3} className="listColStyle template" key={template.id} >
+                            <button className="listItemStyle button" onClick={() => redirectToTemplateView(template.id)}>
+                                <div className="template-item">
+                                    <p className='text-item'>{template.name}</p>
+                                </div>
+                            </button>
                         </Col>
                     ))}
                     <Col xs={12} sm={12} md={12} lg={12} className="listItemStyle template add">
                         <AddTemplate
-                            name={name}
-                            setName={setName}
                             error={error}
                             setError={setError}
                         />
@@ -72,8 +70,6 @@ const TemplatesList = () => {
                     </p>
 
                     <AddTemplate
-                        name={name}
-                        setName={setName}
                         error={error}
                         setError={setError}
                     />

@@ -157,3 +157,16 @@ export const getTemplates = (cycleId, onSuccess, onErrors) => dispatch =>
         },
         onErrors
     );
+
+const addTemplateRowCompleted = () => ({
+    type: actionTypes.ADD_TEMPLATE_ROW_COMPLETED
+});
+
+export const addTemplateRow = (row, onSuccess, onErrors) => dispatch =>
+    backend.templateService.addTemplateRow(row,
+        () => {
+            dispatch(addTemplateRowCompleted());
+            onSuccess();
+        },
+        onErrors
+    );

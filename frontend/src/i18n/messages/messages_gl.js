@@ -95,6 +95,12 @@ export default {
     'project.templates.exerciseEquipment': 'Equipamento',
     'project.templates.exerciseLink': 'Fonte',
     'project.templates.exerciseLinkPattern': 'Formato de enlace incorrecto',
+    'project.templates.exerciseNotFound': 'Non existe este exercicio.',
+    'project.templates.exerciseNotFound.link': 'Preme para crealo.',
+    'project.templates.templateView.exercise': 'Exercicio',
+    'project.templates.templateView.series': 'Series',
+    'project.templates.templateView.reps': 'Repeticións',
+    'project.templates.templateView.weight': 'Peso',
 
     // Actions
     'project.templates.cycles.title': 'Ciclos de adestramento',
@@ -112,6 +118,7 @@ export default {
     'project.templates.templatesList.title': 'Modelos',
     'project.templates.templatesList.empty': 'Non existen modelos',
     'project.templates.templateView.title': 'Vista de modelo',
-    'project.templates.addTemplate': 'Engadir modelo',
+    'project.templates.addTemplate': 'Crear modelo',
+    'project.templates.addTemplateRow': 'Engadir fila',
 
 }
