@@ -23,7 +23,6 @@ const AddTemplateRow = () => {
     const { templateId } = useParams();
     const wrapperRef = useRef(null);
 
-    const [exerciseName, setExerciseName] = useState('');
     const [selectedExercise, setSelectedExercise] = useState(null);
     const [inputValue, setInputValue] = useState('');
     const [series, setSeries] = useState(null);
@@ -50,7 +49,6 @@ const AddTemplateRow = () => {
 
     const onSuggestionSelected = (event, { suggestion }) => {
         setSelectedExercise(suggestion);
-        setExerciseName(suggestion.name);
         setIsSuggestionSelected(true);
     };
 
@@ -59,30 +57,29 @@ const AddTemplateRow = () => {
         event.preventDefault();
 
         if (selectedExercise !== null) {
-                setIsValid(true);
-                dispatch(actions.addTemplateRow(
-                    {
-                        series: series,
-                        reps: reps,
-                        weight: weight,
-                        exerciseId: selectedExercise.id,
-                        templateId: templateId
-                    },
-                    () => {
-                        onClose();
-                    },
-                    errors => setError(errors)));
-            } else {
-                setIsValid(false);
-                setInputValue('');
-                form.reportValidity();
-            }
+            setIsValid(true);
+            dispatch(actions.addTemplateRow(
+                {
+                    series: series,
+                    reps: reps,
+                    weight: weight,
+                    exerciseId: selectedExercise.id,
+                    templateId: templateId
+                },
+                () => {
+                    onClose();
+                },
+                errors => setError(errors)));
+        } else {
+            setIsValid(false);
+            setInputValue('');
+            form.reportValidity();
+        }
 
     }
 
     const onClose = () => {
         setShowAddInput(false);
-        setExerciseName('');
         setSelectedExercise(null);
         setInputValue('');
         setSeries(null);
@@ -98,6 +95,7 @@ const AddTemplateRow = () => {
                 setSuggestions(getExercises);
             },
             errors => setError(errors)));
+        // eslint-disable-next-line
     }, [dispatch, user.id]);
 
     /* Función que detecta clicks fuera del componente para cerrarlo */
@@ -131,8 +129,8 @@ const AddTemplateRow = () => {
                             suggestions={suggestions}
                             onSuggestionsFetchRequested={() => { }}
                             onSuggestionsClearRequested={() => setSuggestions([])}
-                            getSuggestionValue={suggestion => suggestion.name}
-                            renderSuggestion={suggestion => suggestion ? <div>{suggestion.name}</div> : ''}
+                            getSuggestionValue={suggestion => suggestion ? suggestion.name : ''}
+                            renderSuggestion={suggestion => suggestion ? <div className="suggestion">{suggestion.name}</div> : ''}
                             inputProps={{
                                 className: "form-control",
                                 id: "exercise",
@@ -153,10 +151,10 @@ const AddTemplateRow = () => {
                                             // Si no hay sugerencias o el usuario ha escrito algo mal, muestra el enlace
                                             !children && query && !isSuggestionSelected &&
                                             <div className="no-suggestions">
-                                                No existe este ejercicio.
+                                                <FormattedMessage id="project.templates.exerciseNotFound" />
                                                 <br />
                                                 <Link className="link" to="/templates/exercises">
-                                                    Pulsa para crearlo.
+                                                    <FormattedMessage id="project.templates.exerciseNotFound.link" />
                                                 </Link>
                                             </div>
                                         }
