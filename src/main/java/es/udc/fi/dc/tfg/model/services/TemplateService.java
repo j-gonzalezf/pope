@@ -34,6 +34,14 @@ public interface TemplateService {
     List<Templates> getTemplates(Long cycleId);
 
     /**
+     * Devuelve una lista con las filas de una plantilla.
+     *
+     * @param templateId El ID de la plantilla.
+     * @return La lista de objetos TemplateRows que representa las filas.
+     */
+    List<TemplateRows> getTemplateRows(Long templateId);
+
+    /**
      * Devuelve una plantilla a partir de su ID.
      *
      * @param templateId El ID de la plantilla.

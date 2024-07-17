@@ -56,6 +56,7 @@ public class SecurityConfig {
                 .requestMatchers(antMatcher("/api/templates/{id}")).hasRole("TRAINER")
                 .requestMatchers(antMatcher("/api/templates/{id}/delete")).hasRole("TRAINER")
                 .requestMatchers(antMatcher("/api/exercises/exercise/add")).hasRole("TRAINER")
+                .requestMatchers(antMatcher("/api/exercises/exercise/{id}")).permitAll()
                 .requestMatchers(antMatcher("/api/exercises/{id}")).hasRole("TRAINER")
                 .requestMatchers(antMatcher("/api/exercises/{id}/delete")).hasRole("TRAINER")
                 .anyRequest().authenticated()

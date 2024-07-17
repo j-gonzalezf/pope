@@ -9,11 +9,6 @@
     padding-top: 4.5%;
 }
 
-.comment {
-    border-left: 2px solid white;
-    height: 635px;
-}
-
 .title.templates {
     padding-left: 25%;
 }
@@ -105,7 +100,6 @@ input#weight.form-control {
 
     .comment {
         height: auto;
-        border-left: none;
         text-align: center;
     }
 

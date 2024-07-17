@@ -109,6 +109,25 @@ public class ExerciseController {
     }
 
     /**
+     * Devuelve el ejercicio de un entrenador a partir de su ID.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param exerciseId el ID del ejercicio
+     * @return un ejercicio
+     * @throws InstanceNotFoundException si no se encuentra un ejercicio con el
+     * ID proporcionado
+     */
+    @GetMapping("/exercise/{id}")
+    public ExerciseDto getExerciseInfo(@RequestAttribute Long userId,
+            @PathVariable("id") Long exerciseId) throws InstanceNotFoundException {
+
+        Exercises exercise = exerciseService.getExerciseInfo(exerciseId);
+
+        return toExerciseDto(exercise);
+
+    }
+
+    /**
      * Edita un ejercicio.
      *
      * @param userId el ID del usuario que realiza la petición

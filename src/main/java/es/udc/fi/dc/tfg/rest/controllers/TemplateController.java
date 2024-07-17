@@ -4,6 +4,7 @@ import static es.udc.fi.dc.tfg.rest.dtos.TemplateConversor.toTemplateDto;
 import static es.udc.fi.dc.tfg.rest.dtos.TemplateConversor.toTemplatesDto;
 import static es.udc.fi.dc.tfg.rest.dtos.TemplateConversor.toTemplates;
 import static es.udc.fi.dc.tfg.rest.dtos.TemplateConversor.toTemplateRowDto;
+import static es.udc.fi.dc.tfg.rest.dtos.TemplateConversor.toTemplateRowsDto;
 import static es.udc.fi.dc.tfg.rest.dtos.TemplateConversor.toTemplateRows;
 import java.net.URI;
 import java.util.List;
@@ -159,6 +160,43 @@ public class TemplateController {
         List<Templates> templates = templateService.getTemplates(cycleId);
 
         return toTemplatesDto(templates);
+
+    }
+
+    /**
+     * Devuelve la plantilla de un entrenador a partir de su ID.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param templateId el ID de la plantilla
+     * @return una plantilla
+     * @throws InstanceNotFoundException si no se encuentra una plantilla con el
+     * ID proporcionado
+     */
+    @GetMapping("/template/{id}")
+    public TemplateDto getTemplateInfo(@RequestAttribute Long userId,
+            @PathVariable("id") Long templateId) throws InstanceNotFoundException {
+
+        Templates template = templateService.getTemplateInfo(templateId);
+
+        return toTemplateDto(template);
+
+    }
+
+    /**
+     * Devuelve la lista de filas de una plantilla.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param templateId el ID de la plantilla
+     * @return una lista de filas
+     */
+    @GetMapping("/{templateId}/rows")
+    public List<TemplateRowDto> getTemplateRows(@RequestAttribute Long userId,
+            @PathVariable("templateId") Long templateId) {
+
+        //Templates cycle = templateService.getTemplateInfo(templateId);
+        List<TemplateRows> templateRows = templateService.getTemplateRows(templateId);
+
+        return toTemplateRowsDto(templateRows);
 
     }
 

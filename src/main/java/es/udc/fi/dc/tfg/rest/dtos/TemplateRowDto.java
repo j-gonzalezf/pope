@@ -26,6 +26,11 @@ public class TemplateRowDto {
     private Long id;
 
     /**
+     * Nombre del ejercicio.
+     */
+    private String exerciseName;
+
+    /**
      * Series del ejercicio, puede ser nulo.
      */
     private Integer series;
@@ -60,16 +65,18 @@ public class TemplateRowDto {
      * Constructor de la clase TemplateRowDto.
      *
      * @param id El identificador de la fila de la plantilla.
+     * @param exerciseName El nombre del ejercicio.
      * @param series Las series a realizar del ejercicio.
      * @param repetitions Las repeticiones a realizar por serie.
      * @param weight El peso a levantar por repetición.
      * @param exerciseId El ID del ejercicio a realizar.
      * @param templateId El ID de la plantilla donde se encuentra la fila.
      */
-    public TemplateRowDto(Long id, Integer series, Integer repetitions,
-            BigDecimal weight, Long exerciseId, Long templateId) {
+    public TemplateRowDto(Long id, String exerciseName, Integer series,
+            Integer repetitions, BigDecimal weight, Long exerciseId, Long templateId) {
 
         this.id = id;
+        this.exerciseName = exerciseName;
         this.series = series;
         this.repetitions = repetitions;
         this.weight = weight;
@@ -94,6 +101,24 @@ public class TemplateRowDto {
      */
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * Gets the exercise name.
+     *
+     * @return the exercise name
+     */
+    public String getExerciseName() {
+        return exerciseName;
+    }
+
+    /**
+     * Sets the exercise name.
+     *
+     * @param exerciseName the new exercise name
+     */
+    public void setExerciseName(String exerciseName) {
+        this.exerciseName = exerciseName;
     }
 
     /**

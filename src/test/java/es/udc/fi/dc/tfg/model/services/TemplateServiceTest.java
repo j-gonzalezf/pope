@@ -196,6 +196,54 @@ public class TemplateServiceTest {
     }
 
     /**
+     * Test para obtener las filas de una plantilla.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     */
+    @Test
+    public void testGetTemplateRows() throws DuplicateInstanceException {
+
+        TemplateRows templateRow1 = addTemplateRow();
+        TemplateRows templateRow2 = addTemplateRow();
+
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+        Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
+                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
+                LocalDate.of(2001, 1, 1), trainer, client);
+        cycle.setTrainer(trainer);
+        cycle.setClient(client);
+        cycleService.createCycle(cycle);
+
+        Exercises exercise = new Exercises("exerciseName", "description", "exerciseType",
+                null, null, null, null);
+        exercise.setTrainer(trainer);
+        exerciseService.addExercise(exercise);
+
+        Templates template = createTemplate();
+        template.setCycle(cycle);
+        templateService.createTemplate(template);
+
+        templateRow1.setTemplate(template);
+        templateRow1.setExercise(exercise);
+        templateService.addTemplateRow(templateRow1);
+        templateRow2.setTemplate(template);
+        templateRow2.setExercise(exercise);
+        templateService.addTemplateRow(templateRow2);
+
+        List<TemplateRows> templateRows = templateService.getTemplateRows(template.getId());
+
+        assertEquals(2, templateRows.size());
+        assertTrue(templateRows.contains(templateRow1));
+        assertTrue(templateRows.contains(templateRow2));
+
+    }
+
+    /**
      * Test para obtener una plantilla con un ID inexistente.
      *
      * @throws InstanceNotFoundException si no se encuentra una plantilla con el

@@ -2,25 +2,42 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
-import { BsFillPlusCircleFill } from "react-icons/bs";
+import { BsFillPlusCircleFill, BsPencilSquare, BsTrash } from "react-icons/bs";
 import './TemplateView.css';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
 
 import { Errors } from '../../common';
+import * as actions from '../actions';
+import * as selectors from '../selectors';
 import AddTemplateRow from './AddTemplateRow';
 
 const TemplateView = () => {
 
     const dispatch = useDispatch();
 
+    const { clientId } = useParams();
+    const { cycleId } = useParams();
     const { templateId } = useParams();
+
+    const getTemplate = useSelector(selectors.getTemplate);
+    const getTemplateRows = useSelector(selectors.getTemplateRows);
 
     const [error, setError] = useState(null);
     const [showAddInput, setShowAddInput] = useState(false);
+
+    useEffect(() => {
+        dispatch(actions.getTemplate(templateId,
+            () => {
+                dispatch(actions.getTemplateRows(templateId,
+                    () => { },
+                    errors => setError(errors)));
+            },
+            errors => setError(errors)));
+    }, [dispatch, templateId]);
 
     return (
 
@@ -37,7 +54,19 @@ const TemplateView = () => {
                         <Table className="table">
                             <thead>
                                 <tr>
-                                    <th colSpan={4} className="customTable title-template"><h4>Día de Pull</h4></th>
+                                    <th className="customTable title-template">
+                                        <div className="form-buttons name">
+                                            <h4 className="d-flex align-items-center m-0">
+                                                <Link to={`/templates/${clientId}/trainingCycle/${cycleId}`} className='link h'>{getTemplate.name}</Link>
+                                            </h4>
+                                            <Button className="primary template name" title='Editar nombre de plantilla'>
+                                                <BsPencilSquare className="checkIconStyle" color='#e6af2e' size={20} />
+                                            </Button>
+                                            <Button className="primary template delete name" title='Eliminar plantilla'>
+                                                <BsTrash className="crossIconStyle" color='red' size={20} />
+                                            </Button>
+                                        </div>
+                                    </th>
                                 </tr>
                                 <tr>
                                     <th className="customTable underline"><FormattedMessage id="project.templates.templateView.exercise" /></th>
@@ -47,48 +76,35 @@ const TemplateView = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/*
-                        {getCycles.map((cycle) => (
-                            <tr key={cycle.id} className="cycleSelect" onClick={() => redirectToCycleDetails(cycle)}>
-                                <td className="pointer"><BsChevronRight size={15} /></td>
-                                <td className="customTable cycleName">{cycle.name}</td>
-                                <td className="customTable">{cycle.description}</td>
-                                <td className="customTable">{dateFormat(cycle.fromDate)}</td>
-                                <td className="customTable">{dateFormat(cycle.toDate)}</td>
-                                <td className="customTable edit">
-                                    <Button className="primary edit" onClick={(event) => {
-                                        event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
-                                        openUpdateCycleModal(cycle);
-                                    }}
-                                        title='Pulsa para editar ciclo'>
-                                        <BsPencilSquare className="editIconStyle cycle" />
-                                        <span>
-                                            <FormattedMessage id="project.templates.updateCycle" />
-                                        </span>
-                                    </Button>
-                                </td>
-                                <td className="customTable delete">
-                                    <Button className="primary delete" onClick={(event) => {
-                                        event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
-                                        deleteCycle(cycle);
-                                    }}
-                                        title='Pulsa para eliminar ciclo'>
-                                        <BsTrash className="deleteIconStyle cycle" />
-                                        <span>
-                                            <FormattedMessage id="project.templates.deleteCycle" />
-                                        </span>
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))}
-                            */}
+                                {getTemplateRows.map((row) => (
+                                    <tr key={row.id}>
+                                        <td className="customTable">
+                                            <Link to={'/templates/exercises'} className="link h" >
+                                                {row.exerciseName}
+                                            </Link>
+                                        </td>
+                                        <td className="customTable">{row.series}</td>
+                                        <td className="customTable">{row.repetitions}</td>
+                                        <td className="customTable">{row.weight}</td>
+                                        <td className="customTable edit">
+                                            <div className="form-buttons">
+                                                <Button className="primary template" title='Pulsa para editar fila'>
+                                                    <BsPencilSquare className="checkIconStyle" color='#e6af2e' size={20} />
+                                                </Button>
+                                                <Button className="primary template delete" title='Pulsa para eliminar fila'>
+                                                    <BsTrash className="crossIconStyle" color='red' size={20} />
+                                                </Button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
                                 <tr>
                                     {showAddInput ? (
-                                        <td colSpan={4} className="customTable">
+                                        <td colSpan={5} className="customTable">
                                             <AddTemplateRow />
                                         </td>
                                     ) : (
-                                        <td colSpan={4} className="customTable">
+                                        <td colSpan={5} className="customTable">
                                             <Button className="primary cycle" onClick={() => setShowAddInput(true)}>
                                                 <BsFillPlusCircleFill className="plusIconStyle cycle" />
                                                 <span>

@@ -142,22 +142,29 @@ public class ExerciseControllerTest {
     }
 
     /**
-     * Test para añadir un ejercicio.
+     * Test para añadir un ejercicio y obtenerlo a partir de su ID..
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testAddExercise() throws Exception {
+    public void testAddExerciseAndGetExercise() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
 
         ExerciseDto exerciseDto = new ExerciseDto(null, "exerciseName", "description",
                 "exerciseType", null, null, null, trainerDto.getId());
 
-        mockMvc.perform(post("/api/exercises/exercise/add")
+        MvcResult result = mockMvc.perform(post("/api/exercises/exercise/add")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(exerciseDto)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        ExerciseDto createdExercise = new ObjectMapper().readValue(content, ExerciseDto.class);
+
+        mockMvc.perform(get("/api/exercises/exercise/" + createdExercise.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
 
     }
 

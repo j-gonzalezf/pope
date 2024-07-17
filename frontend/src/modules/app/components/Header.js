@@ -5,7 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { CgGym } from "react-icons/cg";
 import './Header.css';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
@@ -28,14 +28,15 @@ const Header = () => {
     const icon = useSelector(users.selectors.getIcon);
 
     const [showHeader, setShowHeader] = useState(false);
-    const [showReference, setShowReference] = useState(false);
+    const [showReference, setShowReference] = useState(false)
 
-    const urlsToHideCycleName = [
-        '/users/clientDetails/' + clientId,
-        '/templates/trainingCycles/' + clientId
-    ];
+    const displayReference = useCallback(() => {
 
-    const displayReference = () => {
+        const urlsToHideCycleName = [
+            '/users/clientDetails/' + clientId,
+            '/templates/trainingCycles/' + clientId
+        ];
+
         if (clientName && cycleName && !urlsToHideCycleName.includes(location.pathname)) {
             return (
                 <>
@@ -48,7 +49,8 @@ const Header = () => {
             return <Link to={`/users/clients`} className='link h'>{clientName}</Link>;
         }
         return '';
-    };
+
+    }, [clientId, clientName, cycleName, location.pathname]);
 
     const clearCycle = () => {
         dispatch(templates.actions.clearCycle());
@@ -79,7 +81,7 @@ const Header = () => {
         } else {
             setShowReference(false);
         }
-    }, [location.pathname]);
+    }, [location.pathname, displayReference]);
 
     return (
 

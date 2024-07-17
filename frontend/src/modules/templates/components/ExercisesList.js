@@ -449,7 +449,7 @@ const ExercisesList = () => {
                                         event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
                                         openUpdateExerciseModal(exercise);
                                     }}
-                                        title='Pulsa para editar ejeercicio'>
+                                        title='Pulsa para editar ejercicio'>
                                         <BsPencilSquare className="editIconStyle cycle" />
                                         <span>
                                             <FormattedMessage id="project.templates.updateCycle" />

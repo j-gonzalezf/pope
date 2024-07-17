@@ -79,6 +79,7 @@ CREATE TABLE Templates (
 
 CREATE TABLE TemplateRows (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    exerciseName VARCHAR(255) NOT NULL,
     series TINYINT,
     repetitions TINYINT,
     weight NUMERIC(5,2),

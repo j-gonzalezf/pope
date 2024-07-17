@@ -50,18 +50,32 @@ public class TemplateServiceImpl implements TemplateService {
     public void addTemplateRow(TemplateRows templateRow) {
         templateRowDao.save(templateRow);
     }
-    
+
     /**
      * Devuelve una lista con las plantillas de un ciclo.
      *
      * @param cycleId El ID del ciclo.
-     * @return La lista de objetos Templlates que representa las plantillas.
+     * @return La lista de objetos Templates que representa las plantillas.
      */
     @Override
     public List<Templates> getTemplates(Long cycleId) {
 
         List<Templates> templates = templateDao.findTemplates(cycleId);
         return templates;
+
+    }
+
+    /**
+     * Devuelve una lista con las filas de una plantilla.
+     *
+     * @param templateId El ID de la plantilla.
+     * @return La lista de objetos TemplateRows que representa las filas.
+     */
+    @Override
+    public List<TemplateRows> getTemplateRows(Long templateId) {
+
+        List<TemplateRows> templateRows = templateRowDao.findByTemplateId(templateId);
+        return templateRows;
 
     }
 

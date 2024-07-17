@@ -66,9 +66,22 @@ public class TemplateConversor {
      * el objeto TemplateRows proporcionado
      */
     public static final TemplateRowDto toTemplateRowDto(TemplateRows templateRow) {
-        return new TemplateRowDto(templateRow.getId(), templateRow.getSeries(),
-                templateRow.getRepetitions(), templateRow.getWeight(),
+        return new TemplateRowDto(templateRow.getId(), templateRow.getExercise().getName(),
+                templateRow.getSeries(), templateRow.getRepetitions(), templateRow.getWeight(),
                 templateRow.getExercise().getId(), templateRow.getTemplate().getId());
+    }
+
+    /**
+     * Convierte una lista de objetos TemplateRows a objetos TemplateRowDto.
+     *
+     * @param templateRows la lista de objetos TemplateRows a convertir
+     * @return una nueva lista de objetos TemplateRowDto que contiene los mismos
+     * datos que la lista de objetos TemplateRows proporcionada
+     */
+    public static final List<TemplateRowDto> toTemplateRowsDto(List<TemplateRows> templateRows) {
+        return templateRows.stream().map(templateRow -> {
+            return toTemplateRowDto(templateRow);
+        }).collect(Collectors.toList());
     }
 
     /**

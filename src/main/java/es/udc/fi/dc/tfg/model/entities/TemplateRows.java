@@ -24,6 +24,11 @@ public class TemplateRows {
     private Long id;
 
     /**
+     * Nombre del ejercicio.
+     */
+    private String exerciseName;
+
+    /**
      * Series del ejercicio, puede ser nulo.
      */
     private Integer series;
@@ -63,9 +68,10 @@ public class TemplateRows {
      * @param exercise El ejercicio asociado a la fila de la plantilla.
      * @param template La plantilla asociada a la fila de la plantilla.
      */
-    public TemplateRows(Integer series, Integer repetitions, BigDecimal weight,
-            Exercises exercise, Templates template) {
+    public TemplateRows(Integer series, Integer repetitions,
+            BigDecimal weight, Exercises exercise, Templates template) {
 
+        this.exerciseName = exercise.getName();
         this.series = series;
         this.repetitions = repetitions;
         this.weight = weight;
@@ -92,6 +98,24 @@ public class TemplateRows {
      */
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * Gets the exercise name.
+     *
+     * @return the exercise name
+     */
+    public String getExerciseName() {
+        return exerciseName;
+    }
+
+    /**
+     * Sets the exercise name.
+     *
+     * @param exerciseName the new exercise name
+     */
+    public void setExerciseName(String exerciseName) {
+        this.exerciseName = exerciseName;
     }
 
     /**

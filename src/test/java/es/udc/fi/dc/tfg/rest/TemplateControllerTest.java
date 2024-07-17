@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package es.udc.fi.dc.tfg.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -469,8 +465,8 @@ public class TemplateControllerTest {
         String content3 = result3.getResponse().getContentAsString();
         TemplateDto createdTemplate = new ObjectMapper().readValue(content3, TemplateDto.class);
 
-        TemplateRowDto templateRowDto = new TemplateRowDto(null, 3, 10, new BigDecimal("50"),
-                createdExercise.getId(), createdTemplate.getId());
+        TemplateRowDto templateRowDto = new TemplateRowDto(null, "exercise", 3, 10,
+                new BigDecimal("50"), createdExercise.getId(), createdTemplate.getId());
 
         mockMvc.perform(post("/api/templates/addRow")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
@@ -485,12 +481,12 @@ public class TemplateControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testCreateTemplateRow_InstanceNotFoundExeption() throws Exception {
+    public void testAddTemplateRow_InstanceNotFoundExeption() throws Exception {
 
         Long incorrectUserId = -1L;
 
-        TemplateRowDto templateRowDto = new TemplateRowDto(null, 3, 10, new BigDecimal("50"),
-                incorrectUserId, incorrectUserId);
+        TemplateRowDto templateRowDto = new TemplateRowDto(null, "exercise", 3, 10,
+                new BigDecimal("50"), incorrectUserId, incorrectUserId);
 
         mockMvc.perform(post("/api/templates/addRow")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
@@ -500,12 +496,12 @@ public class TemplateControllerTest {
     }
 
     /**
-     * Test para aladur una fila en una plantilla sin permiso.
+     * Test para añadir una fila en una plantilla sin permiso.
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testCreateTemplateRow_PermissionException() throws Exception {
+    public void testAddTemplateRow_PermissionException() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
@@ -543,8 +539,8 @@ public class TemplateControllerTest {
         String content3 = result3.getResponse().getContentAsString();
         TemplateDto createdTemplate = new ObjectMapper().readValue(content3, TemplateDto.class);
 
-        TemplateRowDto templateRowDto = new TemplateRowDto(null, 3, 10, new BigDecimal("50"),
-                createdExercise.getId(), createdTemplate.getId());
+        TemplateRowDto templateRowDto = new TemplateRowDto(null, "exercise", 3, 10,
+                new BigDecimal("50"), createdExercise.getId(), createdTemplate.getId());
 
         mockMvc.perform(post("/api/templates/addRow")
                 .header("Authorization", "Bearer " + authTrainer2.getServiceToken())
@@ -559,7 +555,7 @@ public class TemplateControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testCreateTemplateRow_InvalidRole() throws Exception {
+    public void testAddTemplateRow_InvalidRole() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
@@ -597,13 +593,52 @@ public class TemplateControllerTest {
         String content3 = result3.getResponse().getContentAsString();
         TemplateDto createdTemplate = new ObjectMapper().readValue(content3, TemplateDto.class);
 
-        TemplateRowDto templateRowDto = new TemplateRowDto(null, 3, 10, new BigDecimal("50"),
-                createdExercise.getId(), createdTemplate.getId());
+        TemplateRowDto templateRowDto = new TemplateRowDto(null, "exercise", 3, 10,
+                new BigDecimal("50"), createdExercise.getId(), createdTemplate.getId());
 
         mockMvc.perform(post("/api/templates/addRow")
                 .header("Authorization", "Bearer " + authClient.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateRowDto)))
                 .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para obtener las filas de una plantilla.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTemplateRows() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        TemplateDto templateDto = new TemplateDto(null, "templateName",
+                "2001-09-25T10:15:30", createdCycle.getId());
+
+        MvcResult result3 = mockMvc.perform(post("/api/templates/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content3 = result3.getResponse().getContentAsString();
+        TemplateDto createdTemplate = new ObjectMapper().readValue(content3, TemplateDto.class);
+
+        mockMvc.perform(get("/api/templates/" + createdTemplate.getId() + "/rows")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
 
     }
 

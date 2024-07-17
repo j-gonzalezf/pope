@@ -55,6 +55,14 @@ export const getExercises = (trainerId, onSuccess, onErrors) =>
         onErrors
     );
 
+export const getExercise = (id, onSuccess, onErrors) =>
+    appFetch(
+        `/exercises/exercise/${id}`,
+        fetchConfig("GET"),
+        onSuccess,
+        onErrors
+    );
+
 export const updateExercise = (exercise, onSuccess, onErrors) =>
     appFetch(
         `/exercises/${exercise.id}`,
@@ -87,10 +95,26 @@ export const getTemplates = (cycleId, onSuccess, onErrors) =>
         onErrors
     );
 
+export const getTemplate = (id, onSuccess, onErrors) =>
+    appFetch(
+        `/templates/template/${id}`,
+        fetchConfig("GET"),
+        onSuccess,
+        onErrors
+    );
+
 export const addTemplateRow = (row, onSuccess, onErrors) =>
     appFetch(
         "/templates/addRow",
         fetchConfig("POST", row),
+        onSuccess,
+        onErrors
+    );
+
+export const getTemplateRows = (templateId, onSuccess, onErrors) =>
+    appFetch(
+        `/templates/${templateId}/rows`,
+        fetchConfig("GET"),
         onSuccess,
         onErrors
     );

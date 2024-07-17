@@ -100,6 +100,20 @@ export const getExercises = (trainerId, onSuccess, onErrors) => dispatch =>
         onErrors
     );
 
+const getExerciseCompleted = getExercise => ({
+    type: actionTypes.GET_EXERCISE_COMPLETED,
+    getExercise
+});
+
+export const getExercise = (id, onSuccess, onErrors) => dispatch =>
+    backend.templateService.getExercise(id,
+        getExercise => {
+            dispatch(getExerciseCompleted(getExercise));
+            onSuccess();
+        },
+        onErrors
+    );
+
 export const clearExercise = () => ({
     type: actionTypes.CLEAR_EXERCISE
 });
@@ -158,6 +172,20 @@ export const getTemplates = (cycleId, onSuccess, onErrors) => dispatch =>
         onErrors
     );
 
+const getTemplateCompleted = getTemplate => ({
+    type: actionTypes.GET_TEMPLATE_COMPLETED,
+    getTemplate
+});
+
+export const getTemplate = (id, onSuccess, onErrors) => dispatch =>
+    backend.templateService.getTemplate(id,
+        getTemplate => {
+            dispatch(getTemplateCompleted(getTemplate));
+            onSuccess();
+        },
+        onErrors
+    );
+
 const addTemplateRowCompleted = () => ({
     type: actionTypes.ADD_TEMPLATE_ROW_COMPLETED
 });
@@ -166,6 +194,20 @@ export const addTemplateRow = (row, onSuccess, onErrors) => dispatch =>
     backend.templateService.addTemplateRow(row,
         () => {
             dispatch(addTemplateRowCompleted());
+            onSuccess();
+        },
+        onErrors
+    );
+
+const getTemplateRowsCompleted = getTemplateRows => ({
+    type: actionTypes.GET_TEMPLATE_ROWS_COMPLETED,
+    getTemplateRows
+});
+
+export const getTemplateRows = (templateId, onSuccess, onErrors) => dispatch =>
+    backend.templateService.getTemplateRows(templateId,
+        getTemplateRows => {
+            dispatch(getTemplateRowsCompleted(getTemplateRows));
             onSuccess();
         },
         onErrors

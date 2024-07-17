@@ -7,7 +7,9 @@ const initialState = {
     getCycle: {},
     getExercises: [{}],
     getExercise: {},
-    getTemplates: [{}]
+    getTemplates: [{}],
+    getTemplate: {},
+    getTemplateRows: [{}]
 }
 
 const getCycles = (state = initialState.getCycles, action) => {
@@ -62,6 +64,9 @@ const getExercise = (state = initialState.getExercise, action) => {
 
     switch (action.type) {
 
+        case actionTypes.GET_EXERCISE_COMPLETED:
+            return action.getExercise;
+
         case actionTypes.UPDATE_EXERCISE_COMPLETED:
             return action.getExercise;
 
@@ -89,12 +94,42 @@ const getTemplates = (state = initialState.getTemplates, action) => {
 
 }
 
+const getTemplate = (state = initialState.getTemplate, action) => {
+
+    switch (action.type) {
+
+        case actionTypes.GET_TEMPLATE_COMPLETED:
+            return action.getTemplate;
+
+        default:
+            return state;
+
+    }
+
+}
+
+const getTemplateRows = (state = initialState.getTemplateRows, action) => {
+
+    switch (action.type) {
+
+        case actionTypes.GET_TEMPLATE_ROWS_COMPLETED:
+            return action.getTemplateRows;
+
+        default:
+            return state;
+
+    }
+
+}
+
 const reducer = combineReducers({
     getCycles,
     getCycle,
     getExercises,
     getExercise,
-    getTemplates
+    getTemplates,
+    getTemplate,
+    getTemplateRows
 });
 
 export default reducer;

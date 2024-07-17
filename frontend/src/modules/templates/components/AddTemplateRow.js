@@ -60,14 +60,18 @@ const AddTemplateRow = () => {
             setIsValid(true);
             dispatch(actions.addTemplateRow(
                 {
+                    exerciseName: selectedExercise.name,
                     series: series,
-                    reps: reps,
+                    repetitions: reps,
                     weight: weight,
                     exerciseId: selectedExercise.id,
                     templateId: templateId
                 },
                 () => {
                     onClose();
+                    dispatch(actions.getTemplateRows(templateId,
+                        () => { },
+                        errors => setError(errors)));
                 },
                 errors => setError(errors)));
         } else {
@@ -188,6 +192,7 @@ const AddTemplateRow = () => {
 
                         <Form.Control
                             type="number"
+                            step="0.01"
                             className="form-control"
                             id="weight"
                             name="weight"
