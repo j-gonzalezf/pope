@@ -34,7 +34,7 @@ export const updateCycle = (cycle, onSuccess, onErrors) =>
 
 export const deleteCycle = (id, onSuccess, onErrors) =>
     appFetch(
-        `/templates/${id}/delete`, fetchConfig("DELETE"),
+        `/templates/cycle/${id}/delete`, fetchConfig("DELETE"),
         onSuccess,
         onErrors
     );
@@ -103,6 +103,13 @@ export const getTemplate = (id, onSuccess, onErrors) =>
         onErrors
     );
 
+export const deleteTemplate = (id, onSuccess, onErrors) =>
+    appFetch(
+        `/templates/${id}/delete`, fetchConfig("DELETE"),
+        onSuccess,
+        onErrors
+    );
+
 export const addTemplateRow = (row, onSuccess, onErrors) =>
     appFetch(
         "/templates/addRow",
@@ -115,6 +122,13 @@ export const getTemplateRows = (templateId, onSuccess, onErrors) =>
     appFetch(
         `/templates/${templateId}/rows`,
         fetchConfig("GET"),
+        onSuccess,
+        onErrors
+    );
+
+export const deleteTemplateRow = (templateId, id, onSuccess, onErrors) =>
+    appFetch(
+        `/templates/${templateId}/delete/${id}`, fetchConfig("DELETE"),
         onSuccess,
         onErrors
     );

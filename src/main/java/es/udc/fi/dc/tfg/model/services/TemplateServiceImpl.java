@@ -101,4 +101,50 @@ public class TemplateServiceImpl implements TemplateService {
 
     }
 
+    /**
+     * Elimina una plantilla.
+     *
+     * @param id El ID de la plantilla.
+     * @return El ID de la plantilla que ha sido eliminada.
+     * @throws InstanceNotFoundException si no se encuentra una plantilla con el
+     * ID proporcionado.
+     */
+    @Override
+    public Long deleteTemplate(Long id) throws InstanceNotFoundException {
+
+        Optional<Templates> Otemplate = templateDao.findById(id);
+
+        if (!Otemplate.isPresent()) {
+            throw new InstanceNotFoundException("project.entities.templates", id);
+        }
+
+        templateDao.deleteById(id);
+
+        return id;
+
+    }
+
+    /**
+     * Elimina la fila de una plantilla.
+     *
+     * @param id El ID de la fila.
+     * @return El ID de la fila que ha sido eliminada.
+     * @throws InstanceNotFoundException si no se encuentra una fila con el ID
+     * proporcionado.
+     */
+    @Override
+    public Long deleteTemplateRow(Long id) throws InstanceNotFoundException {
+
+        Optional<TemplateRows> OtemplateRow = templateRowDao.findById(id);
+
+        if (!OtemplateRow.isPresent()) {
+            throw new InstanceNotFoundException("project.entities.templateRows", id);
+        }
+
+        templateRowDao.deleteById(id);
+
+        return id;
+
+    }
+
 }

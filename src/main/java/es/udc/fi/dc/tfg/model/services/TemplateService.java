@@ -50,4 +50,24 @@ public interface TemplateService {
      */
     Templates getTemplateInfo(Long templateId) throws InstanceNotFoundException;
 
+    /**
+     * Elimina una plantilla.
+     *
+     * @param id El ID de la plantilla.
+     * @return El ID de la plantilla que ha sido eliminada.
+     * @throws InstanceNotFoundException si no se encuentra una plantilla con el
+     * ID proporcionado.
+     */
+    Long deleteTemplate(Long id) throws InstanceNotFoundException;
+
+    /**
+     * Elimina la fila de una plantilla.
+     *
+     * @param id El ID de la fila.
+     * @return El ID de la fila que ha sido eliminada.
+     * @throws InstanceNotFoundException si no se encuentra una fila con el ID
+     * proporcionado.
+     */
+    Long deleteTemplateRow(Long id) throws InstanceNotFoundException;
+
 }

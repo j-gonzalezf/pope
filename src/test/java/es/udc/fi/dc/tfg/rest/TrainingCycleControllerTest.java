@@ -677,7 +677,7 @@ public class TrainingCycleControllerTest {
         String content = result.getResponse().getContentAsString();
         TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
 
-        mockMvc.perform(delete("/api/templates/" + createdCycle.getId() + "/delete")
+        mockMvc.perform(delete("/api/templates/cycle/" + createdCycle.getId() + "/delete")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
                 .andExpect(status().isOk());
 
@@ -693,7 +693,7 @@ public class TrainingCycleControllerTest {
 
         Long incorrectUserId = -1L;
 
-        mockMvc.perform(delete("/api/templates/" + incorrectUserId + "/delete")
+        mockMvc.perform(delete("/api/templates/cycle/" + incorrectUserId + "/delete")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
                 .andExpect(status().isNotFound());
 
@@ -721,7 +721,7 @@ public class TrainingCycleControllerTest {
         String content = result.getResponse().getContentAsString();
         TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
 
-        mockMvc.perform(delete("/api/templates/" + createdCycle.getId() + "/delete")
+        mockMvc.perform(delete("/api/templates/cycle/" + createdCycle.getId() + "/delete")
                 .header("Authorization", "Bearer " + authTrainer2.getServiceToken()))
                 .andExpect(status().isForbidden());
 
@@ -749,7 +749,7 @@ public class TrainingCycleControllerTest {
         String content = result.getResponse().getContentAsString();
         TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
 
-        mockMvc.perform(delete("/api/templates/" + createdCycle.getId() + "/delete")
+        mockMvc.perform(delete("/api/templates/cycle/" + createdCycle.getId() + "/delete")
                 .header("Authorization", "Bearer " + authClient.getServiceToken()))
                 .andExpect(status().isForbidden());
 

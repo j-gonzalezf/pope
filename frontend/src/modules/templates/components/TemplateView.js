@@ -8,7 +8,7 @@ import './TemplateView.css';
 import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { Errors } from '../../common';
 import * as actions from '../actions';
@@ -18,6 +18,7 @@ import AddTemplateRow from './AddTemplateRow';
 const TemplateView = () => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const { clientId } = useParams();
     const { cycleId } = useParams();
@@ -28,6 +29,26 @@ const TemplateView = () => {
 
     const [error, setError] = useState(null);
     const [showAddInput, setShowAddInput] = useState(false);
+
+    const handleDeleteTemplate = () => {
+        dispatch(actions.deleteTemplate(templateId,
+            () => {
+                navigate(`/templates/${clientId}/trainingCycle/${cycleId}`);
+            },
+            errors => setError(errors)
+        ));
+    }
+
+    const handleDeleteRow = row => {
+        dispatch(actions.deleteTemplateRow(templateId, row.id,
+            () => {
+                dispatch(actions.getTemplateRows(templateId,
+                    () => { },
+                    errors => setError(errors)));
+            },
+            errors => setError(errors)
+        ));
+    }
 
     useEffect(() => {
         dispatch(actions.getTemplate(templateId,
@@ -62,7 +83,7 @@ const TemplateView = () => {
                                             <Button className="primary template name" title='Editar nombre de plantilla'>
                                                 <BsPencilSquare className="checkIconStyle" color='#e6af2e' size={20} />
                                             </Button>
-                                            <Button className="primary template delete name" title='Eliminar plantilla'>
+                                            <Button className="primary template delete name" title='Eliminar plantilla' onClick={handleDeleteTemplate} >
                                                 <BsTrash className="crossIconStyle" color='red' size={20} />
                                             </Button>
                                         </div>
@@ -91,7 +112,8 @@ const TemplateView = () => {
                                                 <Button className="primary template" title='Pulsa para editar fila'>
                                                     <BsPencilSquare className="checkIconStyle" color='#e6af2e' size={20} />
                                                 </Button>
-                                                <Button className="primary template delete" title='Pulsa para eliminar fila'>
+                                                <Button className="primary template delete"
+                                                    title='Pulsa para eliminar fila' onClick={() => handleDeleteRow(row)} >
                                                     <BsTrash className="crossIconStyle" color='red' size={20} />
                                                 </Button>
                                             </div>

@@ -189,7 +189,7 @@ public class TrainingCycleController {
      * no coincide con el ID del ciclo que se va a eliminar
      * @throws InvalidRoleException si el usuario no tiene rol
      */
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/cycle/{id}/delete")
     public Long deleteCycle(@RequestAttribute Long userId, @PathVariable("id") Long id)
             throws InstanceNotFoundException, PermissionException, InvalidRoleException {
 

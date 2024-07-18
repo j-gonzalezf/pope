@@ -186,6 +186,19 @@ export const getTemplate = (id, onSuccess, onErrors) => dispatch =>
         onErrors
     );
 
+const deleteTemplateCompleted = () => ({
+    type: actionTypes.DELETE_TEMPLATE_COMPLETED
+});
+
+export const deleteTemplate = (id, onSuccess, onErrors) => dispatch =>
+    backend.templateService.deleteTemplate(id,
+        () => {
+            dispatch(deleteTemplateCompleted());
+            onSuccess();
+        },
+        onErrors
+    );
+
 const addTemplateRowCompleted = () => ({
     type: actionTypes.ADD_TEMPLATE_ROW_COMPLETED
 });
@@ -208,6 +221,19 @@ export const getTemplateRows = (templateId, onSuccess, onErrors) => dispatch =>
     backend.templateService.getTemplateRows(templateId,
         getTemplateRows => {
             dispatch(getTemplateRowsCompleted(getTemplateRows));
+            onSuccess();
+        },
+        onErrors
+    );
+
+const deleteTemplateRowCompleted = () => ({
+    type: actionTypes.DELETE_TEMPLATE_ROW_COMPLETED
+});
+
+export const deleteTemplateRow = (templateId, id, onSuccess, onErrors) => dispatch =>
+    backend.templateService.deleteTemplateRow(templateId, id,
+        () => {
+            dispatch(deleteTemplateRowCompleted());
             onSuccess();
         },
         onErrors

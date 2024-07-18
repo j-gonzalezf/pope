@@ -255,4 +255,113 @@ public class TemplateServiceTest {
                 () -> templateService.getTemplateInfo(NON_EXISTENT_ID));
     }
 
+    /**
+     * Test para eliminar una plantilla.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra una plantilla con el
+     * ID proporcionado.
+     */
+    @Test
+    public void testDeleteTemplate()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Templates template = createTemplate();
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+        Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
+                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
+
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
+                LocalDate.of(2001, 1, 1), trainer, client);
+
+        cycle.setTrainer(trainer);
+        cycle.setClient(client);
+
+        cycleService.createCycle(cycle);
+
+        template.setCycle(cycle);
+
+        templateService.createTemplate(template);
+
+        Long deletedTemplateId = templateService.deleteTemplate(template.getId());
+
+        // Comprobar que el ID de la plantilla eliminada es el correcto
+        assertEquals(template.getId(), deletedTemplateId);
+
+    }
+
+    /**
+     * Test para eliminar una plantilla con un ID inexistente.
+     *
+     * @throws InstanceNotFoundException si no se encuentra una plantilla con el
+     * ID proporcionado.
+     */
+    @Test
+    public void testDeleteTemplateWithNonExistentId() throws InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> templateService.deleteTemplate(NON_EXISTENT_ID));
+    }
+
+    /**
+     * Test para eliminar la fila de una plantilla.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra una fila con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testDeleteTemplateRow()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+
+        TemplateRows templateRow = addTemplateRow();
+
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+        Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
+                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
+                LocalDate.of(2001, 1, 1), trainer, client);
+        cycle.setTrainer(trainer);
+        cycle.setClient(client);
+        cycleService.createCycle(cycle);
+
+        Exercises exercise = new Exercises("exerciseName", "description", "exerciseType",
+                null, null, null, null);
+        exercise.setTrainer(trainer);
+        exerciseService.addExercise(exercise);
+
+        Templates template = createTemplate();
+        template.setCycle(cycle);
+        templateService.createTemplate(template);
+
+        templateRow.setTemplate(template);
+        templateRow.setExercise(exercise);
+        templateService.addTemplateRow(templateRow);
+
+        Long deletedRowId = templateService.deleteTemplateRow(templateRow.getId());
+
+        // Comprobar que el ID de la fila eliminada es el correcto
+        assertEquals(templateRow.getId(), deletedRowId);
+
+    }
+
+    /**
+     * Test para eliminar la fila de una plantilla con un ID inexistente.
+     *
+     * @throws InstanceNotFoundException si no se encuentra una fila con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testDeleteTemplateRowWithNonExistentId() throws InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> templateService.deleteTemplateRow(NON_EXISTENT_ID));
+    }
+
 }

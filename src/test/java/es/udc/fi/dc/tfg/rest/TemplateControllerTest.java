@@ -25,6 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -422,6 +423,139 @@ public class TemplateControllerTest {
     }
 
     /**
+     * Test para eliminar una plantilla.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteTemplate() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        TemplateDto templateDto = new TemplateDto(null, "templateName",
+                "2001-09-25T10:15:30", createdCycle.getId());
+
+        MvcResult result2 = mockMvc.perform(post("/api/templates/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content3 = result2.getResponse().getContentAsString();
+        TemplateDto createdTemplate = new ObjectMapper().readValue(content3, TemplateDto.class);
+
+        mockMvc.perform(delete("/api/templates/" + createdTemplate.getId() + "/delete")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para eliminar una plantilla inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteTemplate_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+
+        mockMvc.perform(delete("/api/templates/" + incorrectUserId + "/delete")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para eliminar una plantilla sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteTemplate_PermissionException() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        TemplateDto templateDto = new TemplateDto(null, "templateName",
+                "2001-09-25T10:15:30", createdCycle.getId());
+
+        MvcResult result2 = mockMvc.perform(post("/api/templates/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content3 = result2.getResponse().getContentAsString();
+        TemplateDto createdTemplate = new ObjectMapper().readValue(content3, TemplateDto.class);
+
+        mockMvc.perform(delete("/api/templates/" + createdTemplate.getId() + "/delete")
+                .header("Authorization", "Bearer " + authTrainer2.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para eliminar una plantilla con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteTemplate_InvalidRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        TemplateDto templateDto = new TemplateDto(null, "templateName",
+                "2001-09-25T10:15:30", createdCycle.getId());
+
+        MvcResult result2 = mockMvc.perform(post("/api/templates/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content3 = result2.getResponse().getContentAsString();
+        TemplateDto createdTemplate = new ObjectMapper().readValue(content3, TemplateDto.class);
+
+        mockMvc.perform(delete("/api/exercises/" + createdTemplate.getId() + "/delete")
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
      * Test para añadir una fila en una plantilla de entrenamiento.
      *
      * @throws Exception la excepción
@@ -639,6 +773,229 @@ public class TemplateControllerTest {
         mockMvc.perform(get("/api/templates/" + createdTemplate.getId() + "/rows")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
                 .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para eliminar la fila de una plantilla.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteTemplateRow() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        ExerciseDto exerciseDto = new ExerciseDto(null, "exerciseName", "description",
+                "exerciseType", null, null, null, trainerDto.getId());
+
+        MvcResult result2 = mockMvc.perform(post("/api/exercises/exercise/add")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(exerciseDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content2 = result2.getResponse().getContentAsString();
+        ExerciseDto createdExercise = new ObjectMapper().readValue(content2, ExerciseDto.class);
+
+        TemplateDto templateDto = new TemplateDto(null, "templateName",
+                "2001-09-25T10:15:30", createdCycle.getId());
+
+        MvcResult result3 = mockMvc.perform(post("/api/templates/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content3 = result3.getResponse().getContentAsString();
+        TemplateDto createdTemplate = new ObjectMapper().readValue(content3, TemplateDto.class);
+
+        TemplateRowDto templateRowDto = new TemplateRowDto(null, "exercise", 3, 10,
+                new BigDecimal("50"), createdExercise.getId(), createdTemplate.getId());
+
+        MvcResult result4 = mockMvc.perform(post("/api/templates/addRow")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateRowDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content4 = result4.getResponse().getContentAsString();
+        TemplateRowDto createdRow = new ObjectMapper().readValue(content4, TemplateRowDto.class);
+
+        mockMvc.perform(delete("/api/templates/" + createdTemplate.getId() + "/delete/" + createdRow.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para eliminar una fila inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteTemplateRow_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        TemplateDto templateDto = new TemplateDto(null, "templateName",
+                "2001-09-25T10:15:30", createdCycle.getId());
+
+        MvcResult result2 = mockMvc.perform(post("/api/templates/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content2 = result2.getResponse().getContentAsString();
+        TemplateDto createdTemplate = new ObjectMapper().readValue(content2, TemplateDto.class);
+
+        mockMvc.perform(delete("/api/templates/" + createdTemplate.getId() + "/delete/" + incorrectUserId)
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para eliminar una fila sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteTemplateRow_PermissionException() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        ExerciseDto exerciseDto = new ExerciseDto(null, "exerciseName", "description",
+                "exerciseType", null, null, null, trainerDto.getId());
+
+        MvcResult result2 = mockMvc.perform(post("/api/exercises/exercise/add")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(exerciseDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content2 = result2.getResponse().getContentAsString();
+        ExerciseDto createdExercise = new ObjectMapper().readValue(content2, ExerciseDto.class);
+
+        TemplateDto templateDto = new TemplateDto(null, "templateName",
+                "2001-09-25T10:15:30", createdCycle.getId());
+
+        MvcResult result3 = mockMvc.perform(post("/api/templates/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content3 = result3.getResponse().getContentAsString();
+        TemplateDto createdTemplate = new ObjectMapper().readValue(content3, TemplateDto.class);
+
+        TemplateRowDto templateRowDto = new TemplateRowDto(null, "exercise", 3, 10,
+                new BigDecimal("50"), createdExercise.getId(), createdTemplate.getId());
+
+        MvcResult result4 = mockMvc.perform(post("/api/templates/addRow")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateRowDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content4 = result4.getResponse().getContentAsString();
+        TemplateRowDto createdRow = new ObjectMapper().readValue(content4, TemplateRowDto.class);
+
+        mockMvc.perform(delete("/api/templates/" + createdTemplate.getId() + "/delete/" + createdRow.getId())
+                .header("Authorization", "Bearer " + authTrainer2.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para eliminar una fila con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteTemplateRow_InvalidRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        ExerciseDto exerciseDto = new ExerciseDto(null, "exerciseName", "description",
+                "exerciseType", null, null, null, trainerDto.getId());
+
+        MvcResult result2 = mockMvc.perform(post("/api/exercises/exercise/add")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(exerciseDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content2 = result2.getResponse().getContentAsString();
+        ExerciseDto createdExercise = new ObjectMapper().readValue(content2, ExerciseDto.class);
+
+        TemplateDto templateDto = new TemplateDto(null, "templateName",
+                "2001-09-25T10:15:30", createdCycle.getId());
+
+        MvcResult result3 = mockMvc.perform(post("/api/templates/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content3 = result3.getResponse().getContentAsString();
+        TemplateDto createdTemplate = new ObjectMapper().readValue(content3, TemplateDto.class);
+
+        TemplateRowDto templateRowDto = new TemplateRowDto(null, "exercise", 3, 10,
+                new BigDecimal("50"), createdExercise.getId(), createdTemplate.getId());
+
+        MvcResult result4 = mockMvc.perform(post("/api/templates/addRow")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateRowDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content4 = result4.getResponse().getContentAsString();
+        TemplateRowDto createdRow = new ObjectMapper().readValue(content4, TemplateRowDto.class);
+
+        mockMvc.perform(delete("/api/templates/" + createdTemplate.getId() + "/delete/" + createdRow.getId())
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isForbidden());
 
     }
 

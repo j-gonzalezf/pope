@@ -34,6 +34,7 @@ import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 import es.udc.fi.dc.tfg.rest.dtos.TemplateDto;
 import es.udc.fi.dc.tfg.rest.dtos.TemplateRowDto;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 /**
  * Clase TemplateController.
@@ -197,6 +198,56 @@ public class TemplateController {
         List<TemplateRows> templateRows = templateService.getTemplateRows(templateId);
 
         return toTemplateRowsDto(templateRows);
+
+    }
+
+    /**
+     * Elimina una plantilla.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID de la plantilla que se va a eliminar
+     * @return el ID de la plantilla que ha sido eliminada
+     * @throws InstanceNotFoundException si no se encuentra una plantilla con el
+     * ID proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del ciclo que se va a eliminar
+     * @throws InvalidRoleException si el usuario no tiene rol
+     */
+    @DeleteMapping("/{id}/delete")
+    public Long deleteTemplate(@RequestAttribute Long userId, @PathVariable("id") Long id)
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        Templates template = templateService.getTemplateInfo(id);
+
+        validateTemplateUser(userId, template.getCycle());
+
+        return templateService.deleteTemplate(id);
+
+    }
+
+    /**
+     * Elimina la fila de una plantilla.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param templateId el ID de la plantilla a la que pertenece la fila
+     * @param id el ID de la fila que se va a eliminar
+     * @return el ID de la fila que ha sido eliminada
+     * @throws InstanceNotFoundException si no se encuentra una fila con el ID
+     * proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del ciclo que se va a eliminar
+     * @throws InvalidRoleException si el usuario no tiene rol
+     */
+    @DeleteMapping("/{templateId}/delete/{id}")
+    public Long deleteCycle(@RequestAttribute Long userId,
+            @PathVariable("templateId") Long templateId, @PathVariable("id") Long id)
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        Templates template = templateService.getTemplateInfo(templateId);
+
+        validateTemplateUser(userId, template.getCycle());
+
+        return templateService.deleteTemplateRow(id);
 
     }
 
