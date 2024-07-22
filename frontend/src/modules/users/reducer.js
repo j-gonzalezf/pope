@@ -4,7 +4,8 @@ import * as actionTypes from './actionTypes';
 
 const initialState = {
     user: null,
-    getClients: [{}]
+    getClients: [{}],
+    getClientInfo: {}
 }
 
 const user = (state = initialState.user, action) => {
@@ -44,9 +45,27 @@ const getClients = (state = initialState.getClients, action) => {
 
 }
 
+const getClientInfo = (state = initialState.getClientInfo, action) => {
+
+    switch (action.type) {
+
+        case actionTypes.GET_CLIENT_INFO_COMPLETED:
+            return action.getClientInfo;
+
+        case actionTypes.UPDATE_CLIENT_COMPLETED:
+            return action.getClientInfo;
+
+        default:
+            return state;
+
+    }
+
+}
+
 const reducer = combineReducers({
     user,
-    getClients
+    getClients,
+    getClientInfo
 });
 
 export default reducer;

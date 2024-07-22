@@ -1,23 +1,100 @@
-.border {
-    height: 75px;
-    min-width: 100vw;
-    background-color: #296084;
-    border-color: #296084;
-    margin-bottom: 5%;
+.Header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    width: 100%;
     padding: 0;
+    margin: 0;
+    border-color: #191716;
+    border-bottom: white solid 2px;
+    background-color: #191716;
+    box-sizing: border-box;
+}
+
+.header-right {
+    margin-right: 3%;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
+
+.header-nav {
+    max-height: 90px;
+}
+
+.link.h {
+    color: white;
+    text-decoration: none;
+}
+
+.link.h:hover {
+    text-decoration: underline;
+}
+
+/* Ajusta el tamaño y el margen de los iconos */
+.anchor-icon {
+    max-height: 90px;
+    width: auto;
+    margin-left: 15%;
+    margin-right: 2rem;
+    padding: 10%;
+}
+
+.dumbbells-icon {
+    max-height: 70px;
+    width: auto;
+    color: #e6af2e;
+}
+
+.dumbbells-link {
+    margin-left: auto;
+    margin-right: 0.5rem;
 }
 
 .icon-container {
     display: flex;
-    height: 100%;
+    justify-content: flex-end;
+    max-height: 90px;
 }
 
-.anchor-icon {
-    max-height: 75px;
-    padding: 5px;
+.dropdown-toggle.nav-link {
+    display: flex;
+    align-items: center;
+    margin-right: 15%;
+    color: white;
+}
+
+.dropdown-toggle.nav-link:focus,
+.dropdown-toggle.nav-link:hover,
+.dropdown-toggle.nav-link:active,
+.dropdown-toggle.nav-link:visited {
+    color: white;
+}
+
+.dropdown-item {
+    color: #191716;
+}
+
+/* Estilos para los elementos dentro del desplegable */
+.dropdown-item:active,
+.dropdown-item:focus {
+    background-color: #e6af2e;
+    color: #191716;
+}
+
+.icon-image-large {
+    max-height: 80px;
 }
 
 .dropdown-menu.show {
     position: relative;
+    top: 90%;
+    left: 100%;
+    transform: translateX(-100%);
     z-index: 9999;
 }

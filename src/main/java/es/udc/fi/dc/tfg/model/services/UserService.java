@@ -5,6 +5,8 @@ import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
+import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
+import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -13,6 +15,20 @@ import java.util.List;
  * Interfaz UserService.
  */
 public interface UserService {
+
+    /**
+     * Valida un usuario.
+     *
+     * @param userId el ID del usuario que realiza la petición.
+     * @param id el ID del usuario al que se va a realizar una acción CRUD.
+     * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
+     * proporcionado.
+     * @throws PermissionException si el usuario que realiza la petición no
+     * tiene permiso para realizar la acción.
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    void validateUser(Long userId, Long id)
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException;
 
     /**
      * Crea un nuevo usuario.
@@ -46,6 +62,14 @@ public interface UserService {
     Users loginFromId(Long id) throws InstanceNotFoundException;
 
     /**
+     * Devuelve una lista con los clientes de un entrenador.
+     *
+     * @param trainerId El ID del entrenador.
+     * @return La lista de objetos Users que representa los clientes.
+     */
+    List<Users> getClients(Long trainerId);
+
+    /**
      * Actualiza el perfil de un entrenador.
      *
      * @param id El ID del entrenador.
@@ -62,7 +86,8 @@ public interface UserService {
      * proporcionado.
      */
     Users updateProfile(Long id, String email, String fullName, String phone,
-            String icon, String socialLinks) throws DuplicateInstanceException, InstanceNotFoundException;
+            String icon, String socialLinks)
+            throws DuplicateInstanceException, InstanceNotFoundException;
 
     /**
      * Actualiza el perfil de un cliente.
@@ -100,24 +125,15 @@ public interface UserService {
      */
     void changePassword(Long id, String oldPassword, String newPassword)
             throws InstanceNotFoundException, IncorrectPasswordException;
-    
+
     /**
      * Elimina la cuenta de un usuario.
-     * 
+     *
      * @param id El ID del usuario.
-     * @return el ID del usuario que ha sido eliminado
+     * @return el ID del usuario que ha sido eliminado.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
-     * proporcionado 
+     * proporcionado.
      */
     Long deleteUser(Long id) throws InstanceNotFoundException;
-    
-    /**
-     * Devuelve una lista con los clientes de un entrenador.
-     * 
-     * @param trainerId El ID del entrenador.
-     * @return La lista de objetos Users que representa los clientes.
-     * @throws InstanceNotFoundException si no se encuentra ningún cliente.
-     */
-    List<Users> getClients(Long trainerId) throws InstanceNotFoundException;
 
 }

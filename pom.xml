@@ -9,7 +9,7 @@
     <!-- ********************************************** -->
     <groupId>es.udc.fi.dc.tfg</groupId>
     <artifactId>pope</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
     <packaging>jar</packaging>
 
     <name>'TFG Spring MVC Pope App'</name>
@@ -36,7 +36,7 @@
         <project.contextPath>/pope</project.contextPath>
 
         <!--  Dependencies versions  -->
-        <jjwt.version>0.12.5</jjwt.version>
+        <jjwt.version>0.11.5</jjwt.version>
         <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
 
         <!--  Plugins versions  -->
@@ -100,7 +100,7 @@
                 <dataSource.url>jdbc:h2:~/Desktop/TFG/Trabajo_de_Fin_de_Grado/pope/src/main/resources/db/popeDB;AUTO_SERVER=TRUE</dataSource.url>
                 <testDataSource.url>jdbc:h2:mem:popeTest</testDataSource.url>
                 <dataSource.user>sa</dataSource.user>
-                <dataSource.password></dataSource.password>
+                <dataSource.password/>
             </properties>
             <dependencies>
                 <dependency>
@@ -377,7 +377,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore></ignore>
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>

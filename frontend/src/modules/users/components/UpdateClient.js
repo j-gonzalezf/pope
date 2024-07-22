@@ -1,14 +1,15 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import { BsXLg } from "react-icons/bs";
-import './SignUp.css';
+import Modal from 'react-bootstrap/Modal';
+import Nav from 'react-bootstrap/Nav';
+import { BsInfoSquare, BsPencilSquare, BsTrashFill, BsXLg } from "react-icons/bs";
+import './UpdateProfile.css';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { Errors } from '../../common';
 import * as actions from '../actions';
@@ -19,17 +20,23 @@ const UpdateClient = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const { clientId } = useParams();
+
     const user = useSelector(selectors.getUser);
-    const [fullName, setFullName] = useState(user.fullName);
-    const [email, setEmail] = useState(user.email);
-    const [password, setPassword] = useState(user.password);
-    const [phone, setPhone] = useState(user.phone);
-    const [icon, setIcon] = useState(user.icon);
-    const [birthdate, setBirthdate] = useState(user.birthdate);
-    const [injuries, setInjuries] = useState(user.injuries);
-    const [goals, setGoals] = useState(user.goals);
-    const [height, setHeight] = useState(user.height);
+    const client = useSelector(selectors.getClientInfo);
+
+    const [fullName, setFullName] = useState(client.fullName);
+    const [email, setEmail] = useState(client.email);
+    //const [password, setPassword] = useState(client.password);
+    const [phone, setPhone] = useState(client.phone);
+    const [icon, setIcon] = useState(client.icon);
+    const [birthdate, setBirthdate] = useState(client.birthdate);
+    const [injuries, setInjuries] = useState(client.injuries);
+    const [goals, setGoals] = useState(client.goals);
+    const [height, setHeight] = useState(client.height);
     const [error, setError] = useState(null);
+    const [activeTab, setActiveTab] = useState('profile');
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     let form;
 
@@ -70,9 +77,9 @@ const UpdateClient = () => {
 
         if (form.checkValidity()) {
 
-            dispatch(actions.updateProfile(
+            dispatch(actions.updateClient(
                 {
-                    id: user.id,
+                    id: client.id,
                     email: email.trim(),
                     fullName: fullName.trim(),
                     phone: phone,
@@ -81,26 +88,83 @@ const UpdateClient = () => {
                     birthdate: birthdate,
                     injuries: injuries,
                     goals: goals,
-                    height: height
+                    height: height,
+                    trainerId: user.id
                 },
-                () => navigate('/users/clients'),
+                () => navigate('/users/clientDetails/' + client.id),
                 errors => setError(errors)
             ));
 
         } else {
             setError(null);
             form.classList.add('was-validated');
+            window.scrollTo(0, 0);
         }
     }
 
+    const handleSelectTab = (selectedTab) => {
+
+        setActiveTab(selectedTab);
+
+        // Si se selecciona el tab 'update' o 'profile', 
+        // se mueve el scroll al principio de la página
+        if (selectedTab === 'update' || selectedTab === 'profile') {
+            window.scrollTo(0, 0);
+        }
+
+    }
+
+    const handleDelete = () => {
+
+        dispatch(actions.deleteUser(client.id,
+            () => {
+                navigate('/users/clients');
+            },
+            errors => setError(errors)
+        ));
+
+        setShowDeleteModal(false)
+
+    }
+
+    useEffect(() => {
+        dispatch(actions.getClientInfo(clientId,
+            () => { },
+            errors => setError(errors)));
+    }, [dispatch, clientId]);
+
     return (
 
-        <Container fluid className="SignUp">
+        <div fluid="true" className="UpdateProfile">
 
-            <Card className="card bg-light border-dark">
+            <Card className="card updateProfile">
+
+                <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} className="modal">
+                    <Modal.Header className="modal-header deleteProfile">
+                        <Modal.Title>
+                            <FormattedMessage id="project.users.deleteClient.title" />
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className="modal-body">
+                        <FormattedMessage id="project.users.deleteClient.body" />
+                    </Modal.Body>
+                    <Modal.Footer className="modal-footer">
+                        <Button className="btn" variant="secondary" onClick={() => setShowDeleteModal(false)}>
+                            <FormattedMessage id="project.global.button.cancel" />
+                        </Button>
+                        <Button className="btn" variant="danger" onClick={handleDelete}>
+                            <FormattedMessage id="project.users.deleteAccount.button" />
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
 
                 <Card.Header as="h3" className="card-header">
-                    <FormattedMessage id="project.users.updateProfile" />
+                    {activeTab === 'profile' && (
+                        <FormattedMessage id="project.users.clientProfile" />
+                    )}
+                    {activeTab === 'update' && (
+                        <FormattedMessage id="project.users.updateClient" />
+                    )}
                 </Card.Header>
 
                 <Card.Body className="card-body">
@@ -113,17 +177,21 @@ const UpdateClient = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="fullName" htmlFor="fullName" className="mb-3">
                                 <FormattedMessage id="project.users.fullName" />
+                                {activeTab === 'update' && (
+                                    <span className='required'>*</span>
+                                )}
                             </Form.Label>
                             <Form.Control
                                 type="text"
                                 className="form-control"
                                 id="fullName"
                                 name="fullName"
-                                placeholder="Introduzca nombre y apellidos del cliente"
+                                placeholder={activeTab === 'profile' ? '' : "Introduzca nombre y apellidos del cliente"}
                                 value={fullName}
                                 onChange={e => setFullName(e.target.value)}
                                 required
                                 autoFocus
+                                disabled={activeTab === 'profile'}
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.fullNameRequired" />
@@ -132,21 +200,26 @@ const UpdateClient = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="email" htmlFor="email" className="mb-3">
                                 <FormattedMessage id="project.users.email" />
+                                {activeTab === 'update' && (
+                                    <span className='required'>*</span>
+                                )}
                             </Form.Label>
                             <Form.Control
                                 type="email"
                                 className="form-control"
                                 id="email"
                                 name="email"
-                                placeholder="Introduzca el correo del cliente"
+                                placeholder={activeTab === 'profile' ? '' : "Introduzca el correo del cliente"}
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
                                 required
+                                disabled={activeTab === 'profile'}
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.emailRequired" />
                             </Form.Control.Feedback>
                         </Form.Group>
+                        {/*
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="password" htmlFor="password" className="mb-3">
                                 <FormattedMessage id="project.users.password" />
@@ -160,11 +233,13 @@ const UpdateClient = () => {
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                                 required
+                                disabled={activeTab === 'profile'}
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.passwordRequired" />
                             </Form.Control.Feedback>
                         </Form.Group>
+                        */}
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="phone" htmlFor="phone" className="mb-3">
                                 <FormattedMessage id="project.users.phone" />
@@ -174,10 +249,11 @@ const UpdateClient = () => {
                                 className="form-control"
                                 id="phone"
                                 name="phone"
-                                placeholder="Introduzca el teléfono del cliente"
+                                placeholder={activeTab === 'profile' ? '' : "Introduzca el teléfono del cliente"}
                                 value={phone}
                                 onChange={e => setPhone(e.target.value)}
                                 pattern='[0-9]*'
+                                disabled={activeTab === 'profile'}
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.phonePattern" />
@@ -195,6 +271,7 @@ const UpdateClient = () => {
                                     name="icon"
                                     accept="image/png, image/jpg, image/jpeg"
                                     onChange={readImage}
+                                    disabled={activeTab === 'profile'}
                                 />
                                 {icon && (
                                     <Button variant="danger" onClick={clearImage} style={{ marginLeft: '10px' }}>
@@ -214,6 +291,7 @@ const UpdateClient = () => {
                                 name="birthdate"
                                 value={birthdate}
                                 onChange={e => setBirthdate(e.target.value)}
+                                disabled={activeTab === 'profile'}
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.birthdatePattern" />
@@ -228,9 +306,10 @@ const UpdateClient = () => {
                                 className="form-control"
                                 id="injuries"
                                 name="injuries"
-                                placeholder="Introduzca los impedimentos y/o lesiones del cliente"
+                                placeholder={activeTab === 'profile' ? '' : "Introduzca los impedimentos y/o lesiones del cliente"}
                                 value={injuries}
                                 onChange={e => setInjuries(e.target.value)}
+                                disabled={activeTab === 'profile'}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -242,9 +321,10 @@ const UpdateClient = () => {
                                 className="form-control"
                                 id="goals"
                                 name="goals"
-                                placeholder="Introduzca los objetivos a corto y/o largo plazo del cliente"
+                                placeholder={activeTab === 'profile' ? '' : "Introduzca los objetivos a corto y/o largo plazo del cliente"}
                                 value={goals}
                                 onChange={e => setGoals(e.target.value)}
+                                disabled={activeTab === 'profile'}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -256,9 +336,10 @@ const UpdateClient = () => {
                                 className="form-control"
                                 id="height"
                                 name="height"
-                                placeholder="Introduzca la altura del cliente (en cm)"
+                                placeholder={activeTab === 'profile' ? '' : "Introduzca la altura del cliente (en cm)"}
                                 value={height}
                                 onChange={e => setHeight(e.target.value)}
+                                disabled={activeTab === 'profile'}
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.heightPattern" />
@@ -267,17 +348,46 @@ const UpdateClient = () => {
 
                         <Errors errors={error} onClose={() => setError(null)} />
 
-                        <Form.Group className="text-center">
-                            <Button data-testid="submit" type="submit" className="primary" >
-                                <FormattedMessage id="project.users.updateProfile.button" />
-                            </Button>
-                        </Form.Group>
+                        {activeTab === 'update' && (
+                            <Form.Group className="text-center">
+                                <Button data-testid="submit" type="submit" className="primary" >
+                                    <FormattedMessage id="project.users.updateProfile.button" />
+                                </Button>
+                            </Form.Group>
+                        )}
                     </Form>
                 </Card.Body>
 
+                <Card.Footer className="card-footer">
+                    <Nav variant="pills" className="justify-content-between" activeKey={activeTab} onSelect={handleSelectTab}>
+                        {activeTab === 'profile' && (
+                            <Nav.Item>
+                                <Nav.Link className="nav-link updateProfile" eventKey="update">
+                                    <BsPencilSquare style={{ marginRight: '10px' }} />
+                                    <FormattedMessage id="project.users.updateClient" />
+                                </Nav.Link>
+                            </Nav.Item>
+                        )}
+                        {activeTab === 'update' && (
+                            <Nav.Item>
+                                <Nav.Link className="nav-link updateProfile" eventKey="profile">
+                                    <BsInfoSquare style={{ marginRight: '10px' }} />
+                                    <FormattedMessage id="project.users.clientProfile" />
+                                </Nav.Link>
+                            </Nav.Item>
+                        )}
+                        <Nav.Item>
+                            <Nav.Link className="bg-danger nav-link deleteProfile" onClick={() => setShowDeleteModal(true)}>
+                                <BsTrashFill style={{ marginRight: '10px' }} />
+                                <FormattedMessage id="project.users.deleteClient" />
+                            </Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+                </Card.Footer>
+
             </Card>
 
-        </Container>
+        </div>
 
     );
 

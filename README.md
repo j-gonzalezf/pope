@@ -12,7 +12,7 @@ Software and tools you will need to run this project:
 * Java 17 (_tested version_)
 * Node v18.12.0 (_tested version_)
 * yarn 1.22.19 (_tested version_)
-* NetBeans
+* NetBeans (_Reccomended for backend developement_)
 * VS Code (_Reccomended for frontend developement_)
 
 ### Local deployment 🔧
@@ -74,7 +74,7 @@ Thanks to the provided plugin configuration you can access your React app direct
 * Version Control - [GitHub](https://github.com/j-gonzalezf/pope)
 * Issue Tracking - [Jira](https://j-gonzalezf.atlassian.net/jira/software/projects/SCRUM/boards/1)
 * Continuous Integration - 
-* Continous Inspection - 
+* Continous Inspection - [Snyk] (https://app.snyk.io/org/j-gonzalezf)
 
 ## Author ✒️
 

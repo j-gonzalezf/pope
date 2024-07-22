@@ -1,6 +1,5 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import './Login.css';
 
@@ -50,9 +49,9 @@ const Login = () => {
 
     return (
 
-        <Container fluid className="Login">
+        <div fluid="true" className="Login">
 
-            <Card className="card bg-light border-dark">
+            <Card className="card login">
 
                 <Card.Header as="h3" className="card-header">
                     <FormattedMessage id="project.users.login" />
@@ -77,8 +76,8 @@ const Login = () => {
                                 placeholder="Introuzca su correo"
                                 value={email}
                                 onChange={event => setEmail(event.target.value)}
-                                autoFocus
                                 required
+                                autoFocus
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.emailRequired" />
@@ -137,10 +136,10 @@ const Login = () => {
 
                 {userType === 'trainer' && (
 
-                    <p className="signUp-link">
+                    <p className="signUp-question">
                         <FormattedMessage id="project.users.signUp.question" />
                         <br />
-                        <Link to="/users/signup">
+                        <Link className="link" to="/users/signup">
                             <FormattedMessage id="project.users.signUp" />
                         </Link>
                     </p>
@@ -149,7 +148,7 @@ const Login = () => {
 
             </Card>
 
-        </Container>
+        </div>
 
     );
 

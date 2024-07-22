@@ -1,8 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import './SignUp.css';
+import './ChangePassword.css';
 
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -23,6 +22,7 @@ const ChangePassword = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [error, setError] = useState(null);
+    // eslint-disable-next-line
     const [passwordsDoNotMatch, setPasswordsDoNotMatch] = useState(false);
 
     let form;
@@ -55,9 +55,9 @@ const ChangePassword = () => {
 
     return (
 
-        <Container fluid className="SignUp">
+        <div fluid="true" className="ChangePassword">
 
-            <Card className="card bg-light border-dark">
+            <Card className="card cp">
 
                 <Card.Header as="h3" className="card-header">
                     <FormattedMessage id="project.users.changePassword" />
@@ -83,6 +83,7 @@ const ChangePassword = () => {
                                 value={oldPassword}
                                 onChange={e => setOldPassword(e.target.value)}
                                 required
+                                autoFocus
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.oldPasswordRequired" />
@@ -139,7 +140,7 @@ const ChangePassword = () => {
 
             </Card>
 
-        </Container>
+        </div>
 
     );
 

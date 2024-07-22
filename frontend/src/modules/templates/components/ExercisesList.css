@@ -1,0 +1,28 @@
+.ExercisesList {
+    margin: 0;
+    padding: 0;
+    padding-top: 4.5%;
+    padding-bottom: 4.5%;
+    width: auto;
+}
+
+.plusIconStyle.exercise {
+    margin: 0;
+    margin-right: 0.5rem;
+}
+
+.arrowIconStyle {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    color: #e6af2e;
+}
+
+.arrowIconStyle:hover {
+    cursor: pointer;
+}
+
+.react-spreadsheet__cell {
+    background-color: #191716;
+    color: white;
+}

@@ -2,12 +2,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    min-width: 100vw;
+    min-height: 100vh;
+    width: 100%;
     margin: 0 auto;
     padding: 0 auto;
-    padding-top: 2%;
-    padding-bottom: 500px;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    overflow: auto;
     /*
     background-image: url("https://dplnews.com/wp-content/uploads/2021/05/dplnews_bajomarsubmarino_mc310521.gif");
     background-size: cover;
@@ -15,28 +16,21 @@
     */
 }
 
-.card.bg-light.border-dark {
-    width: 50%;
+.card.signUp {
+    width: 45%;
     margin: auto;
+    margin-bottom: 7%;
+    border: none;
+    background-color: #191716;
 }
 
-.card-header {
-    background-color: #296084;
-    color: white;
+.mb-3.required {
+    margin-bottom: 0 !important;
 }
 
-.mb-3 {
-    padding-top: 1%;
-    font-weight: bold;
-    color: #404040;
-}
-
-.text-center {
-    padding: 1%;
-}
-
-.primary {
-    background-color: #296084;
-    border-color: #296084;
-    align-items: center;
+.required.text {
+    color: #e6af2e;
+    margin-top: 0.5rem;
+    margin-left: 0;
+    font-style: italic;
 }

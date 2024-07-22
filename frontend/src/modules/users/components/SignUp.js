@@ -1,6 +1,5 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import { BsXLg } from "react-icons/bs";
 import './SignUp.css';
@@ -26,6 +25,7 @@ const SignUp = () => {
     const [icon, setIcon] = useState(null);
     const [socialLinks, setSocialLinks] = useState('');
     const [error, setError] = useState(null);
+    // eslint-disable-next-line
     const [passwordsDoNotMatch, setPasswordsDoNotMatch] = useState(false);
 
     let confirmPasswordInput;
@@ -73,10 +73,10 @@ const SignUp = () => {
                     email: email.trim(),
                     password: password,
                     fullName: fullName.trim(),
-                    phone: phone,
+                    phone: phone.trim(),
                     role: 'TRAINER',
                     icon: icon,
-                    socialLinks: socialLinks
+                    socialLinks: socialLinks.trim()
                 },
                 () => navigate('/users/clients'),
                 errors => setError(errors),
@@ -89,22 +89,21 @@ const SignUp = () => {
         } else {
             setError(null);
             form.classList.add('was-validated');
+            window.scrollTo(0, 0);
         }
     }
 
     const handleConfirmPasswordChange = value => {
-
         confirmPasswordInput.setCustomValidity('');
         setConfirmPassword(value);
         setPasswordsDoNotMatch(false);
-
     }
 
     return (
 
-        <Container fluid className="SignUp">
+        <div fluid="true" className="SignUp">
 
-            <Card className="card bg-light border-dark">
+            <Card className="card signUp">
 
                 <Card.Header as="h3" className="card-header">
                     <FormattedMessage id="project.users.signUp" />
@@ -120,6 +119,7 @@ const SignUp = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="fullName" htmlFor="fullName" className="mb-3">
                                 <FormattedMessage id="project.users.fullName" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="text"
@@ -139,6 +139,7 @@ const SignUp = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="email" htmlFor="email" className="mb-3">
                                 <FormattedMessage id="project.users.email" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="email"
@@ -157,6 +158,7 @@ const SignUp = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="password" htmlFor="password" className="mb-3">
                                 <FormattedMessage id="project.users.password" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="password"
@@ -175,6 +177,7 @@ const SignUp = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="confirmPassword" htmlFor="confirmPassword" className="mb-3">
                                 <FormattedMessage id="project.users.confirmPassword" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 ref={node => confirmPasswordInput = node}
@@ -243,6 +246,16 @@ const SignUp = () => {
                                 value={socialLinks}
                                 onChange={e => setSocialLinks(e.target.value)}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                <FormattedMessage id="project.users.socialLinksPattern" />
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3 required">
+                            <Form.Label data-testid="requiredFields" htmlFor="requiredFields" className='required text'>
+                                <FormattedMessage id="project.common.requiredFields" />
+                                <span className='required'>*</span>
+                            </Form.Label>
                         </Form.Group>
 
                         <Errors errors={error} onClose={() => setError(null)} />
@@ -257,7 +270,7 @@ const SignUp = () => {
 
             </Card>
 
-        </Container>
+        </div>
 
     );
 
