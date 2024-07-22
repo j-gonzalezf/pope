@@ -6,12 +6,11 @@ export const getUser = state =>
 export const isLoggedIn = state =>
     !!getUser(state);
 
-export const getEmail = state =>
-    getUser(state) ? getUser(state).email : '';
-
 export const getIcon = state =>
     getUser(state) ? getUser(state).icon : '';
 
-export const getClients = state => {
-    return getModuleState(state).getClients;
-}
+export const getClients = state =>
+    getModuleState(state).getClients;
+
+export const getClientInfo = state =>
+    getModuleState(state).getClientInfo;

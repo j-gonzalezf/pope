@@ -1,0 +1,14 @@
+.ClientDetails {
+    margin: 0;
+    padding: 0;
+    padding-top: 4.5%;
+    width: auto;
+}
+
+.listItemStyle.clientDetails {
+    justify-content: space-between;
+}
+
+.clientDetailsText {
+    margin-bottom: 25px;
+}

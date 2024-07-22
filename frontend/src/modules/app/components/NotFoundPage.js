@@ -8,10 +8,11 @@ const NotFoundPage = () => (
     <Container>
         <Row>
             <Col>
-                <h1>
-                    <FormattedMessage id="project.common.notFoundPage" />
+                <br />
+                <h1 className="text-white">
+                    Error 404 - <FormattedMessage id="project.common.notFoundPage" />
                 </h1>
-                <p>
+                <p className="text-white">
                     <FormattedMessage id="project.common.notFoundPageMessage" />
                 </p>
             </Col>

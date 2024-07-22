@@ -73,10 +73,17 @@ public class UserConversor {
                     userDto.getFullName(), userDto.getPhone(), userDto.getIcon(),
                     userDto.getSocialLinks());
         } else if (Users.RoleType.CLIENT.toString().equals(role)) {
+
+            LocalDate birthdate = null;
+
+            if (userDto.getBirthdate() != null && !userDto.getBirthdate().isEmpty()) {
+                birthdate = LocalDate.parse(userDto.getBirthdate());
+            }
+
             return new Users(userDto.getEmail(), userDto.getPassword(),
                     userDto.getFullName(), userDto.getPhone(), userDto.getIcon(),
-                    LocalDate.parse(userDto.getBirthdate()), userDto.getInjuries(),
-                    userDto.getGoals(), userDto.getHeight(), trainer);
+                    birthdate, userDto.getInjuries(), userDto.getGoals(),
+                    userDto.getHeight(), trainer);
         } else {
             throw new IllegalArgumentException("Invalid role: " + userDto.getRole());
         }

@@ -1,0 +1,103 @@
+.TemplatesList {
+    margin: 0;
+    padding: 0;
+    padding-top: 4.5%;
+    width: auto;
+}
+
+.empty-template {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 400px);
+}
+
+.mb-3.template {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 0 !important;
+    margin-left: 4rem;
+    padding-top: 0;
+    align-items: center;
+}
+
+.form-buttons {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    margin-left: auto;
+    height: 20px;
+    text-align: center;
+}
+
+.form-buttons.name {
+    height: auto;
+}
+
+.primary.template {
+    display: flex;
+    align-items: center;
+    margin-top: 0;
+    margin-left: 10px;
+    padding: 0;
+    border: none;
+    height: 20px;
+    background-color: transparent;
+}
+
+.primary.template:focus {
+    background-color: white !important;
+    border-color: #191716 !important;
+    box-shadow: 0 0 0 0.2rem white !important;
+}
+
+.primary.template.name {
+    margin-left: 20px;
+}
+
+.primary.template.delete {
+    margin-left: 25px;
+}
+
+.primary.template.delete.name {
+    margin-left: 15px;
+}
+
+.listColStyle.template {
+    display: flex;
+    flex-direction: column;
+    border: none !important;
+    padding: 0;
+    height: auto;
+    width: 13rem;
+}
+
+.listItemStyle.button {
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    height: auto;
+    width: 13rem;
+}
+
+.text-item {
+    margin: 0;
+}
+
+.listItemStyle.template.add {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    border-color: transparent;
+    transition: none;
+}
+
+.listItemStyle.template.add:hover {
+    border-color: transparent;
+    cursor: default;
+    transform: none;
+}

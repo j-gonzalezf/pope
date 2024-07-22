@@ -35,7 +35,7 @@ public class UsersTest {
     }
 
     @Test
-    public void testConstructors() {
+    public void testUsersConstructors() {
 
         // Test user constructor
         assertNotNull(user);
@@ -52,11 +52,11 @@ public class UsersTest {
         assertEquals("client@example.com", client.getEmail());
         assertEquals("Test Client", client.getFullName());
         assertEquals(Users.RoleType.CLIENT, client.getUserRole());
-        
+
     }
 
     @Test
-    public void testGettersAndSetters() {
+    public void testUsersGettersAndSetters() {
 
         // Test setters
         trainer.setId(3L);

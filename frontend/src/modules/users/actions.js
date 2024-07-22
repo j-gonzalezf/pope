@@ -16,6 +16,11 @@ export const login = (email, password, onSuccess, onErrors, reauthenticationCall
         reauthenticationCallback
     );
 
+export const logout = () => {
+    backend.userService.logout();
+    return { type: actionTypes.LOGOUT };
+}
+
 export const tryLoginFromServiceToken = reauthenticationCallback => dispatch =>
     backend.userService.tryLoginFromServiceToken(
         authenticatedUser => {
@@ -25,11 +30,6 @@ export const tryLoginFromServiceToken = reauthenticationCallback => dispatch =>
         },
         reauthenticationCallback
     );
-
-export const logout = () => {
-    backend.userService.logout();
-    return { type: actionTypes.LOGOUT };
-}
 
 const signUpCompleted = authenticatedUser => ({
     type: actionTypes.SIGN_UP_COMPLETED,
@@ -58,6 +58,32 @@ export const addClient = (newclient, onSuccess, onErrors) => dispatch =>
         onErrors
     );
 
+const getClientsCompleted = getClients => ({
+    type: actionTypes.GET_CLIENTS_COMPLETED,
+    getClients
+});
+
+export const getClients = (id, onSuccess, onErrors) => dispatch =>
+    backend.userService.getClients(id,
+        getClients => {
+            dispatch(getClientsCompleted(getClients));
+            onSuccess();
+        }, onErrors
+    );
+
+const getClientInfoCompleted = getClientInfo => ({
+    type: actionTypes.GET_CLIENT_INFO_COMPLETED,
+    getClientInfo
+});
+
+export const getClientInfo = (clientId, onSuccess, onErrors) => dispatch =>
+    backend.userService.getClientInfo(clientId,
+        getClientInfo => {
+            dispatch(getClientInfoCompleted(getClientInfo));
+            onSuccess();
+        }, onErrors
+    );
+
 export const updateProfileCompleted = user => ({
     type: actionTypes.UPDATE_PROFILE_COMPLETED,
     user
@@ -67,6 +93,20 @@ export const updateProfile = (user, onSuccess, onErrors) => dispatch =>
     backend.userService.updateProfile(user,
         user => {
             dispatch(updateProfileCompleted(user));
+            onSuccess();
+        },
+        onErrors
+    );
+
+export const updateClientCompleted = getClientInfo => ({
+    type: actionTypes.UPDATE_CLIENT_COMPLETED,
+    getClientInfo
+});
+
+export const updateClient = (client, onSuccess, onErrors) => dispatch =>
+    backend.userService.updateProfile(client,
+        client => {
+            dispatch(updateClientCompleted(client));
             onSuccess();
         },
         onErrors
@@ -96,18 +136,4 @@ export const deleteUser = (id, onSuccess, onErrors) => dispatch =>
             onSuccess();
         },
         onErrors
-    );
-
-
-const getClientsCompleted = getClients => ({
-    type: actionTypes.GET_CLIENTS_COMPLETED,
-    getClients
-});
-
-export const getClients = (id, onSuccess, onErrors) => dispatch =>
-    backend.userService.getClients(id,
-        getClients => {
-            dispatch(getClientsCompleted(getClients));
-            onSuccess();
-        }, onErrors
     );

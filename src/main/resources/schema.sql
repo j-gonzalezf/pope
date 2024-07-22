@@ -1,12 +1,14 @@
 DROP TABLE IF EXISTS Feedbacks;
 DROP TABLE IF EXISTS Sensations;
 DROP TABLE IF EXISTS Coments;
+DROP TABLE IF EXISTS TemplateRows;
 DROP TABLE IF EXISTS Templates;
 DROP TABLE IF EXISTS TrainingCycles;
 DROP TABLE IF EXISTS ClientServices;
 DROP TABLE IF EXISTS Services;
 DROP TABLE IF EXISTS PersonalBests;
 DROP TABLE IF EXISTS Weights;
+DROP TABLE IF EXISTS Exercises;
 DROP TABLE IF EXISTS Users;
 
 -- El campo userRole guarda un 0 si es TRAINER y un 1 si es CLIENT.
@@ -55,13 +57,35 @@ CREATE TABLE TrainingCycles (
     CONSTRAINT clientCyclesIdFK FOREIGN KEY(clientId) REFERENCES Users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE Exercises (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    exerciseName VARCHAR(255) NOT NULL,
+    description VARCHAR(500) NOT NULL,
+    exerciseType VARCHAR(255) NOT NULL,
+    bodyPart VARCHAR(255),
+    equipment VARCHAR(255),
+    exerciseLink VARCHAR(1000),
+    trainerId BIGINT,
+    CONSTRAINT trainerExercisesIdFK FOREIGN KEY(trainerId) REFERENCES Users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE Templates (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     templateName VARCHAR(255) NOT NULL,
     templateDate TIMESTAMP NOT NULL,
-    templateFile VARCHAR(255) NOT NULL,
     cycleId BIGINT NOT NULL,
     CONSTRAINT cycleTemplatesIdFK FOREIGN KEY(cycleId) REFERENCES TrainingCycles(id) ON DELETE CASCADE
+);
+
+CREATE TABLE TemplateRows (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    series TINYINT,
+    repetitions TINYINT,
+    weight NUMERIC(5,2),
+    exerciseId BIGINT NOT NULL,
+    templateId BIGINT NOT NULL,
+    CONSTRAINT exerciseRowsIdFK FOREIGN KEY(exerciseId) REFERENCES Exercises(id) ON DELETE CASCADE,
+    CONSTRAINT templateRowsIdFK FOREIGN KEY(templateId) REFERENCES Templates(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Coments (
@@ -97,10 +121,11 @@ CREATE TABLE Weights (
 
 CREATE TABLE PersonalBests (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    exercise VARCHAR(255) NOT NULL,
     weight NUMERIC(5,2) NOT NULL,
     bestDate TIMESTAMP NOT NULL,
+    exerciseId BIGINT NOT NULL,
     clientId BIGINT NOT NULL,
+    CONSTRAINT exerciseBestsIdFK FOREIGN KEY(exerciseId) REFERENCES Exercises(id) ON DELETE CASCADE,
     CONSTRAINT clientBestsIdFK FOREIGN KEY(clientId) REFERENCES Users(id) ON DELETE CASCADE
 );
 

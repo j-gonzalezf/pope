@@ -1,9 +1,8 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import { BsXLg } from "react-icons/bs";
-import './SignUp.css';
+import './AddClient.css';
 
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -78,10 +77,10 @@ const AddClient = () => {
                     phone: phone,
                     role: 'CLIENT',
                     icon: icon,
-                    birthdate: birthdate,
+                    birthdate: birthdate ? birthdate : null,
                     injuries: injuries,
                     goals: goals,
-                    height: height,
+                    height: height ? height : null,
                     trainerId: user.id
                 },
                 () => navigate('/users/clients'),
@@ -91,17 +90,18 @@ const AddClient = () => {
         } else {
             setError(null);
             form.classList.add('was-validated');
+            window.scrollTo(0, 0);
         }
     }
 
     return (
 
-        <Container fluid className="SignUp">
+        <div fluid="true" className="AddClient">
 
-            <Card className="card bg-light border-dark">
+            <Card className="card addClient">
 
                 <Card.Header as="h3" className="card-header">
-                    <FormattedMessage id="project.users.addClientAccount" />
+                    <FormattedMessage id="project.users.addClient.title" />
                 </Card.Header>
 
                 <Card.Body className="card-body">
@@ -114,6 +114,7 @@ const AddClient = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="fullName" htmlFor="fullName" className="mb-3">
                                 <FormattedMessage id="project.users.fullName" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="text"
@@ -133,6 +134,7 @@ const AddClient = () => {
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="email" htmlFor="email" className="mb-3">
                                 <FormattedMessage id="project.users.email" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="email"
@@ -150,14 +152,15 @@ const AddClient = () => {
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="password" htmlFor="password" className="mb-3">
-                                <FormattedMessage id="project.users.password" />
+                                <FormattedMessage id="project.users.passwordClient" />
+                                <span className='required'>*</span>
                             </Form.Label>
                             <Form.Control
                                 type="password"
                                 className="form-control"
                                 id="password"
                                 name="password"
-                                placeholder="Introduzca una clave de acceso para el cliente"
+                                placeholder="Introduzca una contraseña para el cliente"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                                 required
@@ -213,7 +216,7 @@ const AddClient = () => {
                                 className="form-control"
                                 id="birthdate"
                                 name="birthdate"
-                                value={birthdate}
+                                value={birthdate || ''}
                                 onChange={e => setBirthdate(e.target.value)}
                             />
                             <Form.Control.Feedback type="invalid">
@@ -258,12 +261,19 @@ const AddClient = () => {
                                 id="height"
                                 name="height"
                                 placeholder="Introduzca la altura del cliente (en cm)"
-                                value={height}
+                                value={height || ''}
                                 onChange={e => setHeight(e.target.value)}
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.heightPattern" />
                             </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3 required">
+                            <Form.Label data-testid="requiredFields" htmlFor="requiredFields" className='required text'>
+                                <FormattedMessage id="project.common.requiredFields" />
+                                <span className='required'>*</span>
+                            </Form.Label>
                         </Form.Group>
 
                         <Errors errors={error} onClose={() => setError(null)} />
@@ -278,7 +288,7 @@ const AddClient = () => {
 
             </Card>
 
-        </Container>
+        </div>
 
     );
 

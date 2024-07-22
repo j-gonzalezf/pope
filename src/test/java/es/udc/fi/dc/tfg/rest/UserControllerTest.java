@@ -5,7 +5,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.math.BigDecimal;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +31,6 @@ import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
 import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
-import java.math.BigDecimal;
-import org.junit.Before;
 
 /**
  * Clase UserControllerTest.
@@ -74,11 +75,13 @@ public class UserControllerTest {
      * El authenticated user dto.
      */
     private AuthenticatedUserDto authTrainer;
+    private AuthenticatedUserDto authTrainer2;
     private AuthenticatedUserDto authClient;
 
     @Before
     public void createEntities() throws IncorrectLoginException {
         authTrainer = createAuthenticatedTrainer("trainer@user.com");
+        authTrainer2 = createAuthenticatedTrainer("trainer2@user.com");
         authClient = createAuthenticatedClient("client@user.com");
     }
 
@@ -93,14 +96,14 @@ public class UserControllerTest {
     private AuthenticatedUserDto createAuthenticatedTrainer(String email)
             throws IncorrectLoginException {
 
-        Users user = new Users(email, PASSWORD, "trainer", "123456789", "", "");
+        Users trainer = new Users(email, PASSWORD, "trainer", "123456789", "", "");
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        trainer.setPassword(passwordEncoder.encode(trainer.getPassword()));
 
-        userDao.save(user);
+        userDao.save(trainer);
 
         LoginParamsDto loginParams = new LoginParamsDto();
-        loginParams.setEmail(user.getEmail());
+        loginParams.setEmail(trainer.getEmail());
         loginParams.setPassword(PASSWORD);
 
         return userController.login(loginParams);
@@ -118,21 +121,21 @@ public class UserControllerTest {
     private AuthenticatedUserDto createAuthenticatedClient(String email)
             throws IncorrectLoginException {
 
-        Users trainer = new Users("t" + email, PASSWORD, "trainer", "123456789", "", "");
+        Users trainer = new Users(authTrainer.getUserDto().getEmail(), PASSWORD,
+                "trainer", "123456789", "", "");
 
         trainer.setPassword(passwordEncoder.encode(trainer.getPassword()));
+        trainer.setId(authTrainer.getUserDto().getId());
 
-        userDao.save(trainer);
-
-        Users user = new Users(email, PASSWORD, "trainer", "123456789", "", null,
+        Users client = new Users(email, PASSWORD, "trainer", "123456789", "", null,
                 null, null, null, trainer);
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        client.setPassword(passwordEncoder.encode(client.getPassword()));
 
-        userDao.save(user);
+        userDao.save(client);
 
         LoginParamsDto loginParams = new LoginParamsDto();
-        loginParams.setEmail(user.getEmail());
+        loginParams.setEmail(client.getEmail());
         loginParams.setPassword(PASSWORD);
 
         return userController.login(loginParams);
@@ -140,7 +143,7 @@ public class UserControllerTest {
     }
 
     /**
-     * Test para registrarse como usuario.
+     * Test para registrarse como entrenador.
      *
      * @throws Exception la excepción
      */
@@ -160,14 +163,14 @@ public class UserControllerTest {
     }
 
     /**
-     * Test para registrarse como usuario con un email existente.
+     * Test para registrarse como entrenador sin definir un email.
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testSignUp_DuplicatedUser() throws Exception {
+    public void testSignUp_NoEmail() throws Exception {
 
-        UserDto trainerDto = new UserDto(null, "trainer@trainer.com", "trainer",
+        UserDto trainerDto = new UserDto(null, null, "trainer",
                 "123456789", "", "TRAINER", "https://google.es", null, null,
                 null, null, null);
 
@@ -175,21 +178,17 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/api/users/signUp")
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
-                .andExpect(status().isCreated());
-
-        mockMvc.perform(post("/api/users/signUp")
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
                 .andExpect(status().isBadRequest());
 
     }
 
     /**
-     * Test para registrarse como usuario sin definir una contraseña.
+     * Test para registrarse como entrenador sin definir una contraseña.
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testSignUp_NotPassword() throws Exception {
+    public void testSignUp_NoPassword() throws Exception {
 
         UserDto trainerDto = new UserDto(null, "trainer@trainer.com", "trainer",
                 "123456789", "", "TRAINER", "https://google.es", null, null,
@@ -202,12 +201,32 @@ public class UserControllerTest {
     }
 
     /**
-     * Test para registrarse como usuario sin un rol definido.
+     * Test para registrarse como entrenador sin definir un nombre.
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testSignUp_InvalidRole() throws Exception {
+    public void testSignUp_NoName() throws Exception {
+
+        UserDto trainerDto = new UserDto(null, "trainer@trainer.com", null,
+                "123456789", "", "TRAINER", "https://google.es", null, null,
+                null, null, null);
+
+        trainerDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/signUp")
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para registrarse como entrenador sin un rol definido.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testSignUp_NoRole() throws Exception {
 
         UserDto trainerDto = new UserDto(null, "trainer@trainer.com", "trainer",
                 "123456789", "", null, "https://google.es", null, null, null,
@@ -222,12 +241,36 @@ public class UserControllerTest {
     }
 
     /**
-     * Test para registrar un cliente.
+     * Test para registrarse como entrenador con un email existente.
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testAddClient() throws Exception {
+    public void testSignUp_DuplicateInstanceException() throws Exception {
+
+        UserDto trainerDto = new UserDto(null, "trainer@trainer.com", "trainer",
+                "123456789", "", "TRAINER", "https://google.es", null, null,
+                null, null, null);
+
+        trainerDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/signUp")
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/api/users/signUp")
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para registrar un cliente y obtener sus datos.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClientAndGetClientInfo() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
 
@@ -237,9 +280,180 @@ public class UserControllerTest {
 
         clientDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/addClient").header("Authorization", "Bearer " + authTrainer.getServiceToken())
+        MvcResult result = mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        UserDto createdClient = new ObjectMapper().readValue(content, UserDto.class);
+
+        mockMvc.perform(get("/api/users/client/" + createdClient.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para registrar un cliente sin definir un email.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient_NoEmail() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        UserDto clientDto = new UserDto(null, null, "client",
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para registrar un cliente sin definir una clave de acceso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient_NoPassword() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        UserDto clientDto = new UserDto(null, "client@client.com", "client",
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para registrar un cliente sin definir un nombre.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient_NoName() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        UserDto clientDto = new UserDto(null, "client@client.com", null,
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para registrar un cliente sin definir un rol.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient_NoRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        UserDto clientDto = new UserDto(null, "client@client.com", "client",
+                "987654321", null, null, null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para registrar un cliente con un email existente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient_DuplicateInstanceException() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        UserDto clientDto = new UserDto(null, "client@client.com", "client",
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
                 .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para registrar un cliente con un trainerId inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient_InstanceNotFoundException() throws Exception {
+
+        Long incorrectUserId = -1L;
+
+        UserDto clientDto = new UserDto(null, "client@client.com", "client",
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), incorrectUserId);
+
+        clientDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para registrar un cliente con un trainerId distinto al usuario que
+     * realiza la petición.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testAddClient_PermissionException() throws Exception {
+
+        UserDto clientDto = new UserDto(null, "client@client.com", "client",
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", new BigDecimal("170"), authTrainer2.getUserDto().getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isForbidden());
 
     }
 
@@ -259,7 +473,8 @@ public class UserControllerTest {
 
         clientDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/addClient").header("Authorization", "Bearer " + authClient.getServiceToken())
+        mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authClient.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
                 .andExpect(status().isForbidden());
 
@@ -321,7 +536,8 @@ public class UserControllerTest {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        mockMvc.perform(post("/api/users/login").header("Authorization", "Bearer " + authTrainer.getServiceToken())
+        mockMvc.perform(post("/api/users/login")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(loginParams)))
                 .andExpect(status().isNotFound());
 
@@ -370,40 +586,278 @@ public class UserControllerTest {
     }
 
     /**
-     * Test para actualizar perfil.
+     * Test para obtener los clientes de un entrenador.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetClients() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        mockMvc.perform(get("/api/users/" + trainerDto.getId() + "/clients")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para obtener los clientes de un entrenador inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetClients_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+
+        mockMvc.perform(get("/api/users/" + incorrectUserId + "/clients")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para obtener los clientes sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetClients_PermissionException() throws Exception {
+
+        mockMvc.perform(get("/api/users/" + authTrainer2.getUserDto().getId() + "/clients")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para obtener los clientes de un entrenador con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetClients_InvalidRole() throws Exception {
+
+        UserDto clientDto = authClient.getUserDto();
+
+        mockMvc.perform(get("/api/users/" + clientDto.getId() + "/clients")
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para obtener los datos de un cliente inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetClientInfo_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+
+        mockMvc.perform(get("/api/users/client/" + incorrectUserId)
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para obtener los datos de un cliente sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetClientInfo_PermissionException() throws Exception {
+
+        mockMvc.perform(get("/api/users/client/" + authTrainer2.getUserDto().getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para actualizar usuario.
      *
      * @throws Exception la excepción
      */
     @Test
     public void testUpdateProfile() throws Exception {
 
-        UserDto userDto = authTrainer.getUserDto();
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+        clientDto.setBirthdate(null);
 
-        mockMvc.perform(put("/api/users/" + userDto.getId(), userDto.getId())
+        // Actualizar en caso de entrenador
+        mockMvc.perform(put("/api/users/" + trainerDto.getId())
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(userDto))
-                .header("userId", userDto.getId().toString()))
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+                .andExpect(status().isOk());
+
+        // Actualizar en caso de cliente
+        mockMvc.perform(put("/api/users/" + clientDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isOk());
+
+        UserDto updatedClientDto = clientDto;
+        updatedClientDto.setBirthdate("2005-09-25");
+
+        mockMvc.perform(put("/api/users/" + updatedClientDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedClientDto)))
                 .andExpect(status().isOk());
 
     }
 
     /**
-     * Test para actualizar perfil con usuario inexistente.
+     * Test para actualizar usuario sin definir un email.
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testUpdateProfile_Incorrect() throws Exception {
+    public void testUpdateProfile_NoEmail() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        trainerDto.setEmail(null);
+
+        mockMvc.perform(put("/api/users/" + trainerDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para actualizar usuario sin definir un nombre.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateProfile_NoName() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        trainerDto.setFullName(null);
+
+        mockMvc.perform(put("/api/users/" + trainerDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para actualizar usuario sin un rol definido.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateProfile_NoRole() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+
+        trainerDto.setRole(null);
+
+        mockMvc.perform(put("/api/users/" + trainerDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para actualizar usuario con un email existente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateProfile_DuplicateInstanceException() throws Exception {
+
+        UserDto trainerDto = new UserDto(null, "trainer@trainer.com", "trainer",
+                "123456789", "", "TRAINER", "https://google.es", null, null,
+                null, null, null);
+
+        trainerDto.setPassword(PASSWORD);
+
+        mockMvc.perform(post("/api/users/signUp")
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+                .andExpect(status().isCreated());
+
+        UserDto authTrainerDto = authTrainer.getUserDto();
+        authTrainerDto.setEmail("trainer@trainer.com");
+
+        mockMvc.perform(put("/api/users/" + authTrainerDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(authTrainerDto)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    /**
+     * Test para actualizar usuario inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateProfile_InstanceNotFoundExeption() throws Exception {
 
         Long incorrectUserId = -1L;
 
         UserDto updatedUserDto = authTrainer.getUserDto();
         updatedUserDto.setFullName("JohnTest");
 
-        mockMvc.perform(put("/api/users/" + incorrectUserId, updatedUserDto.getId())
+        mockMvc.perform(put("/api/users/" + incorrectUserId)
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedUserDto))
-                .header("userId", updatedUserDto.getId().toString())).andExpect(status().isForbidden());
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedUserDto)))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para actualizar usuario sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateProfile_PermissionException() throws Exception {
+
+        UserDto updatedTrainerDto = authTrainer2.getUserDto();
+        updatedTrainerDto.setFullName("JohnTest");
+
+        // Actualizar a un entrenador sin permiso
+        mockMvc.perform(put("/api/users/" + updatedTrainerDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedTrainerDto)))
+                .andExpect(status().isForbidden());
+
+        UserDto updatedClientDto = authClient.getUserDto();
+        updatedTrainerDto.setFullName("JohnTest");
+
+        // Actualizar a un cliente sin permiso
+        mockMvc.perform(put("/api/users/" + updatedClientDto.getId())
+                .header("Authorization", "Bearer " + authTrainer2.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedClientDto)))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para actualizar usuario con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testUpdateProfile_InvalidRole() throws Exception {
+
+        UserDto clientDto = authClient.getUserDto();
+
+        mockMvc.perform(put("/api/users/" + clientDto.getId())
+                .header("Authorization", "Bearer " + authClient.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isForbidden());
 
     }
 
@@ -418,39 +872,87 @@ public class UserControllerTest {
         UserDto userDto = authTrainer.getUserDto();
         userDto.setPassword(PASSWORD);
 
-        ChangePasswordParamsDto changePasswordParamsDto = new ChangePasswordParamsDto();
-        changePasswordParamsDto.setOldPassword(userDto.getPassword()); // Proporciona la contraseña actual
-        changePasswordParamsDto.setNewPassword("nueva");
+        ChangePasswordParamsDto cpParamsDto = new ChangePasswordParamsDto();
+        cpParamsDto.setOldPassword(userDto.getPassword()); // Proporciona la contraseña actual
+        cpParamsDto.setNewPassword("nueva");
 
-        mockMvc.perform(post("/api/users/" + userDto.getId() + "/changePassword", userDto.getId())
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken()).contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(changePasswordParamsDto))
-                .header("userId", userDto.getId().toString())).andExpect(status().isNoContent());
+        mockMvc.perform(post("/api/users/" + userDto.getId() + "/changePassword")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cpParamsDto)))
+                .andExpect(status().isNoContent());
 
     }
 
     /**
-     * Test para cambiar la contraseña con un usuario inexistente.
+     * Test para cambiar contraseña sin definir una contraseña.
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testChangePassword_Incorrect() throws Exception {
+    public void testChangePassword_NoPassword() throws Exception {
 
-        Long incorrectUserId = -1L;
+        UserDto userDto = authTrainer.getUserDto();
+        userDto.setPassword(PASSWORD);
 
-        UserDto updatedUserDto = authTrainer.getUserDto();
-        updatedUserDto.setFullName("JohnTest");
+        ChangePasswordParamsDto cpParamsDto = new ChangePasswordParamsDto();
+        cpParamsDto.setOldPassword(userDto.getPassword()); // Proporciona la contraseña actual
+        cpParamsDto.setNewPassword(null);
 
-        mockMvc.perform(put("/api/users/" + updatedUserDto.getId() + "/changePassword", incorrectUserId)
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken()).contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(updatedUserDto))
-                .header("userId", incorrectUserId.toString())).andExpect(status().isMethodNotAllowed());
+        mockMvc.perform(post("/api/users/" + userDto.getId() + "/changePassword")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cpParamsDto)))
+                .andExpect(status().isBadRequest());
 
     }
 
     /**
-     * Test para cambiar la contraseña con una contraseña incorrecta.
+     * Test para cambiar la contraseña de un usuario inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testChangePassword_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+
+        UserDto userDto = authTrainer.getUserDto();
+        userDto.setPassword(PASSWORD);
+
+        ChangePasswordParamsDto cpParamsDto = new ChangePasswordParamsDto();
+        cpParamsDto.setOldPassword(userDto.getPassword()); // Proporciona la contraseña actual
+        cpParamsDto.setNewPassword("nueva");
+
+        mockMvc.perform(post("/api/users/" + incorrectUserId + "/changePassword")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cpParamsDto)))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para cambiar la contraseña sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testChangePassword_PermissionException() throws Exception {
+
+        UserDto userDto = authTrainer2.getUserDto();
+        userDto.setPassword(PASSWORD);
+
+        ChangePasswordParamsDto cpParamsDto = new ChangePasswordParamsDto();
+        cpParamsDto.setOldPassword(userDto.getPassword()); // Proporciona la contraseña actual
+        cpParamsDto.setNewPassword("nueva");
+
+        mockMvc.perform(post("/api/users/" + userDto.getId() + "/changePassword")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cpParamsDto)))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para cambiar la contraseña con una contraseña anterior incorrecta.
      *
      * @throws Exception la excepción
      */
@@ -460,14 +962,36 @@ public class UserControllerTest {
         UserDto userDto = authTrainer.getUserDto();
         userDto.setPassword(PASSWORD);
 
-        ChangePasswordParamsDto changePasswordParamsDto = new ChangePasswordParamsDto();
-        changePasswordParamsDto.setOldPassword("mala");
-        changePasswordParamsDto.setNewPassword("nueva");
+        ChangePasswordParamsDto cpParamsDto = new ChangePasswordParamsDto();
+        cpParamsDto.setOldPassword("mala");
+        cpParamsDto.setNewPassword("nueva");
 
-        mockMvc.perform(post("/api/users/" + userDto.getId() + "/changePassword", userDto.getId())
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken()).contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(changePasswordParamsDto))
-                .header("userId", userDto.getId().toString())).andExpect(status().isNotFound());
+        mockMvc.perform(post("/api/users/" + userDto.getId() + "/changePassword")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cpParamsDto)))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para cambiar la contraseña con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testChangePassword_InvalidRole() throws Exception {
+
+        UserDto clientDto = authClient.getUserDto();
+        clientDto.setPassword(PASSWORD);
+
+        ChangePasswordParamsDto cpParamsDto = new ChangePasswordParamsDto();
+        cpParamsDto.setOldPassword(clientDto.getPassword()); // Proporciona la contraseña actual
+        cpParamsDto.setNewPassword("nueva");
+
+        mockMvc.perform(post("/api/users/" + clientDto.getId() + "/changePassword")
+                .header("Authorization", "Bearer " + authClient.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cpParamsDto)))
+                .andExpect(status().isForbidden());
 
     }
 
@@ -488,18 +1012,48 @@ public class UserControllerTest {
     }
 
     /**
-     * Test para obtener los clientes de un entrenador.
+     * Test para eliminar un usuario inexistente.
      *
      * @throws Exception la excepción
      */
     @Test
-    public void testGetAllPosts() throws Exception {
+    public void testDeleteUser_InstanceNotFoundExeption() throws Exception {
 
-        UserDto trainerDto = authTrainer.getUserDto();
+        Long incorrectUserId = -1L;
 
-        mockMvc.perform(get("/api/users/" + trainerDto.getId() + "/clients")
+        mockMvc.perform(delete("/api/users/" + incorrectUserId + "/delete")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para eliminar un usuario sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteUser_PermissionException() throws Exception {
+
+        mockMvc.perform(delete("/api/users/" + authTrainer2.getUserDto().getId() + "/delete")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para eliminar un usuario con un rol de cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testDeleteUser_InvalidRole() throws Exception {
+
+        UserDto clientDto = authClient.getUserDto();
+
+        mockMvc.perform(delete("/api/users/" + clientDto.getId() + "/delete")
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isForbidden());
 
     }
 

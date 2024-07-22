@@ -50,7 +50,7 @@ public class ChangePasswordParamsDto {
      * @return the new password
      */
     @NotNull
-    @Size(min = 1, max = 60)
+    @Size(min = 1, max = 255)
     public String getNewPassword() {
         return newPassword;
     }
