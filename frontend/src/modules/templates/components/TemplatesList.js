@@ -39,7 +39,8 @@ const TemplatesList = () => {
 
 
     return (
-        <div fluid className='TemplatesList'>
+
+        <div fluid="true" className='TemplatesList'>
 
             <h3 className="title">
                 <FormattedMessage id="project.templates.templatesList.title" />
@@ -47,8 +48,8 @@ const TemplatesList = () => {
 
             {getTemplates && getTemplates.length > 0 ? (
                 <Row className="listStyle">
-                    {getTemplates.map((template) => (
-                        <Col xs={12} sm={6} md={4} lg={3} className="listColStyle template" key={template.id} >
+                    {getTemplates.map((template, index) => (
+                        <Col xs={12} sm={6} md={4} lg={3} className="listColStyle template" key={index} >
                             <button className="listItemStyle button" onClick={() => redirectToTemplateView(template.id)}>
                                 <div className="template-item">
                                     <p className='text-item'>{template.name}</p>

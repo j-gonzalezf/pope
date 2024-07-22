@@ -21,9 +21,9 @@ const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [phone, setPhone] = useState(null);
+    const [phone, setPhone] = useState('');
     const [icon, setIcon] = useState(null);
-    const [socialLinks, setSocialLinks] = useState(null);
+    const [socialLinks, setSocialLinks] = useState('');
     const [error, setError] = useState(null);
     // eslint-disable-next-line
     const [passwordsDoNotMatch, setPasswordsDoNotMatch] = useState(false);
@@ -73,10 +73,10 @@ const SignUp = () => {
                     email: email.trim(),
                     password: password,
                     fullName: fullName.trim(),
-                    phone: phone,
+                    phone: phone.trim(),
                     role: 'TRAINER',
                     icon: icon,
-                    socialLinks: socialLinks
+                    socialLinks: socialLinks.trim()
                 },
                 () => navigate('/users/clients'),
                 errors => setError(errors),
@@ -94,16 +94,14 @@ const SignUp = () => {
     }
 
     const handleConfirmPasswordChange = value => {
-
         confirmPasswordInput.setCustomValidity('');
         setConfirmPassword(value);
         setPasswordsDoNotMatch(false);
-
     }
 
     return (
 
-        <div fluid className="SignUp">
+        <div fluid="true" className="SignUp">
 
             <Card className="card signUp">
 

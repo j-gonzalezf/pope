@@ -148,7 +148,7 @@ const ExercisesList = () => {
 
     return (
 
-        <div fluid className='ExercisesList'>
+        <div fluid="true" className='ExercisesList'>
 
             <h3 className="title">
                 <FormattedMessage id="project.templates.exercisesList.title" />
@@ -411,7 +411,7 @@ const ExercisesList = () => {
 
             </Modal>
 
-            <div class="table-responsive">
+            <div className="table-responsive">
                 <Table className="table">
                     <thead>
                         <tr>
@@ -425,8 +425,8 @@ const ExercisesList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {getExercises.map((exercise) => (
-                            <tr key={exercise.id} >
+                        {getExercises.map((exercise, index) => (
+                            <tr key={index} >
                                 <td className="customTable"></td>
                                 <td className="customTable">
                                     {exercise.link ? (

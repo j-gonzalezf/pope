@@ -12,9 +12,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +36,6 @@ import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 import es.udc.fi.dc.tfg.rest.dtos.TemplateDto;
 import es.udc.fi.dc.tfg.rest.dtos.TemplateRowDto;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
 /**
  * Clase TemplateController.
@@ -198,6 +199,60 @@ public class TemplateController {
         List<TemplateRows> templateRows = templateService.getTemplateRows(templateId);
 
         return toTemplateRowsDto(templateRows);
+
+    }
+
+    /**
+     * Edita una plantilla.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID de la plantilla que se va a editar
+     * @param templateDto el template dto
+     * @return el template dto
+     * @throws InstanceNotFoundException si no se encuentra una plantilla con el
+     * ID proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del usuario al que se le va a actualizar el perfil
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    @PutMapping("/template/{id}")
+    public TemplateDto updateTemplate(@RequestAttribute Long userId, @PathVariable("id") Long id,
+            @Validated({TemplateDto.UpdateValidations.class}) @RequestBody TemplateDto templateDto)
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        TrainingCycles cycle = cycleService.getCycleInfo(templateDto.getCycleId());
+
+        validateTemplateUser(userId, cycle);
+
+        return toTemplateDto(templateService.updateTemplate(id, templateDto.getName()));
+
+    }
+
+    /**
+     * Edita la fila de una plantilla.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param id el ID de la fila que se va a editar
+     * @param rowDto el template row dto
+     * @return el template row dto
+     * @throws InstanceNotFoundException si no se encuentra una fila con el ID
+     * proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del usuario al que se le va a actualizar el perfil
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    @PutMapping("/templateRow/{id}")
+    public TemplateRowDto updateTemplateRow(@RequestAttribute Long userId, @PathVariable("id") Long id,
+            @Validated({TemplateRowDto.UpdateValidations.class}) @RequestBody TemplateRowDto rowDto)
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        Exercises exercise = exerciseService.getExerciseInfo(rowDto.getExerciseId());
+        Templates template = templateService.getTemplateInfo(rowDto.getTemplateId());
+
+        validateTemplateUser(userId, template.getCycle());
+
+        return toTemplateRowDto(templateService.updateTemplateRow(id, rowDto.getSeries(),
+                rowDto.getRepetitions(), rowDto.getWeight(), exercise));
 
     }
 

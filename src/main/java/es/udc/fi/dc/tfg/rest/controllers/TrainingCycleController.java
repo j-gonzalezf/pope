@@ -154,7 +154,7 @@ public class TrainingCycleController {
      * @param userId el ID del usuario que realiza la petición
      * @param id el ID del ciclo que se va a editar
      * @param cycleDto el training cycle dto
-     * @return el user dto
+     * @return el training cycle dto
      * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
      * proporcionado
      * @throws PermissionException si el ID del usuario que realiza la petición

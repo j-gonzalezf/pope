@@ -49,7 +49,7 @@ const Login = () => {
 
     return (
 
-        <div fluid className="Login">
+        <div fluid="true" className="Login">
 
             <Card className="card login">
 

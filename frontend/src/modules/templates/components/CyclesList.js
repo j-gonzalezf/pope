@@ -155,7 +155,7 @@ const CyclesList = () => {
 
     return (
 
-        <div fluid className='CyclesList'>
+        <div fluid="true" className='CyclesList'>
 
             <h3 className="title">
                 <FormattedMessage id="project.templates.cycles.title" />
@@ -356,7 +356,7 @@ const CyclesList = () => {
 
             </Modal>
 
-            <div class="table-responsive">
+            <div className="table-responsive">
                 <Table className="table">
                     <thead>
                         <tr>
@@ -369,8 +369,8 @@ const CyclesList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {getCycles.map((cycle) => (
-                            <tr key={cycle.id} className="cycleSelect" tabIndex="0"
+                        {getCycles.map((cycle, index) => (
+                            <tr key={index} className="cycleSelect" tabIndex="0"
                                 onClick={() => redirectToCycleDetails(cycle)}
                                 onKeyDown={(event) => {
                                     if (event.key === 'Enter') {

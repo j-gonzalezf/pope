@@ -55,7 +55,7 @@ const ChangePassword = () => {
 
     return (
 
-        <div fluid className="ChangePassword">
+        <div fluid="true" className="ChangePassword">
 
             <Card className="card cp">
 

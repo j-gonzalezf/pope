@@ -21,11 +21,11 @@ const AddClient = () => {
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [phone, setPhone] = useState(null);
+    const [phone, setPhone] = useState('');
     const [icon, setIcon] = useState(null);
     const [birthdate, setBirthdate] = useState(null);
-    const [injuries, setInjuries] = useState(null);
-    const [goals, setGoals] = useState(null);
+    const [injuries, setInjuries] = useState('');
+    const [goals, setGoals] = useState('');
     const [height, setHeight] = useState(null);
     const [error, setError] = useState(null);
 
@@ -77,10 +77,10 @@ const AddClient = () => {
                     phone: phone,
                     role: 'CLIENT',
                     icon: icon,
-                    birthdate: birthdate,
+                    birthdate: birthdate ? birthdate : null,
                     injuries: injuries,
                     goals: goals,
-                    height: height,
+                    height: height ? height : null,
                     trainerId: user.id
                 },
                 () => navigate('/users/clients'),
@@ -96,7 +96,7 @@ const AddClient = () => {
 
     return (
 
-        <div fluid className="AddClient">
+        <div fluid="true" className="AddClient">
 
             <Card className="card addClient">
 
@@ -216,7 +216,7 @@ const AddClient = () => {
                                 className="form-control"
                                 id="birthdate"
                                 name="birthdate"
-                                value={birthdate}
+                                value={birthdate || ''}
                                 onChange={e => setBirthdate(e.target.value)}
                             />
                             <Form.Control.Feedback type="invalid">
@@ -261,7 +261,7 @@ const AddClient = () => {
                                 id="height"
                                 name="height"
                                 placeholder="Introduzca la altura del cliente (en cm)"
-                                value={height}
+                                value={height || ''}
                                 onChange={e => setHeight(e.target.value)}
                             />
                             <Form.Control.Feedback type="invalid">

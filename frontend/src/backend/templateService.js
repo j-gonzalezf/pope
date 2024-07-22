@@ -103,6 +103,14 @@ export const getTemplate = (id, onSuccess, onErrors) =>
         onErrors
     );
 
+export const updateTemplate = (template, onSuccess, onErrors) =>
+    appFetch(
+        `/templates/template/${template.id}`,
+        fetchConfig("PUT", template),
+        onSuccess,
+        onErrors
+    );
+
 export const deleteTemplate = (id, onSuccess, onErrors) =>
     appFetch(
         `/templates/${id}/delete`, fetchConfig("DELETE"),
@@ -122,6 +130,14 @@ export const getTemplateRows = (templateId, onSuccess, onErrors) =>
     appFetch(
         `/templates/${templateId}/rows`,
         fetchConfig("GET"),
+        onSuccess,
+        onErrors
+    );
+
+export const updateTemplateRow = (row, onSuccess, onErrors) =>
+    appFetch(
+        `/templates/templateRow/${row.id}`,
+        fetchConfig("PUT", row),
         onSuccess,
         onErrors
     );

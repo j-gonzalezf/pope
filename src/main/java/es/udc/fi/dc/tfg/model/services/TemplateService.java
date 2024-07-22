@@ -1,8 +1,10 @@
 package es.udc.fi.dc.tfg.model.services;
 
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
+import es.udc.fi.dc.tfg.model.entities.Exercises;
 import es.udc.fi.dc.tfg.model.entities.TemplateRows;
 import es.udc.fi.dc.tfg.model.entities.Templates;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -49,6 +51,30 @@ public interface TemplateService {
      * @throws InstanceNotFoundException si no se encuentra ninguna plantilla.
      */
     Templates getTemplateInfo(Long templateId) throws InstanceNotFoundException;
+
+    /**
+     * Edita una plantilla.
+     *
+     * @param id El ID de la plantilla.
+     * @param name El nombre de la plantilla.
+     * @return El objeto Templates que representa la plantilla actualizada.
+     * @throws InstanceNotFoundException si no se encuentra ninguna plantilla.
+     */
+    Templates updateTemplate(Long id, String name) throws InstanceNotFoundException;
+
+    /**
+     * Edita la fila de una plantilla.
+     *
+     * @param id El ID de la fila.
+     * @param series Las series a realizar del ejercicio.
+     * @param reps Las repeticiones a realizar del ejercicio.
+     * @param weight El peso a levantar en el ejercicio.
+     * @param exercise El ejercicio a realizar.
+     * @return El objeto TemplateRows que representa la fila actualizada.
+     * @throws InstanceNotFoundException si no se encuentra ninguna fila.
+     */
+    TemplateRows updateTemplateRow(Long id, Integer series, Integer reps,
+            BigDecimal weight, Exercises exercise) throws InstanceNotFoundException;
 
     /**
      * Elimina una plantilla.

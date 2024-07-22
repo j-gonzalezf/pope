@@ -256,6 +256,135 @@ public class TemplateServiceTest {
     }
 
     /**
+     * Test para editar plantillas.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra ninguna plantilla.
+     */
+    @Test
+    public void testUpdateTemplate()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Templates template = createTemplate();
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+        Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
+                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
+
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
+                LocalDate.of(2001, 1, 1), trainer, client);
+
+        cycle.setTrainer(trainer);
+        cycle.setClient(client);
+
+        cycleService.createCycle(cycle);
+
+        template.setCycle(cycle);
+
+        templateService.createTemplate(template);
+
+        Templates updatedTemplate = templateService.updateTemplate(template.getId(), "new Name");
+
+        assertEquals("new Name", updatedTemplate.getName());
+
+    }
+
+    /**
+     * Test para actualizar una plantilla con un ID inexistente.
+     *
+     * @throws InstanceNotFoundException si no se encuentra una plantilla con el
+     * ID proporcionado.
+     */
+    @Test
+    public void testUpdateTemplateWithNonExistentId() throws InstanceNotFoundException {
+        assertThrows(InstanceNotFoundException.class,
+                () -> templateService.updateTemplate(NON_EXISTENT_ID, "new Name"));
+    }
+
+    /**
+     * Test para editar filas de una plantilla.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra ninguna fila.
+     */
+    @Test
+    public void testUpdateTemplateRow()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+
+        TemplateRows templateRow = addTemplateRow();
+
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+        Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
+                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
+                LocalDate.of(2001, 1, 1), trainer, client);
+        cycle.setTrainer(trainer);
+        cycle.setClient(client);
+        cycleService.createCycle(cycle);
+
+        Exercises exercise1 = new Exercises("exerciseName", "description", "exerciseType",
+                null, null, null, null);
+        exercise1.setTrainer(trainer);
+        exerciseService.addExercise(exercise1);
+
+        Exercises exercise2 = new Exercises("exerciseName2", "description", "exerciseType",
+                null, null, null, null);
+        exercise2.setTrainer(trainer);
+        exerciseService.addExercise(exercise2);
+
+        Templates template = createTemplate();
+        template.setCycle(cycle);
+        templateService.createTemplate(template);
+
+        templateRow.setTemplate(template);
+        templateRow.setExercise(exercise1);
+        templateService.addTemplateRow(templateRow);
+
+        TemplateRows updatedRow = templateService.updateTemplateRow(templateRow.getId(),
+                2, 3, new BigDecimal("40"), exercise2);
+
+        assertEquals("2", updatedRow.getSeries().toString());
+        assertEquals("3", updatedRow.getRepetitions().toString());
+        assertEquals(new BigDecimal("40"), updatedRow.getWeight());
+        assertEquals(exercise2, updatedRow.getExercise());
+
+    }
+
+    /**
+     * Test para actualizar una fila con un ID inexistente.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     * @throws InstanceNotFoundException si no se encuentra una fila con el ID
+     * proporcionado.
+     */
+    @Test
+    public void testUpdateTemplateRowWithNonExistentId()
+            throws DuplicateInstanceException, InstanceNotFoundException {
+
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+
+        userService.signUp(trainer);
+
+        Exercises exercise1 = new Exercises("exerciseName", "description", "exerciseType",
+                null, null, null, null);
+        exercise1.setTrainer(trainer);
+        exerciseService.addExercise(exercise1);
+
+        assertThrows(InstanceNotFoundException.class,
+                () -> templateService.updateTemplateRow(NON_EXISTENT_ID, 2, 3,
+                        new BigDecimal("40"), exercise1));
+
+    }
+
+    /**
      * Test para eliminar una plantilla.
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo

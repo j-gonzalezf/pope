@@ -37,7 +37,7 @@ const ClientDetails = () => {
 
     return (
 
-        <div fluid className='ClientDetails'>
+        <div fluid="true" className='ClientDetails'>
 
             <h3 className="title">
                 <FormattedMessage id="project.users.clientDetails.title" />

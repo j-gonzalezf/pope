@@ -53,7 +53,7 @@ const ClientsList = () => {
 
     return (
 
-        <div fluid className='ClientsList'>
+        <div fluid="true" className='ClientsList'>
 
             <h3 className="title">
                 <FormattedMessage id="project.users.clients.title" />
@@ -61,9 +61,9 @@ const ClientsList = () => {
 
             <Row className="listStyle">
 
-                {getClients && (getClients.map((client) => (
+                {getClients && (getClients.map((client, index) => (
 
-                    <Col xs={12} sm={6} md={4} lg={3} key={client.id} className="listColStyle" >
+                    <Col xs={12} sm={6} md={4} lg={3} key={index} className="listColStyle" >
 
                         <button className="listItemStyle" onClick={() => redirectToClientDetails(client.id)}>
                             <div className="image-container">

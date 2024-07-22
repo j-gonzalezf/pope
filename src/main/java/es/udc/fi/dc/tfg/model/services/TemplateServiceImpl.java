@@ -1,10 +1,12 @@
 package es.udc.fi.dc.tfg.model.services;
 
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
+import es.udc.fi.dc.tfg.model.entities.Exercises;
 import es.udc.fi.dc.tfg.model.entities.Templates;
 import es.udc.fi.dc.tfg.model.entities.TemplateDao;
 import es.udc.fi.dc.tfg.model.entities.TemplateRowDao;
 import es.udc.fi.dc.tfg.model.entities.TemplateRows;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +100,64 @@ public class TemplateServiceImpl implements TemplateService {
         Templates template = Otemplate.get();
 
         return template;
+
+    }
+
+    /**
+     * Edita una plantilla.
+     *
+     * @param id El ID de la plantilla.
+     * @param name El nombre de la plantilla.
+     * @return El objeto Templates que representa la plantilla actualizada.
+     * @throws InstanceNotFoundException si no se encuentra ninguna plantilla.
+     */
+    @Override
+    public Templates updateTemplate(Long id, String name)
+            throws InstanceNotFoundException {
+
+        Optional<Templates> Otemplate = templateDao.findById(id);
+
+        if (!Otemplate.isPresent()) {
+            throw new InstanceNotFoundException("project.entities.templates", id);
+        }
+
+        Templates template = Otemplate.get();
+
+        template.setName(name);
+
+        return template;
+
+    }
+
+    /**
+     * Edita la fila de una plantilla.
+     *
+     * @param id El ID de la fila.
+     * @param series Las series a realizar del ejercicio.
+     * @param reps Las repeticiones a realizar del ejercicio.
+     * @param weight El peso a levantar en el ejercicio.
+     * @param exercise El ejercicio a realizar.
+     * @return El objeto TemplateRows que representa la fila actualizada.
+     * @throws InstanceNotFoundException si no se encuentra ninguna fila.
+     */
+    @Override
+    public TemplateRows updateTemplateRow(Long id, Integer series, Integer reps,
+            BigDecimal weight, Exercises exercise) throws InstanceNotFoundException {
+
+        Optional<TemplateRows> OtemplateRow = templateRowDao.findById(id);
+
+        if (!OtemplateRow.isPresent()) {
+            throw new InstanceNotFoundException("project.entities.templateRows", id);
+        }
+
+        TemplateRows row = OtemplateRow.get();
+
+        row.setSeries(series);
+        row.setRepetitions(reps);
+        row.setWeight(weight);
+        row.setExercise(exercise);
+
+        return row;
 
     }
 

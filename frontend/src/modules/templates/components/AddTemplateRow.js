@@ -136,14 +136,13 @@ const AddTemplateRow = () => {
                             getSuggestionValue={suggestion => suggestion ? suggestion.name : ''}
                             renderSuggestion={suggestion => suggestion ? <div className="suggestion">{suggestion.name}</div> : ''}
                             inputProps={{
-                                className: "form-control",
+                                className: `form-control ${!isValid ? 'is-invalid' : ''}`,
                                 id: "exercise",
                                 name: "exercise",
                                 placeholder: "Ejercicio",
                                 value: inputValue,
                                 onChange: onExerciseChange,
                                 required: true,
-                                isInvalid: !isValid,
                                 autoFocus: true
                             }}
                             onSuggestionSelected={onSuggestionSelected}

@@ -135,7 +135,7 @@ const UpdateClient = () => {
 
     return (
 
-        <div fluid className="UpdateProfile">
+        <div fluid="true" className="UpdateProfile">
 
             <Card className="card updateProfile">
 

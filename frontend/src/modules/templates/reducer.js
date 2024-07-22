@@ -101,6 +101,9 @@ const getTemplate = (state = initialState.getTemplate, action) => {
         case actionTypes.GET_TEMPLATE_COMPLETED:
             return action.getTemplate;
 
+        case actionTypes.UPDATE_TEMPLATE_COMPLETED:
+            return action.getTemplate;
+
         default:
             return state;
 

@@ -40,13 +40,13 @@ const Header = () => {
         if (clientName && cycleName && !urlsToHideCycleName.includes(location.pathname)) {
             return (
                 <>
-                    <Link to={`/users/clients`} className='link h'>{clientName}</Link>
+                    <Link to={`/users/clientDetails/${clientId}`} className='link h'>{clientName}</Link>
                     <span className='required'>/ </span>
                     <Link to={`/templates/trainingCycles/${clientId}`} className='link h'>{cycleName}</Link>
                 </>
             );
         } else if (clientName) {
-            return <Link to={`/users/clients`} className='link h'>{clientName}</Link>;
+            return <Link to={`/users/clientDetails/${clientId}`} className='link h'>{clientName}</Link>;
         }
         return '';
 
