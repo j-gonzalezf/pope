@@ -82,13 +82,13 @@ const UpdateClient = () => {
                     id: client.id,
                     email: email.trim(),
                     fullName: fullName.trim(),
-                    phone: phone,
+                    phone: phone ? phone.trim() : null,
                     role: 'CLIENT',
                     icon: icon,
-                    birthdate: birthdate,
-                    injuries: injuries,
-                    goals: goals,
-                    height: height,
+                    birthdate: birthdate || null,
+                    injuries: injuries ? injuries.trim() : null,
+                    goals: goals ? goals.trim() : null,
+                    height: height || null,
                     trainerId: user.id
                 },
                 () => navigate('/users/clientDetails/' + client.id),
@@ -250,7 +250,7 @@ const UpdateClient = () => {
                                 id="phone"
                                 name="phone"
                                 placeholder={activeTab === 'profile' ? '' : "Introduzca el teléfono del cliente"}
-                                value={phone}
+                                value={phone || ''}
                                 onChange={e => setPhone(e.target.value)}
                                 pattern='[0-9]*'
                                 disabled={activeTab === 'profile'}
@@ -307,7 +307,7 @@ const UpdateClient = () => {
                                 id="injuries"
                                 name="injuries"
                                 placeholder={activeTab === 'profile' ? '' : "Introduzca los impedimentos y/o lesiones del cliente"}
-                                value={injuries}
+                                value={injuries || ''}
                                 onChange={e => setInjuries(e.target.value)}
                                 disabled={activeTab === 'profile'}
                             />
@@ -322,7 +322,7 @@ const UpdateClient = () => {
                                 id="goals"
                                 name="goals"
                                 placeholder={activeTab === 'profile' ? '' : "Introduzca los objetivos a corto y/o largo plazo del cliente"}
-                                value={goals}
+                                value={goals || ''}
                                 onChange={e => setGoals(e.target.value)}
                                 disabled={activeTab === 'profile'}
                             />

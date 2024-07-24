@@ -86,9 +86,9 @@ const EditTemplateRow = ({ row, onClose }) => {
     const handleCancel = () => {
         setSelectedExercise(null);
         setInputValue('');
-        setSeries(null);
-        setReps(null);
-        setWeight(null);
+        setSeries('');
+        setReps('');
+        setWeight('');
         setSuggestions([{}]);
         setIsSuggestionSelected(false);
         onClose();
@@ -144,14 +144,13 @@ const EditTemplateRow = ({ row, onClose }) => {
                         getSuggestionValue={suggestion => suggestion ? suggestion.name : ''}
                         renderSuggestion={suggestion => suggestion ? <div className="suggestion">{suggestion.name}</div> : ''}
                         inputProps={{
-                            className: "form-control",
+                            className: `form-control ${isValid ? '' : 'is-invalid'}`,
                             id: "exercise",
                             name: "exercise",
                             placeholder: "Ejercicio",
                             value: inputValue,
                             onChange: onExerciseChange,
                             required: true,
-                            isInvalid: !isValid,
                             autoFocus: true
                         }}
                         onSuggestionSelected={onSuggestionSelected}
@@ -184,7 +183,7 @@ const EditTemplateRow = ({ row, onClose }) => {
                         id="series"
                         name="series"
                         placeholder="Series"
-                        value={series}
+                        value={series || ''}
                         onChange={event => setSeries(event.target.value)}
                     />
 
@@ -194,7 +193,7 @@ const EditTemplateRow = ({ row, onClose }) => {
                         id="reps"
                         name="reps"
                         placeholder="Reps"
-                        value={reps}
+                        value={reps || ''}
                         onChange={event => setReps(event.target.value)}
                     />
 
@@ -205,7 +204,7 @@ const EditTemplateRow = ({ row, onClose }) => {
                         id="weight"
                         name="weight"
                         placeholder="Peso"
-                        value={weight}
+                        value={weight || ''}
                         onChange={event => setWeight(event.target.value)}
                     />
 

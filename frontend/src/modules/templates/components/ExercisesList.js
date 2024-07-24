@@ -23,11 +23,11 @@ const ExercisesList = () => {
 
     const [id, setId] = useState(null);
     const [name, setName] = useState('');
-    const [description, setDescription] = useState(null);
-    const [type, setType] = useState(null);
-    const [bodyPart, setBodyPart] = useState(null);
-    const [equipment, setEquipment] = useState(null);
-    const [link, setLink] = useState(null);
+    const [description, setDescription] = useState('');
+    const [type, setType] = useState('');
+    const [bodyPart, setBodyPart] = useState('');
+    const [equipment, setEquipment] = useState('');
+    const [link, setLink] = useState('');
     const [error, setError] = useState(null);
     const [showAddExerciseModal, setShowAddExerciseModal] = useState(false);
     const [showUpdateExerciseModal, setShowUpdateExerciseModal] = useState(false);
@@ -44,11 +44,11 @@ const ExercisesList = () => {
             dispatch(actions.addExercise(
                 {
                     name: name.trim(),
-                    description: description,
-                    type: type,
-                    bodyPart: bodyPart,
-                    equipment: equipment,
-                    link: link,
+                    description: description.trim(),
+                    type: type.trim(),
+                    bodyPart: bodyPart || null,
+                    equipment: equipment || null,
+                    link: link || null,
                     trainerId: user.id
                 },
                 () => {
@@ -77,11 +77,11 @@ const ExercisesList = () => {
                 {
                     id: id,
                     name: name.trim(),
-                    description: description,
-                    type: type,
-                    bodyPart: bodyPart,
-                    equipment: equipment,
-                    link: link,
+                    description: description.trim(),
+                    type: type.trim(),
+                    bodyPart: bodyPart || null,
+                    equipment: equipment || null,
+                    link: link || null,
                     trainerId: user.id
                 },
                 () => {
@@ -128,11 +128,11 @@ const ExercisesList = () => {
         setShowUpdateExerciseModal(false);
         setId(null);
         setName('');
-        setDescription(null);
-        setType(null);
-        setBodyPart(null);
-        setEquipment(null);
-        setLink(null);
+        setDescription('');
+        setType('');
+        setBodyPart('');
+        setEquipment('');
+        setLink('');
         setError(null);
     }
 
@@ -264,7 +264,7 @@ const ExercisesList = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-3 required">
-                            <Form.Label data-testid="requiredFields" htmlFor="requiredFields" className='required text'>
+                            <Form.Label data-testid="requiredFields" className='required text'>
                                 <FormattedMessage id="project.common.requiredFields" />
                                 <span className='required'>*</span>
                             </Form.Label>
@@ -360,7 +360,7 @@ const ExercisesList = () => {
                                 type="text"
                                 title="Introduzca la parte del cuerpo en la que se enfoca el ejercicio"
                                 placeholder="Introduzca la parte del cuerpo en la que se enfoca el e..."
-                                value={bodyPart}
+                                value={bodyPart || ''}
                                 onChange={e => setBodyPart(e.target.value)}
                             />
                         </Form.Group>
@@ -373,7 +373,7 @@ const ExercisesList = () => {
                                 type="text"
                                 title="Introduzca el equipamiento necesario para realizar el ejercicio"
                                 placeholder="Introduzca el equipamiento necesario para realizar el e..."
-                                value={equipment}
+                                value={equipment || ''}
                                 onChange={e => setEquipment(e.target.value)}
                             />
                         </Form.Group>
@@ -386,7 +386,7 @@ const ExercisesList = () => {
                                 type="url"
                                 title="Introduzca un enlace de referencia para la correcta realización del ejercicio"
                                 placeholder="Introduzca un enlace de referencia para la correcta rea..."
-                                value={link}
+                                value={link || ''}
                                 onChange={e => setLink(e.target.value)}
                             />
                             <Form.Control.Feedback type="invalid">

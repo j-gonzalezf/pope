@@ -73,10 +73,10 @@ const SignUp = () => {
                     email: email.trim(),
                     password: password,
                     fullName: fullName.trim(),
-                    phone: phone.trim(),
+                    phone: phone ? phone.trim() : null,
                     role: 'TRAINER',
                     icon: icon,
-                    socialLinks: socialLinks.trim()
+                    socialLinks: socialLinks ? socialLinks.trim() : null
                 },
                 () => navigate('/users/clients'),
                 errors => setError(errors),
@@ -252,7 +252,7 @@ const SignUp = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-3 required">
-                            <Form.Label data-testid="requiredFields" htmlFor="requiredFields" className='required text'>
+                            <Form.Label data-testid="requiredFields" className='required text'>
                                 <FormattedMessage id="project.common.requiredFields" />
                                 <span className='required'>*</span>
                             </Form.Label>

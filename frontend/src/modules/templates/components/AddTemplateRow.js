@@ -25,9 +25,9 @@ const AddTemplateRow = () => {
 
     const [selectedExercise, setSelectedExercise] = useState(null);
     const [inputValue, setInputValue] = useState('');
-    const [series, setSeries] = useState(null);
-    const [reps, setReps] = useState(null);
-    const [weight, setWeight] = useState(null);
+    const [series, setSeries] = useState('');
+    const [reps, setReps] = useState('');
+    const [weight, setWeight] = useState('');
     const [error, setError] = useState(null);
     const [showAddInput, setShowAddInput] = useState(true);
     const [suggestions, setSuggestions] = useState([{}]);
@@ -61,9 +61,9 @@ const AddTemplateRow = () => {
             dispatch(actions.addTemplateRow(
                 {
                     exerciseName: selectedExercise.name,
-                    series: series,
-                    repetitions: reps,
-                    weight: weight,
+                    series: series || null,
+                    repetitions: reps || null,
+                    weight: weight || null,
                     exerciseId: selectedExercise.id,
                     templateId: templateId
                 },
@@ -86,9 +86,9 @@ const AddTemplateRow = () => {
         setShowAddInput(false);
         setSelectedExercise(null);
         setInputValue('');
-        setSeries(null);
-        setReps(null);
-        setWeight(null);
+        setSeries('');
+        setReps('');
+        setWeight('');
         setSuggestions([{}]);
         setIsSuggestionSelected(false);
     }
@@ -136,7 +136,7 @@ const AddTemplateRow = () => {
                             getSuggestionValue={suggestion => suggestion ? suggestion.name : ''}
                             renderSuggestion={suggestion => suggestion ? <div className="suggestion">{suggestion.name}</div> : ''}
                             inputProps={{
-                                className: `form-control ${!isValid ? 'is-invalid' : ''}`,
+                                className: `form-control ${isValid ? '' : 'is-invalid'}`,
                                 id: "exercise",
                                 name: "exercise",
                                 placeholder: "Ejercicio",

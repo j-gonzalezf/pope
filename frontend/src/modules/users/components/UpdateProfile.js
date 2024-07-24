@@ -74,10 +74,10 @@ const UpdateProfile = () => {
                     id: user.id,
                     email: email.trim(),
                     fullName: fullName.trim(),
-                    phone: phone,
+                    phone: phone ? phone.trim() : null,
                     role: 'TRAINER',
                     icon: icon,
-                    socialLinks: socialLinks
+                    socialLinks: socialLinks ? socialLinks.trim() : null
                 },
                 () => navigate('/users/clients'),
                 errors => setError(errors)
@@ -212,7 +212,7 @@ const UpdateProfile = () => {
                                 id="phone"
                                 name="phone"
                                 placeholder={activeTab === 'profile' ? '' : "Introduzca un teléfono"}
-                                value={phone}
+                                value={phone || ''}
                                 onChange={e => setPhone(e.target.value)}
                                 pattern='[0-9]*'
                                 disabled={activeTab === 'profile'}
@@ -252,7 +252,7 @@ const UpdateProfile = () => {
                                 id="socialLinks"
                                 name="socialLinks"
                                 placeholder={activeTab === 'profile' ? '' : "Introduzca una URL (p.e. https://linktr.ee/usuario)"}
-                                value={socialLinks}
+                                value={socialLinks || ''}
                                 onChange={e => setSocialLinks(e.target.value)}
                                 disabled={activeTab === 'profile'}
                             />

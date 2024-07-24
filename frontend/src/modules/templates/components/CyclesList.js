@@ -26,9 +26,9 @@ const CyclesList = () => {
 
     const [id, setId] = useState(null);
     const [name, setName] = useState('');
-    const [description, setDescription] = useState(null);
-    const [fromDate, setFromDate] = useState(null);
-    const [toDate, setToDate] = useState(null);
+    const [description, setDescription] = useState('');
+    const [fromDate, setFromDate] = useState('');
+    const [toDate, setToDate] = useState('');
     const [error, setError] = useState(null);
     const [showAddCycleModal, setShowAddCycleModal] = useState(false);
     const [showUpdateCycleModal, setShowUpdateCycleModal] = useState(false);
@@ -56,9 +56,9 @@ const CyclesList = () => {
             dispatch(actions.createCycle(
                 {
                     name: name.trim(),
-                    description: description,
-                    fromDate: fromDate,
-                    toDate: toDate,
+                    description: description ? description.trim() : null,
+                    fromDate: fromDate || null,
+                    toDate: toDate || null,
                     trainerId: user.id,
                     clientId: clientId
                 },
@@ -88,9 +88,9 @@ const CyclesList = () => {
                 {
                     id: id,
                     name: name.trim(),
-                    description: description,
-                    fromDate: fromDate,
-                    toDate: toDate,
+                    description: description ? description.trim() : null,
+                    fromDate: fromDate || null,
+                    toDate: toDate || null,
                     trainerId: user.id,
                     clientId: clientId
                 },
@@ -136,9 +136,9 @@ const CyclesList = () => {
         setShowUpdateCycleModal(false);
         setId(null);
         setName('');
-        setDescription(null);
-        setFromDate(null);
-        setToDate(null)
+        setDescription('');
+        setFromDate('');
+        setToDate('');
     }
 
     const redirectToCycleDetails = cycle => {
@@ -241,7 +241,7 @@ const CyclesList = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-3 required">
-                            <Form.Label data-testid="requiredFields" htmlFor="requiredFields" className='required text'>
+                            <Form.Label data-testid="requiredFields" className='required text'>
                                 <FormattedMessage id="project.common.requiredFields" />
                                 <span className='required'>*</span>
                             </Form.Label>
@@ -304,7 +304,7 @@ const CyclesList = () => {
                                 as="textarea"
                                 rows={3}
                                 placeholder="Introduzca una descripción para el ciclo de entrenamiento"
-                                value={description}
+                                value={description || ''}
                                 onChange={e => setDescription(e.target.value)}
                             />
                         </Form.Group>

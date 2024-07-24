@@ -74,13 +74,13 @@ const AddClient = () => {
                     email: email.trim(),
                     password: password,
                     fullName: fullName.trim(),
-                    phone: phone,
+                    phone: phone ? phone.trim() : null,
                     role: 'CLIENT',
                     icon: icon,
-                    birthdate: birthdate ? birthdate : null,
-                    injuries: injuries,
-                    goals: goals,
-                    height: height ? height : null,
+                    birthdate: birthdate || null,
+                    injuries: injuries ? injuries.trim() : null,
+                    goals: goals ? goals.trim() : null,
+                    height: height || null,
                     trainerId: user.id
                 },
                 () => navigate('/users/clients'),
@@ -270,7 +270,7 @@ const AddClient = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-3 required">
-                            <Form.Label data-testid="requiredFields" htmlFor="requiredFields" className='required text'>
+                            <Form.Label data-testid="requiredFields" className='required text'>
                                 <FormattedMessage id="project.common.requiredFields" />
                                 <span className='required'>*</span>
                             </Form.Label>

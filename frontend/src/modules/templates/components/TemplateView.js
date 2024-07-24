@@ -45,7 +45,7 @@ const TemplateView = () => {
             dispatch(actions.updateTemplate(
                 {
                     id: templateId,
-                    name: name,
+                    name: name.trim(),
                     creationDate: getTemplate.creationDate,
                     cycleId: cycleId
                 },
