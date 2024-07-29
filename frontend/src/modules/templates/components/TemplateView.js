@@ -161,8 +161,8 @@ const TemplateView = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {getTemplateRows.map((row, index) => (
-                                    <tr key={index}>
+                                {getTemplateRows.map((row) => (
+                                    <tr key={row.id}>
                                         {editingRowId === row.id ? (
                                             <td colSpan={5} className="customTable">
                                                 <EditTemplateRow row={row} onClose={() => setEditingRowId(null)} />

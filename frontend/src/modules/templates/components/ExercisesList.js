@@ -425,8 +425,8 @@ const ExercisesList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {getExercises.map((exercise, index) => (
-                            <tr key={index} >
+                        {getExercises.map((exercise) => (
+                            <tr key={exercise.id} >
                                 <td className="customTable"></td>
                                 <td className="customTable">
                                     {exercise.link ? (

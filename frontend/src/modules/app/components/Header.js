@@ -71,13 +71,7 @@ const Header = () => {
             '/templates/exercises',
         ];
         if (!urlsToHide.includes(location.pathname)) {
-            // Establece un breve retraso antes de mostrar displayReference para evitar parpadeo con el anterior
-            const timer = setTimeout(() => {
-                setShowReference(true);
-            }, 500); // Retraso de 500 milisegundos
-
-            // Limpia el temporizador si el componente se desmonta o si la ruta cambia
-            return () => clearTimeout(timer);
+            setShowReference(true);
         } else {
             setShowReference(false);
         }

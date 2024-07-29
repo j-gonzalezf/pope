@@ -61,9 +61,9 @@ const ClientsList = () => {
 
             <Row className="listStyle">
 
-                {getClients && (getClients.map((client, index) => (
+                {getClients && (getClients.map((client) => (
 
-                    <Col xs={12} sm={6} md={4} lg={3} key={index} className="listColStyle" >
+                    <Col xs={12} sm={6} md={4} lg={3} key={client.id} className="listColStyle" >
 
                         <button className="listItemStyle" onClick={() => redirectToClientDetails(client.id)}>
                             <div className="image-container">

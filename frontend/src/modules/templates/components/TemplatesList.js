@@ -48,8 +48,8 @@ const TemplatesList = () => {
 
             {getTemplates && getTemplates.length > 0 ? (
                 <Row className="listStyle">
-                    {getTemplates.map((template, index) => (
-                        <Col xs={12} sm={6} md={4} lg={3} className="listColStyle template" key={index} >
+                    {getTemplates.map((template) => (
+                        <Col xs={12} sm={6} md={4} lg={3} className="listColStyle template" key={template.id} >
                             <button className="listItemStyle button" onClick={() => redirectToTemplateView(template.id)}>
                                 <div className="template-item">
                                     <p className='text-item'>{template.name}</p>

@@ -30,21 +30,59 @@ const EditTemplateRow = ({ row, onClose }) => {
     const [reps, setReps] = useState(row.repetitions);
     const [weight, setWeight] = useState(row.weight);
     const [error, setError] = useState(null);
-    const [suggestions, setSuggestions] = useState([{}]);
+    const [suggestions, setSuggestions] = useState([]);
     const [isSuggestionSelected, setIsSuggestionSelected] = useState(false);
     const [isValid, setIsValid] = useState(true);
 
     let form2;
 
-    const onExerciseChange = (event, { newValue }) => {
-        if (newValue !== null && newValue !== undefined) {
-            setInputValue(newValue);
-            setIsSuggestionSelected(false);
-            const filteredExercises = getExercises.filter(exercise =>
-                exercise.name.toLowerCase().startsWith(newValue.toLowerCase())
-            );
-            setSuggestions(filteredExercises);
+    // Para escapar caracteres especiales y poder usar texto literal
+    function escapeRegexCharacters(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function getSuggestions(value) {
+
+        const escapedValue = escapeRegexCharacters(value.trim());
+
+        if (escapedValue === '') {
+            return [];
         }
+
+        const regex = new RegExp('^' + escapedValue, 'i');
+
+        return getExercises.filter(exercise => regex.test(exercise.name));
+
+    }
+
+    // Función para retornar el nombre de la sugerencia
+    function getSuggestionValue(suggestion) {
+        return suggestion.name;
+    }
+
+    // Función para renderizar la lista de sugerencias
+    function renderSuggestion(suggestion) {
+        return (
+            <div key={suggestion.id} className="suggestion">
+                {suggestion.name}
+            </div>
+        );
+    }
+
+    // Actualiza el estado value cuando el valor del input cambia
+    const onExerciseChange = (event, { newValue }) => {
+        setInputValue(newValue);
+        setIsSuggestionSelected(false);
+    };
+
+    // Actualiza el estado suggestions con las sugerencias obtenidas
+    const onSuggestionsFetchRequested = ({ value }) => {
+        const filteredExercises = getSuggestions(value);
+        setSuggestions(filteredExercises);
+    };
+
+    const onSuggestionsClearRequested = () => {
+        setSuggestions([]);
     };
 
     const onSuggestionSelected = (event, { suggestion }) => {
@@ -58,13 +96,18 @@ const EditTemplateRow = ({ row, onClose }) => {
 
         if (selectedExercise !== null) {
             setIsValid(true);
+
+            const seriesValue = series === '0' ? null : series;
+            const repsValue = reps === '0' ? null : reps;
+            const weightValue = weight === '0' ? null : weight;
+
             dispatch(actions.updateTemplateRow(
                 {
                     id: row.id,
                     exerciseName: selectedExercise.name,
-                    series: series,
-                    repetitions: reps,
-                    weight: weight,
+                    series: seriesValue || null,
+                    repetitions: repsValue || null,
+                    weight: weightValue || null,
                     exerciseId: selectedExercise.id,
                     templateId: templateId
                 },
@@ -89,7 +132,7 @@ const EditTemplateRow = ({ row, onClose }) => {
         setSeries('');
         setReps('');
         setWeight('');
-        setSuggestions([{}]);
+        setSuggestions([]);
         setIsSuggestionSelected(false);
         onClose();
     }
@@ -139,10 +182,10 @@ const EditTemplateRow = ({ row, onClose }) => {
 
                     <Autosuggest
                         suggestions={suggestions}
-                        onSuggestionsFetchRequested={() => { }}
-                        onSuggestionsClearRequested={() => setSuggestions([])}
-                        getSuggestionValue={suggestion => suggestion ? suggestion.name : ''}
-                        renderSuggestion={suggestion => suggestion ? <div className="suggestion">{suggestion.name}</div> : ''}
+                        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                        onSuggestionsClearRequested={onSuggestionsClearRequested}
+                        getSuggestionValue={getSuggestionValue}
+                        renderSuggestion={renderSuggestion}
                         inputProps={{
                             className: `form-control ${isValid ? '' : 'is-invalid'}`,
                             id: "exercise",
@@ -185,6 +228,7 @@ const EditTemplateRow = ({ row, onClose }) => {
                         placeholder="Series"
                         value={series || ''}
                         onChange={event => setSeries(event.target.value)}
+                        min="0"
                     />
 
                     <Form.Control
@@ -195,6 +239,7 @@ const EditTemplateRow = ({ row, onClose }) => {
                         placeholder="Reps"
                         value={reps || ''}
                         onChange={event => setReps(event.target.value)}
+                        min="0"
                     />
 
                     <Form.Control
@@ -206,6 +251,7 @@ const EditTemplateRow = ({ row, onClose }) => {
                         placeholder="Peso"
                         value={weight || ''}
                         onChange={event => setWeight(event.target.value)}
+                        min="0"
                     />
 
                     <div className="form-buttons">

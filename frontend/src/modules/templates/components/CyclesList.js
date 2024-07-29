@@ -369,8 +369,8 @@ const CyclesList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {getCycles.map((cycle, index) => (
-                            <tr key={index} className="cycleSelect" tabIndex="0"
+                        {getCycles.map((cycle) => (
+                            <tr key={cycle.id} className="cycleSelect" tabIndex="0"
                                 onClick={() => redirectToCycleDetails(cycle)}
                                 onKeyDown={(event) => {
                                     if (event.key === 'Enter') {
