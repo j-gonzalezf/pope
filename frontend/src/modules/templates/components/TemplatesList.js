@@ -10,6 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Errors } from '../../common';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
+import * as userSelectors from '../../users/selectors';
 import AddTemplate from './AddTemplate';
 
 const TemplatesList = () => {
@@ -20,6 +21,7 @@ const TemplatesList = () => {
     const { clientId } = useParams();
     const { cycleId } = useParams();
 
+    const role = useSelector(userSelectors.getUserRole);
     const getTemplates = useSelector(selectors.getTemplates);
     const [error, setError] = useState(null);
 
@@ -57,12 +59,14 @@ const TemplatesList = () => {
                             </button>
                         </Col>
                     ))}
-                    <Col xs={12} sm={12} md={12} lg={12} className="listItemStyle template add">
-                        <AddTemplate
-                            error={error}
-                            setError={setError}
-                        />
-                    </Col>
+                    {role === 'TRAINER' && (
+                        <Col xs={12} sm={12} md={12} lg={12} className="listItemStyle template add">
+                            <AddTemplate
+                                error={error}
+                                setError={setError}
+                            />
+                        </Col>
+                    )}
                 </Row>
             ) : (
                 <div className="empty-template">
@@ -70,10 +74,12 @@ const TemplatesList = () => {
                         <FormattedMessage id="project.templates.templatesList.empty" />
                     </p>
 
-                    <AddTemplate
-                        error={error}
-                        setError={setError}
-                    />
+                    {role === 'TRAINER' && (
+                        <AddTemplate
+                            error={error}
+                            setError={setError}
+                        />
+                    )}
                 </div>
             )}
 

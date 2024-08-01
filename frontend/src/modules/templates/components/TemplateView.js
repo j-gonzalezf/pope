@@ -14,6 +14,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Errors } from '../../common';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
+import * as userSelectors from '../../users/selectors';
 import AddTemplateRow from './AddTemplateRow';
 import EditTemplateRow from './EditTemplateRow';
 
@@ -26,6 +27,7 @@ const TemplateView = () => {
     const { cycleId } = useParams();
     const { templateId } = useParams();
 
+    const role = useSelector(userSelectors.getUserRole);
     const getTemplate = useSelector(selectors.getTemplate);
     const getTemplateRows = useSelector(selectors.getTemplateRows);
 
@@ -143,12 +145,16 @@ const TemplateView = () => {
                                                 <h4 className="d-flex align-items-center m-0">
                                                     <Link to={`/templates/${clientId}/trainingCycle/${cycleId}`} className='link h'>{getTemplate.name}</Link>
                                                 </h4>
-                                                <Button className="primary template name" title='Editar nombre de plantilla' onClick={() => { setShowUpdateInput(true); setName(getTemplate.name) }}>
-                                                    <BsPencilSquare className="checkIconStyle" color='#e6af2e' size={20} />
-                                                </Button>
-                                                <Button className="primary template delete name" title='Eliminar plantilla' onClick={handleDeleteTemplate} >
-                                                    <BsTrash className="crossIconStyle" color='red' size={20} />
-                                                </Button>
+                                                {role === 'TRAINER' && (
+                                                    <>
+                                                        <Button className="primary template name" title='Editar nombre de plantilla' onClick={() => { setShowUpdateInput(true); setName(getTemplate.name) }}>
+                                                            <BsPencilSquare className="checkIconStyle" color='#e6af2e' size={20} />
+                                                        </Button>
+                                                        <Button className="primary template delete name" title='Eliminar plantilla' onClick={handleDeleteTemplate} >
+                                                            <BsTrash className="crossIconStyle" color='red' size={20} />
+                                                        </Button>
+                                                    </>
+                                                )}
                                             </div>
                                         )}
                                     </th>
@@ -178,35 +184,47 @@ const TemplateView = () => {
                                                 <td className="customTable">{row.repetitions}</td>
                                                 <td className="customTable">{row.weight}</td>
                                                 <td className="customTable edit">
-                                                    <div className="form-buttons">
-                                                        <Button className="primary template" title='Pulsa para editar fila' onClick={() => setEditingRowId(row.id)}>
-                                                            <BsPencilSquare className="checkIconStyle" color='#e6af2e' size={20} />
-                                                        </Button>
-                                                        <Button className="primary template delete"
-                                                            title='Pulsa para eliminar fila' onClick={() => handleDeleteRow(row)} >
-                                                            <BsTrash className="crossIconStyle" color='red' size={20} />
-                                                        </Button>
-                                                    </div>
+                                                    {role === 'TRAINER' && (
+                                                        <div className="form-buttons">
+                                                            <Button className="primary template" title='Pulsa para editar fila' onClick={() => setEditingRowId(row.id)}>
+                                                                <BsPencilSquare className="checkIconStyle" color='#e6af2e' size={20} />
+                                                            </Button>
+                                                            <Button className="primary template delete"
+                                                                title='Pulsa para eliminar fila' onClick={() => handleDeleteRow(row)} >
+                                                                <BsTrash className="crossIconStyle" color='red' size={20} />
+                                                            </Button>
+                                                        </div>
+                                                    )}
                                                 </td>
                                             </>
                                         )}
                                     </tr>
                                 ))}
                                 <tr>
-                                    {showAddInput ? (
-                                        <td colSpan={5} className="customTable">
-                                            <AddTemplateRow />
-                                        </td>
-                                    ) : (
-                                        <td colSpan={5} className="customTable">
-                                            <Button className="primary cycle" onClick={() => setShowAddInput(true)}>
-                                                <BsFillPlusCircleFill className="plusIconStyle cycle" />
-                                                <span>
-                                                    <b><FormattedMessage id="project.templates.addTemplateRow" /></b>
-                                                </span>
-                                            </Button>
-                                        </td>
-                                    )}
+                                    <td colSpan={5} className="customTable">
+                                        {showAddInput ? (
+                                            role === 'TRAINER' ? (
+                                                <AddTemplateRow />
+                                            ) : (
+                                                <Button className="primary cycle" onClick={() => setShowAddInput(false)}>
+                                                    Terminada
+                                                </Button>
+                                            )
+                                        ) : (
+                                            role === 'TRAINER' ? (
+                                                <Button className="primary cycle" onClick={() => setShowAddInput(true)}>
+                                                    <BsFillPlusCircleFill className="plusIconStyle cycle" />
+                                                    <span>
+                                                        <b><FormattedMessage id="project.templates.addTemplateRow" /></b>
+                                                    </span>
+                                                </Button>
+                                            ) : (
+                                                <Button className="primary cycle" onClick={() => setShowAddInput(true)}>
+                                                    Terminar
+                                                </Button>
+                                            )
+                                        )}
+                                    </td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -215,6 +233,7 @@ const TemplateView = () => {
                     <Errors errors={error} onClose={() => setError(null)} />
 
                 </Col>
+
                 <Col xs={12} sm={12} md={3} className='comment'>
                     <h3 className="title comments">
                         Comentarios

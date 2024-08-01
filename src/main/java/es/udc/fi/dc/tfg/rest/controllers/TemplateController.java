@@ -28,6 +28,7 @@ import es.udc.fi.dc.tfg.model.entities.Exercises;
 import es.udc.fi.dc.tfg.model.entities.TemplateRows;
 import es.udc.fi.dc.tfg.model.entities.Templates;
 import es.udc.fi.dc.tfg.model.entities.TrainingCycles;
+import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.services.ExerciseService;
 import es.udc.fi.dc.tfg.model.services.TemplateService;
 import es.udc.fi.dc.tfg.model.services.TrainingCycleService;
@@ -155,9 +156,14 @@ public class TemplateController {
             @PathVariable("cycleId") Long cycleId) throws InstanceNotFoundException,
             PermissionException, InvalidRoleException {
 
+        Users user = userService.loginFromId(userId);
         TrainingCycles cycle = cycleService.getCycleInfo(cycleId);
 
-        validateTemplateUser(userId, cycle);
+        if (user.getUserRole().toString().equals("CLIENT")) {
+            validateTemplateUser(user.getTrainer().getId(), cycle);
+        } else {
+            validateTemplateUser(userId, cycle);
+        }
 
         List<Templates> templates = templateService.getTemplates(cycleId);
 
@@ -173,12 +179,23 @@ public class TemplateController {
      * @return una plantilla
      * @throws InstanceNotFoundException si no se encuentra una plantilla con el
      * ID proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador de los ciclos a obtener
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
      */
     @GetMapping("/template/{id}")
     public TemplateDto getTemplateInfo(@RequestAttribute Long userId,
-            @PathVariable("id") Long templateId) throws InstanceNotFoundException {
+            @PathVariable("id") Long templateId) throws InstanceNotFoundException,
+            PermissionException, InvalidRoleException {
 
+        Users user = userService.loginFromId(userId);
         Templates template = templateService.getTemplateInfo(templateId);
+
+        if (user.getUserRole().toString().equals("CLIENT")) {
+            validateTemplateUser(user.getTrainer().getId(), template.getCycle());
+        } else {
+            validateTemplateUser(userId, template.getCycle());
+        }
 
         return toTemplateDto(template);
 
@@ -190,12 +207,26 @@ public class TemplateController {
      * @param userId el ID del usuario que realiza la petición
      * @param templateId el ID de la plantilla
      * @return una lista de filas
+     * @throws InstanceNotFoundException si no se encuentra una plantilla con el
+     * ID proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador de los ciclos a obtener
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
      */
     @GetMapping("/{templateId}/rows")
     public List<TemplateRowDto> getTemplateRows(@RequestAttribute Long userId,
-            @PathVariable("templateId") Long templateId) {
+            @PathVariable("templateId") Long templateId) throws InstanceNotFoundException,
+            PermissionException, InvalidRoleException {
 
-        //Templates cycle = templateService.getTemplateInfo(templateId);
+        Users user = userService.loginFromId(userId);
+        Templates template = templateService.getTemplateInfo(templateId);
+
+        if (user.getUserRole().toString().equals("CLIENT")) {
+            validateTemplateUser(user.getTrainer().getId(), template.getCycle());
+        } else {
+            validateTemplateUser(userId, template.getCycle());
+        }
+
         List<TemplateRows> templateRows = templateService.getTemplateRows(templateId);
 
         return toTemplateRowsDto(templateRows);
@@ -215,7 +246,7 @@ public class TemplateController {
      * no coincide con el ID del usuario al que se le va a actualizar el perfil
      * @throws InvalidRoleException si el usuario que se va validar no tiene rol
      */
-    @PutMapping("/template/{id}")
+    @PutMapping("/template/{id}/update")
     public TemplateDto updateTemplate(@RequestAttribute Long userId, @PathVariable("id") Long id,
             @Validated({TemplateDto.UpdateValidations.class}) @RequestBody TemplateDto templateDto)
             throws InstanceNotFoundException, PermissionException, InvalidRoleException {

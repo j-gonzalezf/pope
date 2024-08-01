@@ -22,10 +22,12 @@ const Header = () => {
     const dispatch = useDispatch();
 
     const isLoggedIn = useSelector(users.selectors.isLoggedIn);
+    const user = useSelector(users.selectors.getUser);
     const clientId = useSelector(users.selectors.getClientInfo)?.id;
     const clientName = useSelector(users.selectors.getClientInfo)?.fullName;
     const cycleName = useSelector(templates.selectors.getCycle)?.name;
     const icon = useSelector(users.selectors.getIcon);
+    const role = useSelector(users.selectors.getUserRole);
 
     const [showHeader, setShowHeader] = useState(false);
     const [showReference, setShowReference] = useState(false)
@@ -84,13 +86,21 @@ const Header = () => {
             <Navbar data-testid="header" className="Header">
 
                 <div className="header-left">
-                    <Navbar.Brand as={Link} to="/users/clients" title="Clientes" onClick={clearCycle}>
-                        <Image className="anchor-icon" src={AnchorIcon} alt="Logo" />
-                    </Navbar.Brand>
+                    {role === 'TRAINER' ? (
+                        <>
+                            <Navbar.Brand as={Link} to="/users/clients" title="Clientes" onClick={clearCycle}>
+                                <Image className="anchor-icon" src={AnchorIcon} alt="Logo" />
+                            </Navbar.Brand>
 
-                    {showReference &&
-                        <span>{displayReference()}</span>
-                    }
+                            {showReference &&
+                                <span>{displayReference()}</span>
+                            }
+                        </>
+                    ) : (
+                        <Navbar.Brand as={Link} to={`/templates/trainingCycles/${user.id}`} title="Clientes" onClick={clearCycle}>
+                            <Image className="anchor-icon" src={AnchorIcon} alt="Logo" />
+                        </Navbar.Brand>
+                    )}
 
                 </div>
 
@@ -110,13 +120,17 @@ const Header = () => {
                                 <Image className="icon-image-large" src={TrainerIcon} alt="Trainer icon" />
                             </div>
                         }>
-                            <NavDropdown.Item as={Link} to="/users/updateProfile">
-                                <FormattedMessage id="project.users.viewProfile" />
-                            </NavDropdown.Item>
-                            <NavDropdown.Item as={Link} to="/users/changePassword">
-                                <FormattedMessage id="project.users.changePassword" />
-                            </NavDropdown.Item>
-                            <NavDropdown.Divider style={{ backgroundColor: '#191716' }} />
+                            {role === 'TRAINER' && (
+                                <>
+                                    <NavDropdown.Item as={Link} to="/users/updateProfile">
+                                        <FormattedMessage id="project.users.viewProfile" />
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item as={Link} to="/users/changePassword">
+                                        <FormattedMessage id="project.users.changePassword" />
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Divider style={{ backgroundColor: '#191716' }} />
+                                </>
+                            )}
                             <NavDropdown.Item as={Link} to="/users/logout">
                                 <FormattedMessage id="project.users.logout" />
                             </NavDropdown.Item>
