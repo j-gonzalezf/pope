@@ -1,6 +1,8 @@
 package es.udc.fi.dc.tfg.rest.dtos;
 
 import es.udc.fi.dc.tfg.model.entities.Users;
+import es.udc.fi.dc.tfg.model.entities.Weights;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,13 +22,15 @@ public class UserConversor {
      * Convierte un objeto Users a un objeto UserDto.
      *
      * @param user el objeto Users a convertir
+     * @param latestWeight el peso del usuario
      * @return un nuevo objeto UserDto que contiene los mismos datos que el
      * objeto Users proporcionado
      */
-    public static final UserDto toUserDto(Users user) {
+    public static final UserDto toUserDto(Users user, Weights latestWeight) {
 
         Long trainerId = null;
         String birthdate = null;
+        BigDecimal weight = null;
 
         if (user.getTrainer() != null) {
             trainerId = user.getTrainer().getId();
@@ -36,10 +40,19 @@ public class UserConversor {
             birthdate = user.getBirthdate().toString();
         }
 
-        return new UserDto(user.getId(), user.getEmail(), user.getFullName(),
-                user.getPhone(), user.getIcon(), user.getUserRole().toString(),
-                user.getSocialLinks(), birthdate, user.getInjuries(),
-                user.getGoals(), user.getHeight(), trainerId);
+        if (latestWeight != null) {
+            weight = latestWeight.getWeight();
+
+            return new UserDto(user.getId(), user.getEmail(), user.getFullName(),
+                    user.getPhone(), user.getIcon(), user.getUserRole().toString(),
+                    user.getSocialLinks(), birthdate, user.getInjuries(),
+                    user.getGoals(), user.getHeight(), weight, trainerId);
+        } else {
+            return new UserDto(user.getId(), user.getEmail(), user.getFullName(),
+                    user.getPhone(), user.getIcon(), user.getUserRole().toString(),
+                    user.getSocialLinks(), birthdate, user.getInjuries(),
+                    user.getGoals(), user.getHeight(), trainerId);
+        }
 
     }
 
@@ -52,7 +65,7 @@ public class UserConversor {
      */
     public static final List<UserDto> toUsersDto(List<Users> clients) {
         return clients.stream().map(client -> {
-            return toUserDto(client);
+            return toUserDto(client, null);
         }).collect(Collectors.toList());
     }
 
@@ -100,7 +113,7 @@ public class UserConversor {
      */
     public static final AuthenticatedUserDto toAuthenticatedUserDto(String serviceToken, Users user) {
 
-        return new AuthenticatedUserDto(serviceToken, toUserDto(user));
+        return new AuthenticatedUserDto(serviceToken, toUserDto(user, null));
 
     }
 

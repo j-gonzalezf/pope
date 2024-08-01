@@ -34,6 +34,8 @@ export default {
     'project.users.goals': 'Goals',
     'project.users.height': 'Height',
     'project.users.heightPattern': 'Invalid height',
+    'project.users.weight': 'Weight',
+    'project.users.weightPattern': 'Invalid weight',
 
     // Actions
     'project.users.clients.title': 'Clients',

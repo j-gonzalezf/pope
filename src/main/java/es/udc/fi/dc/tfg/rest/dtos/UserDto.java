@@ -88,6 +88,11 @@ public class UserDto {
     private BigDecimal height;
 
     /**
+     * Peso del cliente en kg, puede ser nulo.
+     */
+    private BigDecimal weight;
+
+    /**
      * Identificador del entrenador que creó al cliente.
      */
     private Long trainerId;
@@ -129,6 +134,44 @@ public class UserDto {
         this.injuries = injuries != null ? injuries.trim() : null;
         this.goals = goals != null ? goals.trim() : null;
         this.height = height;
+        this.trainerId = trainerId;
+
+    }
+    
+    /**
+     * Constructor para usuarios de la clase UserDto con weight.
+     *
+     * @param id El identificador del usuario.
+     * @param email El email del usuario.
+     * @param fullName El nombre completo del usuario.
+     * @param phone El teléfono del usuario.
+     * @param icon La foto de perfil del usuario.
+     * @param role El rol del usuario.
+     * @param socialLinks El enlace a las redes sociales del usuario.
+     * @param birthdate La fecha de nacimiento del usuario.
+     * @param injuries Las lesiones del usuario.
+     * @param goals Los objetivos del usuario.
+     * @param height La altura del usuario en cm.
+     * @param weight El peso del usuario en kg.
+     * @param trainerId El ID del entrenador del usuario.
+     */
+    public UserDto(Long id, String email, String fullName, String phone,
+            String icon, String role, String socialLinks, String birthdate,
+            String injuries, String goals, BigDecimal height,
+            BigDecimal weight, Long trainerId) {
+
+        this.id = id;
+        this.email = email != null ? email.trim() : null;
+        this.fullName = fullName != null ? fullName.trim() : null;
+        this.phone = phone != null ? phone.trim() : null;
+        this.icon = icon;
+        this.role = role;
+        this.socialLinks = socialLinks != null ? socialLinks.trim() : null;
+        this.birthdate = birthdate;
+        this.injuries = injuries != null ? injuries.trim() : null;
+        this.goals = goals != null ? goals.trim() : null;
+        this.height = height;
+        this.weight = weight;
         this.trainerId = trainerId;
 
     }
@@ -396,6 +439,26 @@ public class UserDto {
      */
     public void setHeight(BigDecimal height) {
         this.height = height;
+    }
+
+    /**
+     * Gets the weight.
+     *
+     * @return the weight
+     */
+    @DecimalMin(value = "0.00", groups = {AllValidations.class, UpdateValidations.class})
+    @DecimalMax(value = "999.99", groups = {AllValidations.class, UpdateValidations.class})
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    /**
+     * Sets the weight.
+     *
+     * @param weight the new weight
+     */
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
     }
 
     /**
