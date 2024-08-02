@@ -27,7 +27,6 @@ const UpdateClient = () => {
 
     const [fullName, setFullName] = useState(client.fullName);
     const [email, setEmail] = useState(client.email);
-    //const [password, setPassword] = useState(client.password);
     const [phone, setPhone] = useState(client.phone);
     const [icon, setIcon] = useState(client.icon);
     const [birthdate, setBirthdate] = useState(client.birthdate);
@@ -35,8 +34,10 @@ const UpdateClient = () => {
     const [goals, setGoals] = useState(client.goals);
     const [height, setHeight] = useState(client.height);
     const [weight, setWeight] = useState(client.weight);
+    const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('profile');
+    const [showPassword, setShowPassword] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     let form;
@@ -78,6 +79,12 @@ const UpdateClient = () => {
 
         if (form.checkValidity()) {
 
+            if (password) {
+                dispatch(actions.changePassword(client.id, password, password,
+                    () => setShowPassword(false),
+                    errors => setError(errors)));
+            }
+
             const heightValue = height === '0' ? null : height;
             const weightValue = weight === '0' ? null : weight;
 
@@ -86,12 +93,12 @@ const UpdateClient = () => {
                     id: client.id,
                     email: email.trim(),
                     fullName: fullName.trim(),
-                    phone: phone ? phone.trim() : null,
+                    phone: phone?.trim() || null,
                     role: 'CLIENT',
                     icon: icon,
                     birthdate: birthdate || null,
-                    injuries: injuries ? injuries.trim() : null,
-                    goals: goals ? goals.trim() : null,
+                    injuries: injuries?.trim() || null,
+                    goals: goals?.trim() || null,
                     height: heightValue || null,
                     weight: weightValue || null,
                     trainerId: user.id
@@ -110,6 +117,8 @@ const UpdateClient = () => {
     const handleSelectTab = (selectedTab) => {
 
         setActiveTab(selectedTab);
+
+        setShowPassword(false);
 
         // Si se selecciona el tab 'update' o 'profile', 
         // se mueve el scroll al principio de la página
@@ -224,27 +233,6 @@ const UpdateClient = () => {
                                 <FormattedMessage id="project.users.emailRequired" />
                             </Form.Control.Feedback>
                         </Form.Group>
-                        {/*
-                        <Form.Group className="mb-3">
-                            <Form.Label data-testid="password" htmlFor="password" className="mb-3">
-                                <FormattedMessage id="project.users.password" />
-                            </Form.Label>
-                            <Form.Control
-                                type="password"
-                                className="form-control"
-                                id="password"
-                                name="password"
-                                placeholder="Introduzca una clave de acceso para el cliente"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                required
-                                disabled={activeTab === 'profile'}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                <FormattedMessage id="project.users.passwordRequired" />
-                            </Form.Control.Feedback>
-                        </Form.Group>
-                        */}
                         <Form.Group className="mb-3">
                             <Form.Label data-testid="phone" htmlFor="phone" className="mb-3">
                                 <FormattedMessage id="project.users.phone" />
@@ -371,6 +359,34 @@ const UpdateClient = () => {
                                 <FormattedMessage id="project.users.weightPattern" />
                             </Form.Control.Feedback>
                         </Form.Group>
+
+                        {activeTab !== 'profile' && (
+                            <Form.Group className="mb-3">
+                                <Form.Label data-testid="password" htmlFor="password" className="mb-3">
+                                    <FormattedMessage id="project.users.passwordClient" />
+                                </Form.Label>
+                                {!showPassword ? (
+                                    <>
+                                        <br />
+                                        <Button className="primary" onClick={() => setShowPassword(true)}
+                                            title='Pulsa para cambiar clave de acceso del cliente'>
+                                            <FormattedMessage id="project.users.changePassword.button" />
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <Form.Control
+                                        type="password"
+                                        className="form-control"
+                                        id="password"
+                                        name="password"
+                                        placeholder="Introduzca una nueva clave de acceso para el cliente"
+                                        value={password}
+                                        onChange={e => setPassword(e.target.value)}
+                                        disabled={activeTab === 'profile'}
+                                    />
+                                )}
+                            </Form.Group>
+                        )}
 
                         <Errors errors={error} onClose={() => setError(null)} />
 

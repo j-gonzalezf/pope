@@ -264,10 +264,13 @@ public class UserServiceImpl implements UserService {
 
         Users user = permissionChecker.checkUser(id);
 
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new IncorrectPasswordException();
-        } else {
+        if (user.getUserRole().toString().equals("CLIENT")
+                || passwordEncoder.matches(oldPassword, user.getPassword())) {
+
             user.setPassword(passwordEncoder.encode(newPassword));
+
+        } else {
+            throw new IncorrectPasswordException();
         }
 
     }
