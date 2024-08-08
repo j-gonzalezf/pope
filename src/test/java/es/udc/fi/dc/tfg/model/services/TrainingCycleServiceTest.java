@@ -16,6 +16,7 @@ import es.udc.fi.dc.tfg.model.common.exceptions.DuplicateInstanceException;
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.TrainingCycles;
 import es.udc.fi.dc.tfg.model.entities.Users;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -59,18 +60,19 @@ public class TrainingCycleServiceTest {
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
      * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testCreateCycleAndGetCycleInfo()
-            throws DuplicateInstanceException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         TrainingCycles cycle = createCycle();
         Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
         Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
                 LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         cycle.setTrainer(trainer);
         cycle.setClient(client);
@@ -94,9 +96,10 @@ public class TrainingCycleServiceTest {
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
-    public void testGetCycles() throws DuplicateInstanceException {
+    public void testGetCycles() throws DuplicateInstanceException, IOException {
 
         TrainingCycles cycle1 = createCycle();
         TrainingCycles cycle2 = createCycle();
@@ -104,8 +107,8 @@ public class TrainingCycleServiceTest {
         Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
                 LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         cycle1.setTrainer(trainer);
         cycle1.setClient(client);
@@ -141,18 +144,19 @@ public class TrainingCycleServiceTest {
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
      * @throws InstanceNotFoundException si no se encuentra ningún ciclo.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testUpdateCycle()
-            throws DuplicateInstanceException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         TrainingCycles cycle = createCycle();
         Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
         Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
                 LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         cycle.setTrainer(trainer);
         cycle.setClient(client);
@@ -190,18 +194,19 @@ public class TrainingCycleServiceTest {
      * email.
      * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
      * proporcionado.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testDeleteCycle()
-            throws DuplicateInstanceException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         TrainingCycles cycle = createCycle();
         Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
         Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
                 LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         cycle.setTrainer(trainer);
         cycle.setClient(client);

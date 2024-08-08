@@ -76,12 +76,14 @@ const Header = () => {
             setShowReference(true);
         } else {
             setShowReference(false);
+            dispatch(users.actions.clearClientInfo());
+            dispatch(templates.actions.clearCycle());
         }
-    }, [location.pathname, displayReference]);
+    }, [dispatch, location.pathname, displayReference]);
 
     return (
 
-        showHeader ? (
+        (user && showHeader) ? (
 
             <Navbar data-testid="header" className="Header">
 
@@ -113,11 +115,17 @@ const Header = () => {
                     <Nav className="header-nav">
                         <NavDropdown title={icon !== undefined ?
                             <div className="icon-container">
-                                <Image className="icon-image-large" src={"data:image/png;base64," + icon.base64} alt={icon.name} />
+                                <Image
+                                    className="icon-image-large"
+                                    src={user.iconImagePath}
+                                    alt="User icon" />
                             </div>
                             :
                             <div className="icon-container">
-                                <Image className="icon-image-large" src={TrainerIcon} alt="Trainer icon" />
+                                <Image
+                                    className="icon-image-large"
+                                    src={TrainerIcon}
+                                    alt="Trainer icon" />
                             </div>
                         }>
                             {role === 'TRAINER' && (

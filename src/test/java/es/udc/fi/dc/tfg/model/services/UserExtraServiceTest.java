@@ -4,6 +4,7 @@ import es.udc.fi.dc.tfg.model.common.exceptions.DuplicateInstanceException;
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Users;
 import es.udc.fi.dc.tfg.model.entities.Weights;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -55,10 +56,11 @@ public class UserExtraServiceTest {
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
      * @throws InstanceNotFoundException si no se encuentra ninguna plantilla.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testWeightRegisterAndGetLastWeight()
-            throws DuplicateInstanceException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Weights weight = createWeightRegister();
         Weights weight2 = createWeightRegister();
@@ -66,8 +68,8 @@ public class UserExtraServiceTest {
         Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
                 LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         weight.setClient(client);
         weight2.setClient(client);

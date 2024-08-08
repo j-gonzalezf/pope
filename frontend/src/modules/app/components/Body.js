@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 
@@ -14,6 +14,10 @@ const Body = () => {
 
   const loggedIn = useSelector(users.selectors.isLoggedIn);
   const userRole = useSelector(users.selectors.getUserRole);
+
+  useEffect(() => {
+
+  }, [loggedIn]);
 
   return (
 

@@ -43,20 +43,20 @@ export const tryLoginFromServiceToken = (onSuccess, reauthenticationCallback) =>
   );
 }
 
-export const signUp = (user, onSuccess, onErrors, reauthenticationCallback) =>
+export const signUp = (formData, onSuccess, onErrors, reauthenticationCallback) =>
   appFetch(
     "/users/signUp",
-    fetchConfig("POST", user),
+    fetchConfig("POST", formData),
     (authenticatedUser) => {
       processLoginSignUp(authenticatedUser, reauthenticationCallback, onSuccess);
     },
     onErrors
   );
 
-export const addClient = (user, onSuccess, onErrors) =>
+export const addClient = (formData, onSuccess, onErrors) =>
   appFetch(
     "/users/addClient",
-    fetchConfig("POST", user),
+    fetchConfig("POST", formData),
     onSuccess,
     onErrors
   );

@@ -2,6 +2,7 @@ package es.udc.fi.dc.tfg.rest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.mock.web.MockMultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,6 +33,7 @@ import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
 import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 /**
  * Clase UserControllerTest.
@@ -156,8 +159,13 @@ public class UserControllerTest {
 
         trainerDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/signUp")
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(trainerDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        mockMvc.perform(multipart("/api/users/signUp")
+                .file(userPart)
+                .file(filePart))
                 .andExpect(status().isCreated());
 
     }
@@ -176,8 +184,13 @@ public class UserControllerTest {
 
         trainerDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/signUp")
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(trainerDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        mockMvc.perform(multipart("/api/users/signUp")
+                .file(userPart)
+                .file(filePart))
                 .andExpect(status().isBadRequest());
 
     }
@@ -194,8 +207,13 @@ public class UserControllerTest {
                 "123456789", "", "TRAINER", "https://google.es", null, null,
                 null, null, null);
 
-        mockMvc.perform(post("/api/users/signUp")
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(trainerDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        mockMvc.perform(multipart("/api/users/signUp")
+                .file(userPart)
+                .file(filePart))
                 .andExpect(status().isBadRequest());
 
     }
@@ -214,8 +232,13 @@ public class UserControllerTest {
 
         trainerDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/signUp")
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(trainerDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        mockMvc.perform(multipart("/api/users/signUp")
+                .file(userPart)
+                .file(filePart))
                 .andExpect(status().isBadRequest());
 
     }
@@ -234,8 +257,13 @@ public class UserControllerTest {
 
         trainerDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/signUp")
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(trainerDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        mockMvc.perform(multipart("/api/users/signUp")
+                .file(userPart)
+                .file(filePart))
                 .andExpect(status().isBadRequest());
 
     }
@@ -254,12 +282,18 @@ public class UserControllerTest {
 
         trainerDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/signUp")
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(trainerDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        mockMvc.perform(multipart("/api/users/signUp")
+                .file(userPart)
+                .file(filePart))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(post("/api/users/signUp")
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+        mockMvc.perform(multipart("/api/users/signUp")
+                .file(userPart)
+                .file(filePart))
                 .andExpect(status().isBadRequest());
 
     }
@@ -281,10 +315,19 @@ public class UserControllerTest {
 
         clientDto.setPassword(PASSWORD);
 
-        MvcResult result = mockMvc.perform(post("/api/users/addClient")
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
-                .andExpect(status().isCreated()).andReturn();
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(clientDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builder = multipart("/api/users/addClient")
+                .file(userPart)
+                .file(filePart);
+
+        builder.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        MvcResult result = mockMvc.perform(builder)
+                .andExpect(status().isCreated())
+                .andReturn();
 
         String content = result.getResponse().getContentAsString();
         UserDto createdClient = new ObjectMapper().readValue(content, UserDto.class);
@@ -311,9 +354,17 @@ public class UserControllerTest {
 
         clientDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/addClient")
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(clientDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builder = multipart("/api/users/addClient")
+                .file(userPart)
+                .file(filePart);
+
+        builder.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builder)
                 .andExpect(status().isBadRequest());
 
     }
@@ -332,9 +383,17 @@ public class UserControllerTest {
                 "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
                 "Objetivo", new BigDecimal("170"), null, trainerDto.getId());
 
-        mockMvc.perform(post("/api/users/addClient")
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(clientDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builder = multipart("/api/users/addClient")
+                .file(userPart)
+                .file(filePart);
+
+        builder.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builder)
                 .andExpect(status().isBadRequest());
 
     }
@@ -355,9 +414,17 @@ public class UserControllerTest {
 
         clientDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/addClient")
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(clientDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builder = multipart("/api/users/addClient")
+                .file(userPart)
+                .file(filePart);
+
+        builder.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builder)
                 .andExpect(status().isBadRequest());
 
     }
@@ -378,9 +445,17 @@ public class UserControllerTest {
 
         clientDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/addClient")
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(clientDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builder = multipart("/api/users/addClient")
+                .file(userPart)
+                .file(filePart);
+
+        builder.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builder)
                 .andExpect(status().isBadRequest());
 
     }
@@ -401,14 +476,20 @@ public class UserControllerTest {
 
         clientDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/addClient")
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(clientDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builder = multipart("/api/users/addClient")
+                .file(userPart)
+                .file(filePart);
+
+        builder.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builder)
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(post("/api/users/addClient")
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+        mockMvc.perform(builder)
                 .andExpect(status().isBadRequest());
 
     }
@@ -429,9 +510,17 @@ public class UserControllerTest {
 
         clientDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/addClient")
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(clientDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builder = multipart("/api/users/addClient")
+                .file(userPart)
+                .file(filePart);
+
+        builder.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builder)
                 .andExpect(status().isNotFound());
 
     }
@@ -451,9 +540,17 @@ public class UserControllerTest {
 
         clientDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/addClient")
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(clientDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builder = multipart("/api/users/addClient")
+                .file(userPart)
+                .file(filePart);
+
+        builder.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builder)
                 .andExpect(status().isForbidden());
 
     }
@@ -474,9 +571,17 @@ public class UserControllerTest {
 
         clientDto.setPassword(PASSWORD);
 
-        mockMvc.perform(post("/api/users/addClient")
-                .header("Authorization", "Bearer " + authClient.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+        MockMultipartFile userPart = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(clientDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builder = multipart("/api/users/addClient")
+                .file(userPart)
+                .file(filePart);
+
+        builder.header("Authorization", "Bearer " + authClient.getServiceToken());
+
+        mockMvc.perform(builder)
                 .andExpect(status().isForbidden());
 
     }
@@ -691,24 +796,58 @@ public class UserControllerTest {
         clientDto.setBirthdate(null);
 
         // Actualizar en caso de entrenador
-        mockMvc.perform(put("/api/users/" + trainerDto.getId())
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+        MockMultipartFile userPartT = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(trainerDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builderT = multipart("/api/users/" + trainerDto.getId())
+                .file(userPartT)
+                .file(filePart)
+                .with(request -> {
+                    request.setMethod("PUT");
+                    return request;
+                });
+
+        builderT.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builderT)
                 .andExpect(status().isOk());
 
         // Actualizar en caso de cliente
-        mockMvc.perform(put("/api/users/" + clientDto.getId())
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+        MockMultipartFile userPartC = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(clientDto).getBytes());
+
+        MockHttpServletRequestBuilder builderC = multipart("/api/users/" + clientDto.getId())
+                .file(userPartC)
+                .file(filePart)
+                .with(request -> {
+                    request.setMethod("PUT");
+                    return request;
+                });
+
+        builderC.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builderC)
                 .andExpect(status().isOk());
 
         UserDto updatedClientDto = clientDto;
         updatedClientDto.setBirthdate("2005-09-25");
         updatedClientDto.setWeight(new BigDecimal("80"));
 
-        mockMvc.perform(put("/api/users/" + updatedClientDto.getId())
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedClientDto)))
+        MockMultipartFile userPartCU = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(updatedClientDto).getBytes());
+
+        MockHttpServletRequestBuilder builderCU = multipart("/api/users/" + updatedClientDto.getId())
+                .file(userPartCU)
+                .file(filePart)
+                .with(request -> {
+                    request.setMethod("PUT");
+                    return request;
+                });
+
+        builderCU.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builderCU)
                 .andExpect(status().isOk());
 
     }
@@ -725,9 +864,21 @@ public class UserControllerTest {
 
         trainerDto.setEmail(null);
 
-        mockMvc.perform(put("/api/users/" + trainerDto.getId())
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+        MockMultipartFile userPartT = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(trainerDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builderT = multipart("/api/users/" + trainerDto.getId())
+                .file(userPartT)
+                .file(filePart)
+                .with(request -> {
+                    request.setMethod("PUT");
+                    return request;
+                });
+
+        builderT.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builderT)
                 .andExpect(status().isBadRequest());
 
     }
@@ -744,9 +895,21 @@ public class UserControllerTest {
 
         trainerDto.setFullName(null);
 
-        mockMvc.perform(put("/api/users/" + trainerDto.getId())
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+        MockMultipartFile userPartT = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(trainerDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builderT = multipart("/api/users/" + trainerDto.getId())
+                .file(userPartT)
+                .file(filePart)
+                .with(request -> {
+                    request.setMethod("PUT");
+                    return request;
+                });
+
+        builderT.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builderT)
                 .andExpect(status().isBadRequest());
 
     }
@@ -763,9 +926,21 @@ public class UserControllerTest {
 
         trainerDto.setRole(null);
 
-        mockMvc.perform(put("/api/users/" + trainerDto.getId())
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
+        MockMultipartFile userPartT = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(trainerDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builderT = multipart("/api/users/" + trainerDto.getId())
+                .file(userPartT)
+                .file(filePart)
+                .with(request -> {
+                    request.setMethod("PUT");
+                    return request;
+                });
+
+        builderT.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builderT)
                 .andExpect(status().isBadRequest());
 
     }
@@ -778,22 +953,42 @@ public class UserControllerTest {
     @Test
     public void testUpdateProfile_DuplicateInstanceException() throws Exception {
 
-        UserDto trainerDto = new UserDto(null, "trainer@trainer.com", "trainer",
-                "123456789", "", "TRAINER", "https://google.es", null, null,
-                null, null, null);
+        UserDto trainerDto = authTrainer.getUserDto();
 
-        trainerDto.setPassword(PASSWORD);
+        MockMultipartFile userPartT = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(trainerDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
 
-        mockMvc.perform(post("/api/users/signUp")
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(trainerDto)))
-                .andExpect(status().isCreated());
+        MockHttpServletRequestBuilder builderT = multipart("/api/users/" + trainerDto.getId())
+                .file(userPartT)
+                .file(filePart)
+                .with(request -> {
+                    request.setMethod("PUT");
+                    return request;
+                });
 
-        UserDto authTrainerDto = authTrainer.getUserDto();
-        authTrainerDto.setEmail("trainer@trainer.com");
+        builderT.header("Authorization", "Bearer " + authTrainer.getServiceToken());
 
-        mockMvc.perform(put("/api/users/" + authTrainerDto.getId())
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(authTrainerDto)))
+        mockMvc.perform(builderT)
+                .andExpect(status().isOk());
+
+        UserDto authTrainerDto = authTrainer2.getUserDto();
+        authTrainerDto.setEmail(trainerDto.getEmail());
+
+        MockMultipartFile userPartA = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(authTrainerDto).getBytes());
+
+        MockHttpServletRequestBuilder builderA = multipart("/api/users/" + authTrainerDto.getId())
+                .file(userPartA)
+                .file(filePart)
+                .with(request -> {
+                    request.setMethod("PUT");
+                    return request;
+                });
+
+        builderA.header("Authorization", "Bearer " + authTrainer2.getServiceToken());
+
+        mockMvc.perform(builderA)
                 .andExpect(status().isBadRequest());
 
     }
@@ -811,9 +1006,21 @@ public class UserControllerTest {
         UserDto updatedUserDto = authTrainer.getUserDto();
         updatedUserDto.setFullName("JohnTest");
 
-        mockMvc.perform(put("/api/users/" + incorrectUserId)
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedUserDto)))
+        MockMultipartFile userPartT = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(updatedUserDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builderT = multipart("/api/users/" + incorrectUserId)
+                .file(userPartT)
+                .file(filePart)
+                .with(request -> {
+                    request.setMethod("PUT");
+                    return request;
+                });
+
+        builderT.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builderT)
                 .andExpect(status().isNotFound());
 
     }
@@ -830,18 +1037,41 @@ public class UserControllerTest {
         updatedTrainerDto.setFullName("JohnTest");
 
         // Actualizar a un entrenador sin permiso
-        mockMvc.perform(put("/api/users/" + updatedTrainerDto.getId())
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedTrainerDto)))
+        MockMultipartFile userPartT = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(updatedTrainerDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builderT = multipart("/api/users/" + updatedTrainerDto.getId())
+                .file(userPartT)
+                .file(filePart)
+                .with(request -> {
+                    request.setMethod("PUT");
+                    return request;
+                });
+
+        builderT.header("Authorization", "Bearer " + authTrainer.getServiceToken());
+
+        mockMvc.perform(builderT)
                 .andExpect(status().isForbidden());
 
         UserDto updatedClientDto = authClient.getUserDto();
         updatedTrainerDto.setFullName("JohnTest");
 
         // Actualizar a un cliente sin permiso
-        mockMvc.perform(put("/api/users/" + updatedClientDto.getId())
-                .header("Authorization", "Bearer " + authTrainer2.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(updatedClientDto)))
+        MockMultipartFile userPartC = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(updatedClientDto).getBytes());
+
+        MockHttpServletRequestBuilder builderC = multipart("/api/users/" + updatedClientDto.getId())
+                .file(userPartC)
+                .file(filePart)
+                .with(request -> {
+                    request.setMethod("PUT");
+                    return request;
+                });
+
+        builderT.header("Authorization", "Bearer " + authTrainer2.getServiceToken());
+
+        mockMvc.perform(builderC)
                 .andExpect(status().isForbidden());
 
     }
@@ -856,9 +1086,21 @@ public class UserControllerTest {
 
         UserDto clientDto = authClient.getUserDto();
 
-        mockMvc.perform(put("/api/users/" + clientDto.getId())
-                .header("Authorization", "Bearer " + authClient.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+        MockMultipartFile userPartT = new MockMultipartFile("user", "", "application/json",
+                new ObjectMapper().writeValueAsString(clientDto).getBytes());
+        MockMultipartFile filePart = new MockMultipartFile("file", "", "text/plain", new byte[0]);
+
+        MockHttpServletRequestBuilder builderT = multipart("/api/users/" + clientDto.getId())
+                .file(userPartT)
+                .file(filePart)
+                .with(request -> {
+                    request.setMethod("PUT");
+                    return request;
+                });
+
+        builderT.header("Authorization", "Bearer " + authClient.getServiceToken());
+
+        mockMvc.perform(builderT)
                 .andExpect(status().isForbidden());
 
     }

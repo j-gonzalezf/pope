@@ -7,9 +7,11 @@ import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
 import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Interfaz UserService.
@@ -34,10 +36,13 @@ public interface UserService {
      * Crea un nuevo usuario.
      *
      * @param user el objeto Users que representa al usuario a crear.
+     * @param file el icono del usuario
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
-    void signUp(Users user) throws DuplicateInstanceException;
+    void signUp(Users user, MultipartFile file)
+            throws DuplicateInstanceException, IOException;
 
     /**
      * Inicia sesión con el email y la contraseña proporcionados.
@@ -76,7 +81,7 @@ public interface UserService {
      * @param email El nuevo correo electrónico del entrenador.
      * @param fullName El nuevo nombre completo del entrenador.
      * @param phone El nuevo número de teléfono del entrenador.
-     * @param icon La foto de perfil del entrenador.
+     * @param file La foto de perfil del entrenador.
      * @param socialLinks El enlace a las redes sociales del entrenador.
      * @return El objeto Users que representa al usuario con el perfil
      * actualizado.
@@ -84,10 +89,11 @@ public interface UserService {
      * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
+     * @throws IOException si hay algún error a la hora de guardar la imagen.
      */
     Users updateProfile(Long id, String email, String fullName, String phone,
-            String icon, String socialLinks)
-            throws DuplicateInstanceException, InstanceNotFoundException;
+            MultipartFile file, String socialLinks) throws DuplicateInstanceException,
+            InstanceNotFoundException, IOException;
 
     /**
      * Actualiza el perfil de un cliente.
@@ -107,10 +113,11 @@ public interface UserService {
      * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
+     * @throws IOException si hay algún error a la hora de guardar la imagen.
      */
-    Users updateClient(Long id, String email, String fullName, String phone, String icon,
+    Users updateClient(Long id, String email, String fullName, String phone, MultipartFile icon,
             LocalDate birthdate, String injuries, String goals, BigDecimal height)
-            throws DuplicateInstanceException, InstanceNotFoundException;
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException;
 
     /**
      * Cambia la contraseña de un usuario.

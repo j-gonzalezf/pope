@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -258,6 +259,15 @@ public class Users {
      */
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    @Transient
+    public String getIconImagePath() {
+        if (icon == null || id == null) {
+            return null;
+        }
+
+        return "/src/main/resources/user-icons/" + id + "/" + icon;
     }
 
     /**

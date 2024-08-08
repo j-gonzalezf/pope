@@ -16,6 +16,7 @@ import es.udc.fi.dc.tfg.model.common.exceptions.DuplicateInstanceException;
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Exercises;
 import es.udc.fi.dc.tfg.model.entities.Users;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -57,15 +58,16 @@ public class ExerciseServiceTest {
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
      * @throws InstanceNotFoundException si no se encuentra ningún ejercicio.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testAddExerciseAndGetExerciseInfo()
-            throws DuplicateInstanceException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Exercises exercise = addExercise();
         Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
 
-        userService.signUp(trainer);
+        userService.signUp(trainer, null);
 
         exercise.setTrainer(trainer);
 
@@ -89,15 +91,16 @@ public class ExerciseServiceTest {
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
-    public void testGetExercises() throws DuplicateInstanceException {
+    public void testGetExercises() throws DuplicateInstanceException, IOException {
 
         Exercises exercise1 = addExercise();
         Exercises exercise2 = addExercise();
         Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
 
-        userService.signUp(trainer);
+        userService.signUp(trainer, null);
 
         exercise1.setTrainer(trainer);
         exerciseService.addExercise(exercise1);
@@ -131,15 +134,16 @@ public class ExerciseServiceTest {
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
      * @throws InstanceNotFoundException si no se encuentra ningún ejercicio.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testUpdateExercise()
-            throws DuplicateInstanceException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Exercises exercise = addExercise();
         Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
 
-        userService.signUp(trainer);
+        userService.signUp(trainer, null);
 
         exercise.setTrainer(trainer);
         exerciseService.addExercise(exercise);
@@ -175,15 +179,16 @@ public class ExerciseServiceTest {
      * email.
      * @throws InstanceNotFoundException si no se encuentra un ejercicio con el
      * ID proporcionado.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testDeleteExercise()
-            throws DuplicateInstanceException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Exercises exercise = addExercise();
         Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
 
-        userService.signUp(trainer);
+        userService.signUp(trainer, null);
 
         exercise.setTrainer(trainer);
         exerciseService.addExercise(exercise);
