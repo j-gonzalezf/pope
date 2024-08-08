@@ -101,7 +101,7 @@ CREATE TABLE Coments (
 CREATE TABLE Sensations (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     fatigue TINYINT,
-    soreness TINYINT,
+    stiffness TINYINT,
     motivation TINYINT,
     sleep TINYINT,
     sensationDate TIMESTAMP NOT NULL,

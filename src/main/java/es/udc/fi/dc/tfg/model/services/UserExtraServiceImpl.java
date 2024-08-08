@@ -3,7 +3,6 @@ package es.udc.fi.dc.tfg.model.services;
 import es.udc.fi.dc.tfg.model.entities.WeightDao;
 import es.udc.fi.dc.tfg.model.entities.Weights;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
