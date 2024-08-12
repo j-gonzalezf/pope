@@ -123,4 +123,18 @@ export default {
     'project.templates.addTemplate': 'Create template',
     'project.templates.addTemplateRow': 'Add row',
 
+
+    // Tracking Module
+    // Attributes
+    'project.tracking.fatigue': 'Fatigue',
+    'project.tracking.stiffness': 'Stiffness',
+    'project.tracking.motivation': 'Motivation',
+    'project.tracking.sleep': 'Sleep quality',
+
+
+    // Actions
+    'project.tracking.sensations.title': 'Training evaluation',
+    'project.tracking.sensations.button': 'Send',
+    'project.tracking.sensations.cancel': 'Finish later',
+
 }

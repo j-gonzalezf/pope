@@ -17,6 +17,7 @@ import * as selectors from '../selectors';
 import * as userSelectors from '../../users/selectors';
 import AddTemplateRow from './AddTemplateRow';
 import EditTemplateRow from './EditTemplateRow';
+import SensationModal from '../../tracking/components/SensationsModal';
 
 const TemplateView = () => {
 
@@ -229,6 +230,10 @@ const TemplateView = () => {
                             </tbody>
                         </Table>
                     </div>
+
+                    {showAddInput && role === 'CLIENT' && (
+                        <SensationModal showModal={showAddInput} setShowModal={setShowAddInput} />
+                    )}
 
                     <Errors errors={error} onClose={() => setError(null)} />
 

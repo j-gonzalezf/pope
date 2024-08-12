@@ -123,4 +123,17 @@ export default {
     'project.templates.addTemplate': 'Crear modelo',
     'project.templates.addTemplateRow': 'Engadir fila',
 
+
+    // Tracking Module
+    // Attributes
+    'project.tracking.fatigue': 'Fatiga',
+    'project.tracking.stiffness': 'Maniotas',
+    'project.tracking.motivation': 'Motivación',
+    'project.tracking.sleep': 'Calidade do sono',
+
+    // Actions
+    'project.tracking.sensations.title': 'Avaliación do adestramento',
+    'project.tracking.sensations.button': 'Enviar',
+    'project.tracking.sensations.cancel': 'Rematar máis tarde',
+
 }

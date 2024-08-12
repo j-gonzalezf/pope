@@ -225,7 +225,7 @@ public class Sensations {
      * @return the client
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clientId")
+    @JoinColumn(name = "userId")
     public Users getClient() {
         return client;
     }
