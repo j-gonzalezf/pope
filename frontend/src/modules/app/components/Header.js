@@ -35,11 +35,11 @@ const Header = () => {
     const displayReference = useCallback(() => {
 
         const urlsToHideCycleName = [
-            '/users/clientDetails/' + clientId,
-            '/templates/trainingCycles/' + clientId
+            `/users/clientDetails/${clientId ? clientId : ''}`,
+            `/templates/trainingCycles/${clientId ? clientId : ''}`
         ];
 
-        if (clientName && cycleName && !urlsToHideCycleName.includes(location.pathname)) {
+        if (clientId && clientName && cycleName && !urlsToHideCycleName.includes(location.pathname)) {
             return (
                 <>
                     <Link to={`/users/clientDetails/${clientId}`} className='link h'>{clientName}</Link>
@@ -47,7 +47,7 @@ const Header = () => {
                     <Link to={`/templates/trainingCycles/${clientId}`} className='link h'>{cycleName}</Link>
                 </>
             );
-        } else if (clientName) {
+        } else if (clientId && clientName) {
             return <Link to={`/users/clientDetails/${clientId}`} className='link h'>{clientName}</Link>;
         }
         return '';
@@ -63,7 +63,6 @@ const Header = () => {
     }, [location, isLoggedIn]);
 
     useEffect(() => {
-        displayReference();
         // URLs to hide the header reference
         const urlsToHide = [
             '/users/clients',
@@ -71,8 +70,10 @@ const Header = () => {
             '/users/updateProfile',
             '/users/changePassword',
             '/templates/exercises',
+            '/notFound'
         ];
         if (!urlsToHide.includes(location.pathname)) {
+            displayReference();
             setShowReference(true);
         } else {
             setShowReference(false);
@@ -97,9 +98,11 @@ const Header = () => {
                             }
                         </>
                     ) : (
-                        <Navbar.Brand as={Link} to={`/templates/trainingCycles/${user.id}`} title="Clientes" onClick={clearCycle}>
-                            <Image className="anchor-icon" src={AnchorIcon} alt="Logo" />
-                        </Navbar.Brand>
+                        user && (
+                            <Navbar.Brand as={Link} to={`/templates/trainingCycles/${user.id}`} title="Clientes" onClick={clearCycle}>
+                                <Image className="anchor-icon" src={AnchorIcon} alt="Logo" />
+                            </Navbar.Brand>
+                        )
                     )}
 
                 </div>
