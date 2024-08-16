@@ -135,6 +135,9 @@ export default {
     // Actions
     'project.tracking.sensations.title': 'Training evaluation',
     'project.tracking.sensations.button': 'Send',
+    'project.tracking.sensations.end': 'Finish',
     'project.tracking.sensations.cancel': 'Finish later',
+    'project.tracking.sensations.titleUpdate': 'Training evaluation update',
+    'project.tracking.sensations.update': 'Update evaluation',
 
 }

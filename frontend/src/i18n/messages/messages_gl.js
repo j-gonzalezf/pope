@@ -134,6 +134,9 @@ export default {
     // Actions
     'project.tracking.sensations.title': 'Avaliación do adestramento',
     'project.tracking.sensations.button': 'Enviar',
+    'project.tracking.sensations.end': 'Rematar',
     'project.tracking.sensations.cancel': 'Rematar máis tarde',
+    'project.tracking.sensations.titleUpdate': 'Editar avaliación do adestramento',
+    'project.tracking.sensations.update': 'Actualizar avaliación',
 
 }

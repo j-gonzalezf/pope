@@ -13,11 +13,14 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { Errors } from '../../common';
 import * as actions from '../actions';
+import * as trackingActions from '../../tracking/actions';
 import * as selectors from '../selectors';
+import * as trackingSelectors from '../../tracking/selectors';
 import * as userSelectors from '../../users/selectors';
 import AddTemplateRow from './AddTemplateRow';
 import EditTemplateRow from './EditTemplateRow';
 import SensationModal from '../../tracking/components/SensationsModal';
+import SensationUpdateModal from '../../tracking/components/SensationsUpdateModal';
 
 const TemplateView = () => {
 
@@ -29,6 +32,7 @@ const TemplateView = () => {
     const { templateId } = useParams();
 
     const role = useSelector(userSelectors.getUserRole);
+    const getSensation = useSelector(trackingSelectors.getSensation);
     const getTemplate = useSelector(selectors.getTemplate);
     const getTemplateRows = useSelector(selectors.getTemplateRows);
 
@@ -36,6 +40,8 @@ const TemplateView = () => {
     const [error, setError] = useState(null);
     const [showAddInput, setShowAddInput] = useState(false);
     const [showUpdateInput, setShowUpdateInput] = useState(false);
+    const [showSensationModal, setShowSensationModal] = useState(false);
+    const [showUpdateSensationModal, setShowUpdateSensationModal] = useState(false);
     const [editingRowId, setEditingRowId] = useState(null);
 
     let form1;
@@ -89,9 +95,15 @@ const TemplateView = () => {
                 dispatch(actions.getTemplateRows(templateId,
                     () => { },
                     errors => setError(errors)));
+                if (role === 'CLIENT') {
+                    dispatch(trackingActions.clearSensation());
+                    dispatch(trackingActions.getSensation(templateId,
+                        () => { },
+                        errors => setError(errors)));
+                }
             },
             errors => setError(errors)));
-    }, [dispatch, templateId]);
+    }, [dispatch, role, templateId]);
 
     return (
 
@@ -203,25 +215,25 @@ const TemplateView = () => {
                                 ))}
                                 <tr>
                                     <td colSpan={5} className="customTable">
-                                        {showAddInput ? (
-                                            role === 'TRAINER' ? (
+                                        {role === 'TRAINER' ? (
+                                            showAddInput ? (
                                                 <AddTemplateRow />
                                             ) : (
-                                                <Button className="primary cycle" onClick={() => setShowAddInput(false)}>
-                                                    Terminada
-                                                </Button>
-                                            )
-                                        ) : (
-                                            role === 'TRAINER' ? (
                                                 <Button className="primary cycle" onClick={() => setShowAddInput(true)}>
                                                     <BsFillPlusCircleFill className="plusIconStyle cycle" />
                                                     <span>
                                                         <b><FormattedMessage id="project.templates.addTemplateRow" /></b>
                                                     </span>
                                                 </Button>
+                                            )
+                                        ) : (
+                                            getSensation && Object.keys(getSensation).length > 0 ? (
+                                                <Button className="primary cycle" onClick={() => setShowUpdateSensationModal(true)}>
+                                                    <FormattedMessage id="project.tracking.sensations.update" />
+                                                </Button>
                                             ) : (
-                                                <Button className="primary cycle" onClick={() => setShowAddInput(true)}>
-                                                    Terminar
+                                                <Button className="primary cycle" onClick={() => setShowSensationModal(true)}>
+                                                    <FormattedMessage id="project.tracking.sensations.end" />
                                                 </Button>
                                             )
                                         )}
@@ -231,8 +243,12 @@ const TemplateView = () => {
                         </Table>
                     </div>
 
-                    {showAddInput && role === 'CLIENT' && (
-                        <SensationModal showModal={showAddInput} setShowModal={setShowAddInput} />
+                    {showSensationModal && role === 'CLIENT' && (
+                        <SensationModal showModal={showSensationModal} setShowModal={setShowSensationModal} />
+                    )}
+
+                    {showUpdateSensationModal && role === 'CLIENT' && (
+                        <SensationUpdateModal showModal={showUpdateSensationModal} setShowModal={setShowUpdateSensationModal} getSensation={getSensation} />
                     )}
 
                     <Errors errors={error} onClose={() => setError(null)} />

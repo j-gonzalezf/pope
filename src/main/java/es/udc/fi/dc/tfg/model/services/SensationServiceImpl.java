@@ -46,13 +46,12 @@ public class SensationServiceImpl implements SensationService {
 
         Optional<Sensations> Osensation = sensationDao.findByTemplateId(templateId);
 
-        if (!Osensation.isPresent()) {
-            throw new InstanceNotFoundException("project.entities.templates", templateId);
+        if (Osensation.isPresent()) {
+            Sensations sensation = Osensation.get();
+            return sensation;
+        } else {
+            return null;
         }
-
-        Sensations sensation = Osensation.get();
-
-        return sensation;
 
     }
 

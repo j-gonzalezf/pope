@@ -135,6 +135,9 @@ export default {
     // Actions
     'project.tracking.sensations.title': 'Evaluación del entrenamiento',
     'project.tracking.sensations.button': 'Enviar',
+    'project.tracking.sensations.end': 'Terminar',
     'project.tracking.sensations.cancel': 'Terminar más tarde',
+    'project.tracking.sensations.titleUpdate': 'Editar evaluación del entrenamiento',
+    'project.tracking.sensations.update': 'Editar evaluación',
 
 }

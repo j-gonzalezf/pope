@@ -7,3 +7,19 @@ export const sensationsRegister = (sensations, onSuccess, onErrors) =>
         onSuccess,
         onErrors
     );
+
+export const getSensation = (templateId, onSuccess, onErrors) =>
+    appFetch(
+        `/sensations/${templateId}`,
+        fetchConfig("GET"),
+        onSuccess,
+        onErrors
+    );
+
+export const updateSensation = (sensation, onSuccess, onErrors) =>
+    appFetch(
+        `/sensations/${sensation.id}/update`,
+        fetchConfig("PUT", sensation),
+        onSuccess,
+        onErrors
+    );

@@ -5,22 +5,18 @@ import Modal from 'react-bootstrap/Modal';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
 
 import { Errors } from '../../common';
 import * as actions from '../actions';
 
-const SensationModal = ({ showModal, setShowModal }) => {
+const SensationUpdateModal = ({ showModal, setShowModal, getSensation }) => {
 
     const dispatch = useDispatch();
 
-    const { clientId } = useParams();
-    const { templateId } = useParams();
-
-    const [fatigue, setFatigue] = useState(0);
-    const [stiffness, setStiffness] = useState(0);
-    const [motivation, setMotivation] = useState(0);
-    const [sleep, setSleep] = useState(0);
+    const [fatigue, setFatigue] = useState(getSensation.fatigue || 0);
+    const [stiffness, setStiffness] = useState(getSensation.stiffness || 0);
+    const [motivation, setMotivation] = useState(getSensation.motivation || 0);
+    const [sleep, setSleep] = useState(getSensation.sleep || 0);
     const [error, setError] = useState(null);
 
     let form;
@@ -31,18 +27,19 @@ const SensationModal = ({ showModal, setShowModal }) => {
 
         if (form.checkValidity()) {
 
-            dispatch(actions.registerSensations(
+            dispatch(actions.updateSensation(
                 {
+                    id: getSensation.id,
                     fatigue: fatigue === 0 ? null : fatigue,
                     stiffness: stiffness === 0 ? null : stiffness,
                     motivation: motivation === 0 ? null : motivation,
                     sleep: sleep === 0 ? null : sleep,
-                    sensationDate: new Date().toISOString().slice(0, -1),
-                    templateId: Number(templateId),
-                    clientId: Number(clientId)
+                    sensationDate: getSensation.sensationDate,
+                    templateId: getSensation.templateId,
+                    clientId: getSensation.clientId
                 },
                 () => {
-                    dispatch(actions.getSensation(templateId,
+                    dispatch(actions.getSensation(getSensation.templateId,
                         () => { },
                         errors => setError(errors)));
                     closeModal();
@@ -54,10 +51,6 @@ const SensationModal = ({ showModal, setShowModal }) => {
 
     const closeModal = () => {
         setShowModal(false);
-        setFatigue(0);
-        setStiffness(0);
-        setMotivation(0);
-        setSleep(0);
         setError(null);
     };
 
@@ -66,7 +59,7 @@ const SensationModal = ({ showModal, setShowModal }) => {
 
             <Modal.Header className="modal-header">
                 <Modal.Title>
-                    <FormattedMessage id="project.tracking.sensations.title" />
+                    <FormattedMessage id="project.tracking.sensations.titleUpdate" />
                 </Modal.Title>
             </Modal.Header>
 
@@ -141,10 +134,10 @@ const SensationModal = ({ showModal, setShowModal }) => {
 
             <Modal.Footer className="modal-footer">
                 <Button variant="secondary" onClick={closeModal}>
-                    <FormattedMessage id="project.tracking.sensations.cancel" />
+                    <FormattedMessage id="project.global.button.cancel" />
                 </Button>
                 <Button className="primary cycle" onClick={handleSubmit}>
-                    <FormattedMessage id="project.tracking.sensations.button" />
+                    <FormattedMessage id="project.templates.updateCycle" />
                 </Button>
             </Modal.Footer>
 
@@ -153,4 +146,4 @@ const SensationModal = ({ showModal, setShowModal }) => {
 
 }
 
-export default SensationModal;
+export default SensationUpdateModal;
