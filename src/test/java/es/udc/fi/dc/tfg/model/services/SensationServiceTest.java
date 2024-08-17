@@ -9,8 +9,10 @@ import es.udc.fi.dc.tfg.model.entities.Users;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +109,54 @@ public class SensationServiceTest {
         assertEquals(sensations.getSensationDate(), getSensations.getSensationDate());
         assertEquals(sensations.getTemplate(), getSensations.getTemplate());
         assertEquals(sensations.getClient(), getSensations.getClient());
+
+    }
+
+    /**
+     * Test para obtener los registros de sensaciones de un cliente.
+     *
+     * @throws DuplicateInstanceException si ya existe un usuario con el mismo
+     * email.
+     */
+    @Test
+    public void testGetSensations() throws DuplicateInstanceException {
+
+        Sensations sensations1 = sensationsRegister();
+        Sensations sensations2 = sensationsRegister();
+        Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
+        Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
+                LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
+
+        userService.signUp(trainer);
+        userService.signUp(client);
+
+        TrainingCycles cycle = new TrainingCycles("cycleName", "description",
+                LocalDate.of(2000, 1, 1), LocalDate.of(2001, 1, 1), trainer, client);
+
+        cycleService.createCycle(cycle);
+
+        Templates template1 = new Templates("templateName1",
+                LocalDateTime.of(2000, 1, 1, 0, 0), cycle);
+        Templates template2 = new Templates("templateName2",
+                LocalDateTime.of(2000, 1, 1, 0, 0), cycle);
+
+        templateService.createTemplate(template1);
+        templateService.createTemplate(template2);
+
+        sensations1.setTemplate(template1);
+        sensations1.setClient(client);
+
+        sensations2.setTemplate(template2);
+        sensations2.setClient(client);
+
+        sensationService.sensationsRegister(sensations1);
+        sensationService.sensationsRegister(sensations2);
+
+        List<Sensations> sensations = sensationService.getSensations(client.getId());
+
+        assertEquals(2, sensations.size());
+        assertTrue(sensations.contains(sensations1));
+        assertTrue(sensations.contains(sensations2));
 
     }
 

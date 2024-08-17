@@ -2,6 +2,7 @@ package es.udc.fi.dc.tfg.model.services;
 
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Sensations;
+import java.util.List;
 
 /**
  * Interfaz SensationService.
@@ -15,6 +16,14 @@ public interface SensationService {
      * registrar.
      */
     void sensationsRegister(Sensations sensations);
+
+    /**
+     * Devuelve una lista con los registros de sensaciones de un cliente.
+     *
+     * @param clientId El ID del cliente.
+     * @return La lista de objetos Sensations que representa los registros.
+     */
+    List<Sensations> getSensations(Long clientId);
 
     /**
      * Devuelve un registro de sensaciones a partir del ID de su plantilla

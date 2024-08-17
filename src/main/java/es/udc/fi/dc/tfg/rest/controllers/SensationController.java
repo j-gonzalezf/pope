@@ -1,6 +1,7 @@
 package es.udc.fi.dc.tfg.rest.controllers;
 
 import static es.udc.fi.dc.tfg.rest.dtos.SensationConversor.toSensationDto;
+import static es.udc.fi.dc.tfg.rest.dtos.SensationConversor.toSensationsDto;
 import static es.udc.fi.dc.tfg.rest.dtos.SensationConversor.toSensations;
 
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
@@ -16,6 +17,7 @@ import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 import es.udc.fi.dc.tfg.rest.dtos.SensationDto;
 import java.net.URI;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -96,6 +98,31 @@ public class SensationController {
                 .buildAndExpand(sensations.getId()).toUri();
 
         return ResponseEntity.created(location).body(toSensationDto(sensations));
+
+    }
+
+    /**
+     * Devuelve la lista de registros de sensaciones de un cliente.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param clientId el ID del ciclo
+     * @return una lista de registros
+     * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
+     * proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador de los ciclos a obtener
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    @GetMapping("/fromClient/{clientId}")
+    public List<SensationDto> getSensations(@RequestAttribute Long userId,
+            @PathVariable("clientId") Long clientId) throws InstanceNotFoundException,
+            PermissionException, InvalidRoleException {
+
+        userService.validateUser(userId, clientId);
+
+        List<Sensations> sensations = sensationService.getSensations(clientId);
+
+        return toSensationsDto(sensations);
 
     }
 

@@ -4,6 +4,8 @@ import es.udc.fi.dc.tfg.model.entities.Sensations;
 import es.udc.fi.dc.tfg.model.entities.Templates;
 import es.udc.fi.dc.tfg.model.entities.Users;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Clase SensationConversor.
@@ -28,6 +30,19 @@ public class SensationConversor {
                 sensation.getStiffness(), sensation.getMotivation(),
                 sensation.getSleep(), sensation.getSensationDate().toString(),
                 sensation.getTemplate().getId(), sensation.getClient().getId());
+    }
+
+    /**
+     * Convierte una lista de objetos Sensations a objetos SensationDto.
+     *
+     * @param sensations la lista de objetos Sensations a convertir
+     * @return una nueva lista de objetos SensationDto que contiene los mismos
+     * datos que la lista de objetos Sensations proporcionada
+     */
+    public static final List<SensationDto> toSensationsDto(List<Sensations> sensations) {
+        return sensations.stream().map(sensation -> {
+            return toSensationDto(sensation);
+        }).collect(Collectors.toList());
     }
 
     /**

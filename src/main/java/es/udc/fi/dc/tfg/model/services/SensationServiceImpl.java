@@ -3,6 +3,7 @@ package es.udc.fi.dc.tfg.model.services;
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.SensationDao;
 import es.udc.fi.dc.tfg.model.entities.Sensations;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,20 @@ public class SensationServiceImpl implements SensationService {
     public void sensationsRegister(Sensations sensations) {
 
         sensationDao.save(sensations);
+
+    }
+
+    /**
+     * Devuelve una lista con los registros de sensaciones de un cliente.
+     *
+     * @param clientId El ID del cliente.
+     * @return La lista de objetos Sensations que representa los registros.
+     */
+    @Override
+    public List<Sensations> getSensations(Long clientId) {
+
+        List<Sensations> sensations = sensationDao.findByClientId(clientId);
+        return sensations;
 
     }
 

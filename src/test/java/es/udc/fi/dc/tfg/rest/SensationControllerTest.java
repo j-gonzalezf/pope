@@ -30,6 +30,10 @@ import es.udc.fi.dc.tfg.rest.dtos.SensationDto;
 import es.udc.fi.dc.tfg.rest.dtos.TemplateDto;
 import es.udc.fi.dc.tfg.rest.dtos.TrainingCycleDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
+import java.math.BigDecimal;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Clase SensationControllerTest.
@@ -74,12 +78,14 @@ public class SensationControllerTest {
      * El authenticated user dto.
      */
     private AuthenticatedUserDto authTrainer;
+    private AuthenticatedUserDto authTrainer2;
     private AuthenticatedUserDto authClient;
     private AuthenticatedUserDto authClient2;
 
     @Before
     public void createEntities() throws IncorrectLoginException {
         authTrainer = createAuthenticatedTrainer("trainer@user.com");
+        authTrainer2 = createAuthenticatedTrainer("trainer2@user.com");
         authClient = createAuthenticatedClient("client@user.com");
         authClient2 = createAuthenticatedClient("client2@user.com");
     }
@@ -286,6 +292,66 @@ public class SensationControllerTest {
         mockMvc.perform(post("/api/sensations/create")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(sensationDto)))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para obtener los registros de sensaciones de un cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetSensations() throws Exception {
+
+        UserDto clientDto = authClient.getUserDto();
+
+        mockMvc.perform(get("/api/sensations/fromClient/" + clientDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para obtener los registros de sensaciones de un cliente inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetSensations_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectId = -1L;
+
+        mockMvc.perform(get("/api/sensations/fromClient/" + incorrectId)
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para obtener los registros de sensaciones de un cliente sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetSensations_PermissionException() throws Exception {
+
+        UserDto clientDto = new UserDto(null, "client@client.com", "client",
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", null, null, authTrainer2.getUserDto().getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        MvcResult result = mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer2.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        UserDto createdClient = new ObjectMapper().readValue(content, UserDto.class);
+
+        mockMvc.perform(get("/api/sensations/fromClient/" + createdClient.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
                 .andExpect(status().isForbidden());
 
     }
