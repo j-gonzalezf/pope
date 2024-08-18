@@ -3,7 +3,25 @@ import { combineReducers } from 'redux';
 import * as actionTypes from './actionTypes';
 
 const initialState = {
+    getSensations: [],
     getSensation: null,
+}
+
+const getSensations = (state = initialState.getSensations, action) => {
+
+    switch (action.type) {
+
+        case actionTypes.GET_SENSATIONS_COMPLETED:
+            return action.getSensations;
+
+        case actionTypes.CLEAR_SENSATIONS:
+            return [];
+
+        default:
+            return state;
+
+    }
+
 }
 
 const getSensation = (state = initialState.getSensation, action) => {
@@ -27,6 +45,7 @@ const getSensation = (state = initialState.getSensation, action) => {
 }
 
 const reducer = combineReducers({
+    getSensations,
     getSensation
 });
 

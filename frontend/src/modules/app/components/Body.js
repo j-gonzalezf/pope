@@ -7,6 +7,7 @@ import users, {
   Login, Logout, SignUp, UpdateClient, UpdateProfile
 } from "../../users";
 import { CyclesList, ExercisesList, TemplatesList, TemplateView } from "../../templates";
+import { GraphsList, GraphPage } from "../../tracking";
 import Home from "./Home";
 import NotFoundPage from "./NotFoundPage";
 
@@ -29,6 +30,8 @@ const Body = () => {
         {loggedIn && userRole === 'TRAINER' && <Route path="/users/changePassword" element={<ChangePassword />} />}
         {loggedIn && userRole === 'TRAINER' && <Route path="/users/updateClient/:clientId" element={<UpdateClient />} />}
         {loggedIn && userRole === 'TRAINER' && <Route path="/users/clientDetails/:clientId" element={<ClientDetails />} />}
+        {loggedIn && userRole === 'TRAINER' && <Route path="/tracking/graphs/:clientId" element={<GraphsList />} />}
+        {loggedIn && userRole === 'TRAINER' && <Route path="/tracking/graph/:sensationKey" element={<GraphPage />} />}
         {loggedIn && <Route path="/templates/trainingCycles/:clientId" element={<CyclesList />} />}
         {loggedIn && <Route path="/templates/:clientId/trainingCycle/:cycleId" element={<TemplatesList />} />}
         {loggedIn && <Route path="/templates/:clientId/trainingCycle/:cycleId/template/:templateId" element={<TemplateView />} />}

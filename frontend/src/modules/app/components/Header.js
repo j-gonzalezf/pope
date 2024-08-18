@@ -36,7 +36,13 @@ const Header = () => {
 
         const urlsToHideCycleName = [
             `/users/clientDetails/${clientId ? clientId : ''}`,
-            `/templates/trainingCycles/${clientId ? clientId : ''}`
+            `/templates/trainingCycles/${clientId ? clientId : ''}`,
+            `/tracking/graphs/${clientId ? clientId : ''}`,
+            '/tracking/graph/fatigue',
+            '/tracking/graph/stiffness',
+            '/tracking/graph/motivation',
+            '/tracking/graph/sleep',
+            '/tracking/graph/weight',
         ];
 
         if (clientId && clientName && cycleName && !urlsToHideCycleName.includes(location.pathname)) {

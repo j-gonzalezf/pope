@@ -14,6 +14,24 @@ export const registerSensations = (sensations, onSuccess, onErrors) => dispatch 
         onErrors
     );
 
+const getSensationsCompleted = getSensations => ({
+    type: actionTypes.GET_SENSATIONS_COMPLETED,
+    getSensations
+});
+
+export const getSensations = (clientId, onSuccess, onErrors) => dispatch =>
+    backend.trackingService.getSensations(clientId,
+        getSensations => {
+            dispatch(getSensationsCompleted(getSensations));
+            onSuccess();
+        },
+        onErrors
+    );
+
+export const clearSensations = () => ({
+    type: actionTypes.CLEAR_SENSATIONS,
+});
+
 const getSensationCompleted = getSensation => ({
     type: actionTypes.GET_SENSATION_COMPLETED,
     getSensation

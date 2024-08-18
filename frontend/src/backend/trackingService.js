@@ -8,6 +8,14 @@ export const sensationsRegister = (sensations, onSuccess, onErrors) =>
         onErrors
     );
 
+export const getSensations = (clientId, onSuccess, onErrors) =>
+    appFetch(
+        `/sensations/fromClient/${clientId}`,
+        fetchConfig("GET"),
+        onSuccess,
+        onErrors
+    );
+
 export const getSensation = (templateId, onSuccess, onErrors) =>
     appFetch(
         `/sensations/${templateId}`,

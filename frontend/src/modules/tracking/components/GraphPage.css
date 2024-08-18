@@ -1,0 +1,22 @@
+.GraphPage {
+    margin: 0;
+    padding: 0;
+    padding-top: 4.5%;
+    width: auto;
+}
+
+.GraphContainer {
+    width: 80rem;
+    height: 30rem;
+}
+
+.Graph .tick text {
+    fill: white !important;
+    font-size: 0.8rem !important;
+}
+
+.Graph .domain,
+.Graph .tick line {
+    stroke-dasharray: 0, 0 !important;
+    stroke: gray !important;
+}
