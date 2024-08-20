@@ -130,6 +130,9 @@ export default {
     'project.tracking.stiffness': 'Maniotas',
     'project.tracking.motivation': 'Motivación',
     'project.tracking.sleep': 'Calidade do sono',
+    'project.tracking.week': 'Semana',
+    'project.tracking.month': 'Mes',
+    'project.tracking.year': 'Ano',
 
     // Actions
     'project.tracking.sensations.title': 'Avaliación do adestramento',

@@ -7,7 +7,7 @@
 
 .GraphContainer {
     width: 80rem;
-    height: 30rem;
+    height: 25rem;
 }
 
 .Graph .tick text {
@@ -19,4 +19,43 @@
 .Graph .tick line {
     stroke-dasharray: 0, 0 !important;
     stroke: gray !important;
+}
+
+.primary {
+    margin-top: 10px;
+    border: 1px solid #191716;
+    background-color: #e6af2e;
+    color: #191716;
+    align-items: center;
+    font-weight: bold;
+}
+
+.primary:active,
+.primary:focus {
+    border: 1px solid #191716 !important;
+    box-shadow: none !important;
+    background-color: #e6af2e !important;
+    color: #191716 !important;
+}
+
+.notSelected {
+    margin-top: 10px;
+    border: 1px solid #191716;
+    background-color: white;
+    color: #191716;
+    align-items: center;
+    font-weight: bold;
+}
+
+.notSelected:hover {
+    border: 1px solid #191716;
+    background-color: white;
+}
+
+.notSelected:active,
+.notSelected:focus {
+    border: 1px solid #191716 !important;
+    box-shadow: none !important;
+    background-color: #191716 !important;
+    color: white !important;
 }

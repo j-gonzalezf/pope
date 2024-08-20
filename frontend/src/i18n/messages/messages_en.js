@@ -130,6 +130,9 @@ export default {
     'project.tracking.stiffness': 'Stiffness',
     'project.tracking.motivation': 'Motivation',
     'project.tracking.sleep': 'Sleep quality',
+    'project.tracking.week': 'Week',
+    'project.tracking.month': 'Month',
+    'project.tracking.year': 'Year',
 
 
     // Actions
