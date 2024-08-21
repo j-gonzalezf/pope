@@ -372,14 +372,14 @@ public class TrainingCycleControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testGetTrainingCycles_InvalidRole() throws Exception {
+    public void testGetTrainingCycles_NoInvalidRole() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
 
         mockMvc.perform(get("/api/templates/" + trainerDto.getId() + "/clients/" + clientDto.getId() + "/cycles")
                 .header("Authorization", "Bearer " + authClient.getServiceToken()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
 
     }
 
@@ -433,7 +433,7 @@ public class TrainingCycleControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testGetCycle_InvalidRole() throws Exception {
+    public void testGetCycle_NoInvalidRole() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
@@ -451,7 +451,7 @@ public class TrainingCycleControllerTest {
 
         mockMvc.perform(get("/api/templates/cycle/" + createdCycle.getId())
                 .header("Authorization", "Bearer " + authClient.getServiceToken()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
 
     }
 

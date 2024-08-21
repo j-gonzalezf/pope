@@ -276,7 +276,8 @@ public class UserControllerTest {
 
         UserDto clientDto = new UserDto(null, "client@client.com", "client",
                 "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
-                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+                "Objetivo", new BigDecimal("170"), new BigDecimal("70"),
+                trainerDto.getId());
 
         clientDto.setPassword(PASSWORD);
 
@@ -306,7 +307,7 @@ public class UserControllerTest {
 
         UserDto clientDto = new UserDto(null, null, "client",
                 "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
-                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+                "Objetivo", new BigDecimal("170"), null, trainerDto.getId());
 
         clientDto.setPassword(PASSWORD);
 
@@ -329,7 +330,7 @@ public class UserControllerTest {
 
         UserDto clientDto = new UserDto(null, "client@client.com", "client",
                 "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
-                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+                "Objetivo", new BigDecimal("170"), null, trainerDto.getId());
 
         mockMvc.perform(post("/api/users/addClient")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
@@ -350,7 +351,7 @@ public class UserControllerTest {
 
         UserDto clientDto = new UserDto(null, "client@client.com", null,
                 "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
-                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+                "Objetivo", new BigDecimal("170"), null, trainerDto.getId());
 
         clientDto.setPassword(PASSWORD);
 
@@ -373,7 +374,7 @@ public class UserControllerTest {
 
         UserDto clientDto = new UserDto(null, "client@client.com", "client",
                 "987654321", null, null, null, "2001-09-25", "Sin lesiones",
-                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+                "Objetivo", new BigDecimal("170"), null, trainerDto.getId());
 
         clientDto.setPassword(PASSWORD);
 
@@ -396,7 +397,7 @@ public class UserControllerTest {
 
         UserDto clientDto = new UserDto(null, "client@client.com", "client",
                 "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
-                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+                "Objetivo", new BigDecimal("170"), null, trainerDto.getId());
 
         clientDto.setPassword(PASSWORD);
 
@@ -424,7 +425,7 @@ public class UserControllerTest {
 
         UserDto clientDto = new UserDto(null, "client@client.com", "client",
                 "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
-                "Objetivo", new BigDecimal("170"), incorrectUserId);
+                "Objetivo", new BigDecimal("170"), null, incorrectUserId);
 
         clientDto.setPassword(PASSWORD);
 
@@ -446,7 +447,7 @@ public class UserControllerTest {
 
         UserDto clientDto = new UserDto(null, "client@client.com", "client",
                 "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
-                "Objetivo", new BigDecimal("170"), authTrainer2.getUserDto().getId());
+                "Objetivo", new BigDecimal("170"), null, authTrainer2.getUserDto().getId());
 
         clientDto.setPassword(PASSWORD);
 
@@ -469,7 +470,7 @@ public class UserControllerTest {
 
         UserDto clientDto = new UserDto(null, "client@client.com", "client",
                 "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
-                "Objetivo", new BigDecimal("170"), trainerDto.getId());
+                "Objetivo", new BigDecimal("170"), null, trainerDto.getId());
 
         clientDto.setPassword(PASSWORD);
 
@@ -703,6 +704,7 @@ public class UserControllerTest {
 
         UserDto updatedClientDto = clientDto;
         updatedClientDto.setBirthdate("2005-09-25");
+        updatedClientDto.setWeight(new BigDecimal("80"));
 
         mockMvc.perform(put("/api/users/" + updatedClientDto.getId())
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
@@ -1053,6 +1055,66 @@ public class UserControllerTest {
 
         mockMvc.perform(delete("/api/users/" + clientDto.getId() + "/delete")
                 .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para obtener los registros de pesos de un cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetWeights() throws Exception {
+
+        UserDto clientDto = authClient.getUserDto();
+
+        mockMvc.perform(get("/api/users/weights/fromClient/" + clientDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para obtener los registros de sensaciones de un cliente inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetWeights_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectId = -1L;
+
+        mockMvc.perform(get("/api/users/weights/fromClient/" + incorrectId)
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para obtener los registros de sensaciones de un cliente sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetWeights_PermissionException() throws Exception {
+
+        UserDto clientDto = new UserDto(null, "client@client.com", "client",
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", null, null, authTrainer2.getUserDto().getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        MvcResult result = mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer2.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        UserDto createdClient = new ObjectMapper().readValue(content, UserDto.class);
+
+        mockMvc.perform(get("/api/users/weights/fromClient/" + createdClient.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
                 .andExpect(status().isForbidden());
 
     }

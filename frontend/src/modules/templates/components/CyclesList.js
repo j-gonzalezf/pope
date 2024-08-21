@@ -21,6 +21,7 @@ const CyclesList = () => {
     const navigate = useNavigate();
 
     const user = useSelector(userSelectors.getUser);
+    const role = useSelector(userSelectors.getUserRole);
     const { clientId } = useParams();
     const getCycles = useSelector(selectors.getCycles);
 
@@ -146,12 +147,16 @@ const CyclesList = () => {
     }
 
     useEffect(() => {
-
-        dispatch(actions.getCycles(user.id, clientId,
-            () => { },
-            errors => setError(errors)));
-
-    }, [dispatch, user.id, clientId]);
+        if(role === "CLIENT") {
+            dispatch(actions.getCycles(user.trainerId, clientId,
+                () => { },
+                errors => setError(errors)));
+        } else {
+            dispatch(actions.getCycles(user.id, clientId,
+                () => { },
+                errors => setError(errors)));
+        }
+    }, [dispatch, role, user.trainerId, user.id, clientId]);
 
     return (
 
@@ -382,43 +387,49 @@ const CyclesList = () => {
                                 <td className="customTable">{cycle.description}</td>
                                 <td className="customTable">{dateFormat(cycle.fromDate)}</td>
                                 <td className="customTable">{dateFormat(cycle.toDate)}</td>
-                                <td className="customTable edit">
-                                    <Button className="primary edit" onClick={(event) => {
-                                        event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
-                                        openUpdateCycleModal(cycle);
-                                    }}
-                                        title='Pulsa para editar ciclo'>
-                                        <BsPencilSquare className="editIconStyle cycle" />
+                                {role === 'TRAINER' && (
+                                    <>
+                                        <td className="customTable edit">
+                                            <Button className="primary edit" onClick={(event) => {
+                                                event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
+                                                openUpdateCycleModal(cycle);
+                                            }}
+                                                title='Pulsa para editar ciclo'>
+                                                <BsPencilSquare className="editIconStyle cycle" />
+                                                <span>
+                                                    <FormattedMessage id="project.templates.updateCycle" />
+                                                </span>
+                                            </Button>
+                                        </td>
+                                        <td className="customTable delete">
+                                            <Button className="primary delete" onClick={(event) => {
+                                                event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
+                                                deleteCycle(cycle);
+                                            }}
+                                                title='Pulsa para eliminar ciclo'>
+                                                <BsTrash className="deleteIconStyle cycle" />
+                                                <span>
+                                                    <FormattedMessage id="project.templates.deleteCycle" />
+                                                </span>
+                                            </Button>
+                                        </td>
+                                    </>
+                                )}
+                            </tr>
+                        ))}
+                        {role === 'TRAINER' && (
+                            <tr>
+                                <td className="customTable"></td>
+                                <td colSpan={4} className="customTable">
+                                    <Button className="primary cycle" onClick={() => setShowAddCycleModal(true)}>
+                                        <BsFillPlusCircleFill className="plusIconStyle cycle" />
                                         <span>
-                                            <FormattedMessage id="project.templates.updateCycle" />
-                                        </span>
-                                    </Button>
-                                </td>
-                                <td className="customTable delete">
-                                    <Button className="primary delete" onClick={(event) => {
-                                        event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
-                                        deleteCycle(cycle);
-                                    }}
-                                        title='Pulsa para eliminar ciclo'>
-                                        <BsTrash className="deleteIconStyle cycle" />
-                                        <span>
-                                            <FormattedMessage id="project.templates.deleteCycle" />
+                                            <b><FormattedMessage id="project.templates.addCycle" /></b>
                                         </span>
                                     </Button>
                                 </td>
                             </tr>
-                        ))}
-                        <tr>
-                            <td className="customTable"></td>
-                            <td colSpan={4} className="customTable">
-                                <Button className="primary cycle" onClick={() => setShowAddCycleModal(true)}>
-                                    <BsFillPlusCircleFill className="plusIconStyle cycle" />
-                                    <span>
-                                        <b><FormattedMessage id="project.templates.addCycle" /></b>
-                                    </span>
-                                </Button>
-                            </td>
-                        </tr>
+                        )}
                     </tbody>
                 </Table>
             </div>

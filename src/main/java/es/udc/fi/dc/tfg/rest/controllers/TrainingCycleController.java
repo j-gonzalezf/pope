@@ -112,10 +112,15 @@ public class TrainingCycleController {
             @PathVariable("trainerId") Long trainerId, @PathVariable("clientId") Long clientId)
             throws InstanceNotFoundException, PermissionException, InvalidRoleException {
 
+        Users user = userService.loginFromId(userId);
         Users trainer = userService.loginFromId(trainerId);
         Users client = userService.loginFromId(clientId);
 
-        validateCycleUser(userId, trainer, client);
+        if (user.getUserRole().toString().equals("CLIENT")) {
+            validateCycleUser(user.getTrainer().getId(), trainer, client);
+        } else {
+            validateCycleUser(userId, trainer, client);
+        }
 
         List<TrainingCycles> cycles = cycleService.getCycles(trainerId, clientId);
 
@@ -140,9 +145,16 @@ public class TrainingCycleController {
             @PathVariable("id") Long cycleId) throws InstanceNotFoundException,
             PermissionException, InvalidRoleException {
 
+        Users user = userService.loginFromId(userId);
         TrainingCycles cycle = cycleService.getCycleInfo(cycleId);
+        Users trainer = userService.loginFromId(cycle.getTrainer().getId());
+        Users client = userService.loginFromId(cycle.getClient().getId());
 
-        validateCycleUser(userId, cycle.getTrainer(), cycle.getClient());
+        if (user.getUserRole().toString().equals("CLIENT")) {
+            validateCycleUser(user.getTrainer().getId(), trainer, client);
+        } else {
+            validateCycleUser(userId, trainer, client);
+        }
 
         return toTrainingCycleDto(cycle);
 

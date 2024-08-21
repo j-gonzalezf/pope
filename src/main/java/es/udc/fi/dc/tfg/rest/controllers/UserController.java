@@ -4,6 +4,7 @@ import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toAuthenticatedUserDto;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUser;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUserDto;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUsersDto;
+import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toWeightsDto;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -31,10 +32,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import es.udc.fi.dc.tfg.model.common.exceptions.DuplicateInstanceException;
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
 import es.udc.fi.dc.tfg.model.entities.Users;
+import es.udc.fi.dc.tfg.model.entities.Weights;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
 import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
+import es.udc.fi.dc.tfg.model.services.UserExtraService;
 import es.udc.fi.dc.tfg.model.services.UserService;
 import es.udc.fi.dc.tfg.rest.common.ErrorsDto;
 import es.udc.fi.dc.tfg.rest.common.JwtGenerator;
@@ -43,6 +46,8 @@ import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
 import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
+import es.udc.fi.dc.tfg.rest.dtos.WeightDto;
+import java.time.LocalDateTime;
 
 /**
  * Clase UserController.
@@ -78,6 +83,12 @@ public class UserController {
      */
     @Autowired
     private UserService userService;
+
+    /**
+     * El user extra service.
+     */
+    @Autowired
+    private UserExtraService userExtraService;
 
     /**
      * Maneja la excepción de inicio de sesión incorrecto.
@@ -176,10 +187,16 @@ public class UserController {
 
         Users user = createUser(userDto, trainer);
 
+        Weights weight = null;
+        if (userDto.getWeight() != null) {
+            weight = new Weights(userDto.getWeight(), LocalDateTime.now(), user);
+            userExtraService.weightRegister(weight);
+        }
+
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(user.getId()).toUri();
 
-        return ResponseEntity.created(location).body(toUserDto(user));
+        return ResponseEntity.created(location).body(toUserDto(user, weight));
 
     }
 
@@ -262,8 +279,9 @@ public class UserController {
         userService.validateUser(userId, clientId);
 
         Users client = userService.loginFromId(clientId);
+        Weights weight = userExtraService.getLastWeight(clientId);
 
-        return toUserDto(client);
+        return toUserDto(client, weight);
 
     }
 
@@ -298,7 +316,7 @@ public class UserController {
             case "TRAINER" -> {
                 return toUserDto(userService.updateProfile(id, userDto.getEmail(),
                         userDto.getFullName(), userDto.getPhone(),
-                        userDto.getIcon(), userDto.getSocialLinks()));
+                        userDto.getIcon(), userDto.getSocialLinks()), null);
             }
 
             case "CLIENT" -> {
@@ -309,9 +327,22 @@ public class UserController {
                     birthdate = LocalDate.parse(userDto.getBirthdate());
                 }
 
-                return toUserDto(userService.updateClient(id, userDto.getEmail(),
+                Weights lastWeight = userExtraService.getLastWeight(id);
+                Weights newWeight = null;
+                if (userDto.getWeight() != null && (lastWeight == null
+                        || !lastWeight.getWeight().equals(userDto.getWeight()))) {
+                    newWeight = new Weights(userDto.getWeight(), LocalDateTime.now(), user);
+                    userExtraService.weightRegister(newWeight);
+
+                }
+
+                Users updatedClient = userService.updateClient(id, userDto.getEmail(),
                         userDto.getFullName(), userDto.getPhone(), userDto.getIcon(),
-                        birthdate, userDto.getInjuries(), userDto.getGoals(), userDto.getHeight()));
+                        birthdate, userDto.getInjuries(), userDto.getGoals(),
+                        userDto.getHeight());
+
+                return toUserDto(updatedClient, newWeight != null ? newWeight : lastWeight);
+
             }
 
             default ->
@@ -368,6 +399,31 @@ public class UserController {
         userService.validateUser(userId, id);
 
         return userService.deleteUser(id);
+
+    }
+
+    /**
+     * Devuelve la lista de registros de pesos de un cliente.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param clientId el ID del cliente
+     * @return una lista de registros
+     * @throws InstanceNotFoundException si no se encuentra un cliente con el ID
+     * proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador de los ciclos a obtener
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    @GetMapping("/weights/fromClient/{clientId}")
+    public List<WeightDto> getWeights(@RequestAttribute Long userId,
+            @PathVariable("clientId") Long clientId) throws InstanceNotFoundException,
+            PermissionException, InvalidRoleException {
+
+        userService.validateUser(userId, clientId);
+
+        List<Weights> weights = userExtraService.getWeights(clientId);
+
+        return toWeightsDto(weights);
 
     }
 

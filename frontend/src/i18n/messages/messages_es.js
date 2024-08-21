@@ -34,7 +34,9 @@ export default {
     'project.users.goals': 'Objetivos',
     'project.users.height': 'Altura',
     'project.users.heightPattern': 'Formato de altura incorrecto',
-    
+    'project.users.weight': 'Peso',
+    'project.users.weightPattern': 'Formato de peso incorrecto',
+
     // Actions
     'project.users.clients.title': 'Clientes',
     'project.users.clientDetails.title': 'Gestión del cliente',
@@ -120,5 +122,25 @@ export default {
     'project.templates.templateView.title': 'Vista de plantilla',
     'project.templates.addTemplate': 'Crear plantilla',
     'project.templates.addTemplateRow': 'Añadir fila',
+
+
+    // Tracking Module
+    // Attributes
+    'project.tracking.fatigue': 'Fatiga',
+    'project.tracking.stiffness': 'Agujetas',
+    'project.tracking.motivation': 'Motivación',
+    'project.tracking.sleep': 'Calidad de sueño',
+    'project.tracking.week': 'Semana',
+    'project.tracking.month': 'Mes',
+    'project.tracking.year': 'Año',
+
+
+    // Actions
+    'project.tracking.sensations.title': 'Evaluación del entrenamiento',
+    'project.tracking.sensations.button': 'Enviar',
+    'project.tracking.sensations.end': 'Terminar',
+    'project.tracking.sensations.cancel': 'Terminar más tarde',
+    'project.tracking.sensations.titleUpdate': 'Editar evaluación del entrenamiento',
+    'project.tracking.sensations.update': 'Editar evaluación',
 
 }

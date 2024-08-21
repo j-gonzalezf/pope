@@ -98,9 +98,14 @@ public class ExerciseController {
             @PathVariable("trainerId") Long trainerId)
             throws InstanceNotFoundException, PermissionException, InvalidRoleException {
 
+        Users user = userService.loginFromId(userId);
         Users trainer = userService.loginFromId(trainerId);
 
-        validateUser(userId, trainer);
+        if (user.getUserRole().toString().equals("CLIENT")) {
+            validateUser(user.getTrainer().getId(), trainer);
+        } else {
+            validateUser(userId, trainer);
+        }
 
         List<Exercises> exercises = exerciseService.getExercises(trainerId);
 
@@ -116,12 +121,23 @@ public class ExerciseController {
      * @return un ejercicio
      * @throws InstanceNotFoundException si no se encuentra un ejercicio con el
      * ID proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
      */
     @GetMapping("/exercise/{id}")
     public ExerciseDto getExerciseInfo(@RequestAttribute Long userId,
-            @PathVariable("id") Long exerciseId) throws InstanceNotFoundException {
+            @PathVariable("id") Long exerciseId) throws InstanceNotFoundException,
+            PermissionException, InvalidRoleException {
 
+        Users user = userService.loginFromId(userId);
         Exercises exercise = exerciseService.getExerciseInfo(exerciseId);
+
+        if (user.getUserRole().toString().equals("CLIENT")) {
+            validateUser(user.getTrainer().getId(), exercise.getTrainer());
+        } else {
+            validateUser(userId, exercise.getTrainer());
+        }
 
         return toExerciseDto(exercise);
 
@@ -140,7 +156,7 @@ public class ExerciseController {
      * no coincide con el ID del usuario al que se le va a actualizar el perfil
      * @throws InvalidRoleException si el usuario que se va validar no tiene rol
      */
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/update")
     public ExerciseDto updateExercise(@RequestAttribute Long userId, @PathVariable("id") Long id,
             @Validated({ExerciseDto.UpdateValidations.class}) @RequestBody ExerciseDto exerciseDto)
             throws InstanceNotFoundException, PermissionException, InvalidRoleException {

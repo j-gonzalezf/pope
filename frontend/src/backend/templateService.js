@@ -65,7 +65,7 @@ export const getExercise = (id, onSuccess, onErrors) =>
 
 export const updateExercise = (exercise, onSuccess, onErrors) =>
     appFetch(
-        `/exercises/${exercise.id}`,
+        `/exercises/${exercise.id}/update`,
         fetchConfig("PUT", exercise),
         onSuccess,
         onErrors
@@ -105,7 +105,7 @@ export const getTemplate = (id, onSuccess, onErrors) =>
 
 export const updateTemplate = (template, onSuccess, onErrors) =>
     appFetch(
-        `/templates/template/${template.id}`,
+        `/templates/template/${template.id}/update`,
         fetchConfig("PUT", template),
         onSuccess,
         onErrors

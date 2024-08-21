@@ -98,6 +98,113 @@ body {
   box-shadow: 0 0 0 0.2rem red;
 }
 
+.form-range {
+  background-color: transparent;
+  appearance: none;
+}
+
+.form-range:focus {
+  outline: none;
+}
+
+.form-range:focus::-webkit-slider-thumb {
+  background: #191716;
+  box-shadow: 0 0 0 2px #e6af2e;
+}
+
+.form-range:focus::-moz-range-thumb {
+  background: #191716;
+  box-shadow: 0 0 0 2px #e6af2e;
+}
+
+.form-range:focus::-ms-thumb {
+  background: #191716;
+  box-shadow: 0 0 0 2px #e6af2e;
+}
+
+.form-range::-moz-focus-outer {
+  border: 0;
+}
+
+.form-range::-webkit-slider-thumb {
+  background: #e6af2e;
+  border: 1px solid #e6af2e;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #e6af2e;
+  transition: background 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  appearance: none;
+}
+
+.form-range::-webkit-slider-thumb:active {
+  background: #191716;
+  box-shadow: 0 0 0 2px #e6af2e;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  color: transparent;
+  cursor: pointer;
+  background-color: white;
+  border-color: transparent;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px white;
+}
+
+.form-range::-moz-range-thumb {
+  background: #e6af2e;
+  border: 1px solid #e6af2e;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #e6af2e;
+  transition: background 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  appearance: none;
+}
+
+.form-range::-moz-range-thumb:active {
+  background: #191716;
+  box-shadow: 0 0 0 2px #e6af2e;
+}
+
+.form-range::-moz-range-track {
+  color: transparent;
+  cursor: pointer;
+  background-color: white;
+  border-color: transparent;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px white;
+}
+
+.form-range::-ms-thumb {
+  background: #e6af2e;
+  border: 1px solid #e6af2e;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #e6af2e;
+  transition: background 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  appearance: none;
+}
+
+.form-range::-ms-thumb:active {
+  background: #191716;
+  box-shadow: 0 0 0 2px #e6af2e;
+}
+
+.form-range::-ms-track {
+  color: transparent;
+  cursor: pointer;
+  background-color: transparent;
+  border-color: transparent;
+  border-width: 8px;
+  box-shadow: 0 0 0 1px white;
+}
+
+.form-range::-ms-fill-lower {
+  background-color: #e6af2e;
+  border-radius: 4px;
+}
+
+.form-range::-ms-fill-upper {
+  background-color: #e6af2e;
+  border-radius: 4px;
+}
+
 /* Buttons */
 .btn {
   align-items: center;

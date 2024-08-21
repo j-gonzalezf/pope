@@ -404,7 +404,7 @@ public class TemplateControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testGetTemplates_InvalidRole() throws Exception {
+    public void testGetTemplates_NoInvalidRole() throws Exception {
 
         UserDto trainerDto = authTrainer.getUserDto();
         UserDto clientDto = authClient.getUserDto();
@@ -422,7 +422,7 @@ public class TemplateControllerTest {
 
         mockMvc.perform(get("/api/templates/fromCycle/" + createdCycle.getId())
                 .header("Authorization", "Bearer " + authClient.getServiceToken()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
 
     }
 
@@ -459,7 +459,7 @@ public class TemplateControllerTest {
         String content2 = result2.getResponse().getContentAsString();
         TemplateDto newTemplateDto = new ObjectMapper().readValue(content2, TemplateDto.class);
 
-        mockMvc.perform(put("/api/templates/template/" + newTemplateDto.getId())
+        mockMvc.perform(put("/api/templates/template/" + newTemplateDto.getId() + "/update")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newTemplateDto)))
                 .andExpect(status().isOk());
@@ -500,7 +500,7 @@ public class TemplateControllerTest {
         TemplateDto newTemplateDto = new ObjectMapper().readValue(content2, TemplateDto.class);
         newTemplateDto.setName(null);
 
-        mockMvc.perform(put("/api/templates/template/" + newTemplateDto.getId())
+        mockMvc.perform(put("/api/templates/template/" + newTemplateDto.getId() + "/update")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newTemplateDto)))
                 .andExpect(status().isBadRequest());
@@ -533,7 +533,7 @@ public class TemplateControllerTest {
         TemplateDto templateDto = new TemplateDto(null, "templateName",
                 "2001-09-25T10:15:30", createdCycle.getId());
 
-        mockMvc.perform(put("/api/templates/template/" + incorrectUserId)
+        mockMvc.perform(put("/api/templates/template/" + incorrectUserId + "/update")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateDto)))
                 .andExpect(status().isNotFound());
@@ -573,7 +573,7 @@ public class TemplateControllerTest {
         String content2 = result2.getResponse().getContentAsString();
         TemplateDto newTemplateDto = new ObjectMapper().readValue(content2, TemplateDto.class);
 
-        mockMvc.perform(put("/api/templates/template/" + newTemplateDto.getId())
+        mockMvc.perform(put("/api/templates/template/" + newTemplateDto.getId() + "/update")
                 .header("Authorization", "Bearer " + authTrainer2.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newTemplateDto)))
                 .andExpect(status().isForbidden());
@@ -613,7 +613,7 @@ public class TemplateControllerTest {
         String content2 = result2.getResponse().getContentAsString();
         TemplateDto newTemplateDto = new ObjectMapper().readValue(content2, TemplateDto.class);
 
-        mockMvc.perform(put("/api/templates/template/" + newTemplateDto.getId())
+        mockMvc.perform(put("/api/templates/template/" + newTemplateDto.getId() + "/update")
                 .header("Authorization", "Bearer " + authClient.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newTemplateDto)))
                 .andExpect(status().isForbidden());
