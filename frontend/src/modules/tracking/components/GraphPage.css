@@ -26,7 +26,7 @@
     stroke: gray !important;
 }
 
-.primary {
+.primary.graph {
     margin-top: 10px;
     border: 1px solid #191716;
     background-color: #e6af2e;
@@ -35,9 +35,9 @@
     font-weight: bold;
 }
 
-.primary:active,
-.primary:focus,
-.primary:hover {
+.primary.graph:active,
+.primary.graph:focus,
+.primary.graph:hover {
     border: 1px solid #191716 !important;
     box-shadow: none !important;
     background-color: #e6af2e !important;

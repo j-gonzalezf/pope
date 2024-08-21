@@ -120,13 +120,13 @@ const GraphPage = () => {
             </h3>
             <div className='GraphContainer'>
                 <div className="btn-group" role="group" aria-label="Time range">
-                    <button className={weekBtn ? "btn primary" : "btn notSelected"} onClick={() => { setTimeRange(7); setWeekBtn(true); setMonthBtn(false); setYearBtn(false) }}>
+                    <button className={weekBtn ? "btn primary graph" : "btn notSelected"} onClick={() => { setTimeRange(7); setWeekBtn(true); setMonthBtn(false); setYearBtn(false) }}>
                         <FormattedMessage id="project.tracking.week" />
                     </button>
-                    <button className={monthBtn ? "btn primary" : "btn notSelected"} onClick={() => { setTimeRange(20); setWeekBtn(false); setMonthBtn(true); setYearBtn(false) }}>
+                    <button className={monthBtn ? "btn primary graph" : "btn notSelected"} onClick={() => { setTimeRange(20); setWeekBtn(false); setMonthBtn(true); setYearBtn(false) }}>
                         <FormattedMessage id="project.tracking.month" />
                     </button>
-                    <button className={yearBtn ? "btn primary" : "btn notSelected"} onClick={() => { setTimeRange(240); setWeekBtn(false); setMonthBtn(false); setYearBtn(true) }}>
+                    <button className={yearBtn ? "btn primary graph" : "btn notSelected"} onClick={() => { setTimeRange(240); setWeekBtn(false); setMonthBtn(false); setYearBtn(true) }}>
                         <FormattedMessage id="project.tracking.year" />
                     </button>
                 </div>

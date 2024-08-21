@@ -142,4 +142,13 @@ export default {
     'project.tracking.sensations.titleUpdate': 'Editar avaliación do adestramento',
     'project.tracking.sensations.update': 'Actualizar avaliación',
 
+
+    // Comments Module
+    // Attributes
+
+
+    // Actions
+    'project.comments.title': 'Comentarios',
+    'project.comments.add': 'Enviar',
+
 }

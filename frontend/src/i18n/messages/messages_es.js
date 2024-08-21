@@ -143,4 +143,13 @@ export default {
     'project.tracking.sensations.titleUpdate': 'Editar evaluación del entrenamiento',
     'project.tracking.sensations.update': 'Editar evaluación',
 
+
+    // Comments Module
+    // Attributes
+
+
+    // Actions
+    'project.comments.title': 'Comentarios',
+    'project.comments.add': 'Enviar',
+
 }

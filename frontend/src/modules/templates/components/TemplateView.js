@@ -21,6 +21,7 @@ import AddTemplateRow from './AddTemplateRow';
 import EditTemplateRow from './EditTemplateRow';
 import SensationModal from '../../tracking/components/SensationsModal';
 import SensationUpdateModal from '../../tracking/components/SensationsUpdateModal';
+import AddComment from '../../comments/components/AddComment';
 
 const TemplateView = () => {
 
@@ -257,8 +258,11 @@ const TemplateView = () => {
 
                 <Col xs={12} sm={12} md={3} className='comment'>
                     <h3 className="title comments">
-                        Comentarios
+                        <FormattedMessage id="project.comments.title" />
                     </h3>
+
+                    <AddComment />
+
                 </Col>
 
             </Row>

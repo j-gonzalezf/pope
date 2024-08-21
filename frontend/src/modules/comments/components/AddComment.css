@@ -1,0 +1,35 @@
+.AddComment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.title.comments {
+    text-align: center;
+}
+
+.mb-3.comment {
+    margin-bottom: 13px !important;
+}
+
+.btn-group.comment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-color: #e6af2e;
+}
+
+.comment-input {
+    padding: 10px;
+    border: 1px solid #191716;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.primary.comment {
+    margin: 0 !important;
+    margin-left: 3px !important;
+    padding: 10px;
+    border-radius: 5px !important;
+}

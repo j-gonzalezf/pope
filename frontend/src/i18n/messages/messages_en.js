@@ -143,4 +143,13 @@ export default {
     'project.tracking.sensations.titleUpdate': 'Training evaluation update',
     'project.tracking.sensations.update': 'Update evaluation',
 
+
+    // Comments Module
+    // Attributes
+
+
+    // Actions
+    'project.comments.title': 'Comments',
+    'project.comments.add': 'Add',
+
 }
