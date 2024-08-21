@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SensationServiceImpl implements SensationService {
 
     /**
-     * El weight dao.
+     * El sensation dao.
      */
     @Autowired
     private SensationDao sensationDao;
