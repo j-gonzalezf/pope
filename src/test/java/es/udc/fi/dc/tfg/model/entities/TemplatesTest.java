@@ -60,7 +60,7 @@ public class TemplatesTest {
     @Test
     public void testTemplateConstructors() {
 
-        // Test template constructor
+        // Test void template constructor
         assertNotNull(voidTemplate);
         assertNull(voidTemplate.getId());
 

@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { Errors } from '../../common';
 import DefaultIcon from '../../common/images/client-logo.webp';
 import * as actions from '../actions';
+import * as trackingActions from '../../tracking/actions';
 import * as selectors from '../selectors';
 
 const ClientsList = () => {
@@ -33,6 +34,8 @@ const ClientsList = () => {
     };
 
     useEffect(() => {
+
+        dispatch(trackingActions.clearSensations());
 
         dispatch(actions.getClients(user.id,
             () => { },

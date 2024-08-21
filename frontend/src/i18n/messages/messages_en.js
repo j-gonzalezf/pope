@@ -34,6 +34,8 @@ export default {
     'project.users.goals': 'Goals',
     'project.users.height': 'Height',
     'project.users.heightPattern': 'Invalid height',
+    'project.users.weight': 'Weight',
+    'project.users.weightPattern': 'Invalid weight',
 
     // Actions
     'project.users.clients.title': 'Clients',
@@ -120,5 +122,25 @@ export default {
     'project.templates.templateView.title': 'Template view',
     'project.templates.addTemplate': 'Create template',
     'project.templates.addTemplateRow': 'Add row',
+
+
+    // Tracking Module
+    // Attributes
+    'project.tracking.fatigue': 'Fatigue',
+    'project.tracking.stiffness': 'Stiffness',
+    'project.tracking.motivation': 'Motivation',
+    'project.tracking.sleep': 'Sleep quality',
+    'project.tracking.week': 'Week',
+    'project.tracking.month': 'Month',
+    'project.tracking.year': 'Year',
+
+
+    // Actions
+    'project.tracking.sensations.title': 'Training evaluation',
+    'project.tracking.sensations.button': 'Send',
+    'project.tracking.sensations.end': 'Finish',
+    'project.tracking.sensations.cancel': 'Finish later',
+    'project.tracking.sensations.titleUpdate': 'Training evaluation update',
+    'project.tracking.sensations.update': 'Update evaluation',
 
 }

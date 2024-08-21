@@ -19,3 +19,8 @@
     border: none;
     background-color: #191716;
 }
+
+#weight.form-control.weight {
+    margin-left: 0 !important;
+    width: 100% !important;
+}

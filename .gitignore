@@ -15,4 +15,5 @@ yarn-error.log*
 =
 
 src/main/resources/db
+src/main/resources/user-icons
 frontend/src/modules/common/fonts/discartedFonts

@@ -4,8 +4,8 @@ import * as actionTypes from './actionTypes';
 
 const initialState = {
     user: null,
-    getClients: [{}],
-    getClientInfo: {}
+    getClients: [],
+    getClientInfo: null
 }
 
 const user = (state = initialState.user, action) => {

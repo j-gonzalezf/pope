@@ -343,13 +343,13 @@ public class ExerciseControllerTest {
      * @throws Exception la excepción
      */
     @Test
-    public void testGetExercises_InvalidRole() throws Exception {
+    public void testGetExercises_NoInvalidRole() throws Exception {
 
         UserDto clientDto = authClient.getUserDto();
 
         mockMvc.perform(get("/api/exercises/" + clientDto.getId())
                 .header("Authorization", "Bearer " + authClient.getServiceToken()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
 
     }
 
@@ -374,7 +374,7 @@ public class ExerciseControllerTest {
         String content = result.getResponse().getContentAsString();
         ExerciseDto newExerciseDto = new ObjectMapper().readValue(content, ExerciseDto.class);
 
-        mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId())
+        mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId() + "/update")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newExerciseDto)))
                 .andExpect(status().isOk());
@@ -403,7 +403,7 @@ public class ExerciseControllerTest {
         ExerciseDto newExerciseDto = new ObjectMapper().readValue(content, ExerciseDto.class);
         newExerciseDto.setName(null);
 
-        mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId())
+        mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId() + "/update")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newExerciseDto)))
                 .andExpect(status().isBadRequest());
@@ -432,7 +432,7 @@ public class ExerciseControllerTest {
         ExerciseDto newExerciseDto = new ObjectMapper().readValue(content, ExerciseDto.class);
         newExerciseDto.setDescription(null);
 
-        mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId())
+        mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId() + "/update")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newExerciseDto)))
                 .andExpect(status().isBadRequest());
@@ -461,7 +461,7 @@ public class ExerciseControllerTest {
         ExerciseDto newExerciseDto = new ObjectMapper().readValue(content, ExerciseDto.class);
         newExerciseDto.setType(null);
 
-        mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId())
+        mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId() + "/update")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newExerciseDto)))
                 .andExpect(status().isBadRequest());
@@ -482,7 +482,7 @@ public class ExerciseControllerTest {
         ExerciseDto exerciseDto = new ExerciseDto(null, "exerciseName", "description",
                 "exerciseType", null, null, null, trainerDto.getId());
 
-        mockMvc.perform(put("/api/exercises/" + incorrectUserId)
+        mockMvc.perform(put("/api/exercises/" + incorrectUserId + "/update")
                 .header("Authorization", "Bearer " + authTrainer.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(exerciseDto)))
                 .andExpect(status().isNotFound());
@@ -510,7 +510,7 @@ public class ExerciseControllerTest {
         String content = result.getResponse().getContentAsString();
         ExerciseDto newExerciseDto = new ObjectMapper().readValue(content, ExerciseDto.class);
 
-        mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId())
+        mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId() + "/update")
                 .header("Authorization", "Bearer " + authTrainer2.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newExerciseDto)))
                 .andExpect(status().isForbidden());
@@ -538,7 +538,7 @@ public class ExerciseControllerTest {
         String content = result.getResponse().getContentAsString();
         ExerciseDto newExerciseDto = new ObjectMapper().readValue(content, ExerciseDto.class);
 
-        mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId())
+        mockMvc.perform(put("/api/exercises/" + newExerciseDto.getId() + "/update")
                 .header("Authorization", "Bearer " + authClient.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(newExerciseDto)))
                 .andExpect(status().isForbidden());

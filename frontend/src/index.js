@@ -8,8 +8,9 @@ import ReactDOM from 'react-dom/client';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
 
-import store from '../src/store';
+import { store, persistor } from '../src/store';
 import backend, { NetworkError } from './backend';
 import { initReactIntl } from './i18n';
 import app, { App } from './modules/app/';
@@ -23,11 +24,13 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <Provider store={store}>
-            <IntlProvider locale={locale} messages={messages}>
-                <HashRouter>
-                    <App />
-                </HashRouter>
-            </IntlProvider>
+            <PersistGate loading={null} persistor={persistor}>
+                <IntlProvider locale={locale} messages={messages}>
+                    <HashRouter>
+                        <App />
+                    </HashRouter>
+                </IntlProvider>
+            </PersistGate>
         </Provider>
     </React.StrictMode>
 );

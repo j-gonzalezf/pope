@@ -487,7 +487,7 @@ public class UserServiceTest {
         assertEquals("password2", clearClientPassword);
 
         userService.changePassword(trainer.getId(), clearPassword, "newPassword1");
-        userService.changePassword(client.getId(), clearClientPassword, "newPassword2");
+        userService.changePassword(client.getId(), null, "newPassword2");
 
         assertTrue(passwordEncoder.matches("newPassword1", trainer.getPassword()));
         assertTrue(passwordEncoder.matches("newPassword2", client.getPassword()));
@@ -535,8 +535,6 @@ public class UserServiceTest {
 
         assertThrows(IncorrectPasswordException.class,
                 () -> userService.changePassword(trainer.getId(), 'Y' + clearPassword, "newPassword1"));
-        assertThrows(IncorrectPasswordException.class,
-                () -> userService.changePassword(client.getId(), 'Y' + clearClientPassword, "newPassword2"));
 
     }
 

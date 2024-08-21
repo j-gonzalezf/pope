@@ -26,7 +26,8 @@ const AddClient = () => {
     const [birthdate, setBirthdate] = useState(null);
     const [injuries, setInjuries] = useState('');
     const [goals, setGoals] = useState('');
-    const [height, setHeight] = useState(null);
+    const [height, setHeight] = useState('');
+    const [weight, setWeight] = useState('');
     const [error, setError] = useState(null);
 
     const user = useSelector(selectors.getUser);
@@ -69,6 +70,9 @@ const AddClient = () => {
 
         if (form.checkValidity()) {
 
+            const heightValue = height === '0' ? null : height;
+            const weightValue = weight === '0' ? null : weight;
+
             dispatch(actions.addClient(
                 {
                     email: email.trim(),
@@ -80,7 +84,8 @@ const AddClient = () => {
                     birthdate: birthdate || null,
                     injuries: injuries ? injuries.trim() : null,
                     goals: goals ? goals.trim() : null,
-                    height: height || null,
+                    height: heightValue || null,
+                    weight: weightValue || null,
                     trainerId: user.id
                 },
                 () => navigate('/users/clients'),
@@ -263,9 +268,29 @@ const AddClient = () => {
                                 placeholder="Introduzca la altura del cliente (en cm)"
                                 value={height || ''}
                                 onChange={e => setHeight(e.target.value)}
+                                min={0}
                             />
                             <Form.Control.Feedback type="invalid">
                                 <FormattedMessage id="project.users.heightPattern" />
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label data-testid="weight" htmlFor="weight" className="mb-3">
+                                <FormattedMessage id="project.users.weight" />
+                            </Form.Label>
+                            <Form.Control
+                                type="number"
+                                step="0.01"
+                                className="form-control weight"
+                                id="weight"
+                                name="weight"
+                                placeholder="Introduzca el peso del cliente (en kg)"
+                                value={weight || ''}
+                                onChange={e => setWeight(e.target.value)}
+                                min={0}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                <FormattedMessage id="project.users.weightPattern" />
                             </Form.Control.Feedback>
                         </Form.Group>
 

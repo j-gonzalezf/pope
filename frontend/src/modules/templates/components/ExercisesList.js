@@ -19,6 +19,7 @@ const ExercisesList = () => {
     const dispatch = useDispatch();
 
     const user = useSelector(userSelectors.getUser);
+    const role = useSelector(userSelectors.getUserRole);
     const getExercises = useSelector(selectors.getExercises);
 
     const [id, setId] = useState(null);
@@ -141,10 +142,16 @@ const ExercisesList = () => {
     }
 
     useEffect(() => {
-        dispatch(actions.getExercises(user.id,
-            () => { },
-            errors => setError(errors)));
-    }, [dispatch, user.id]);
+        if (role === 'CLIENT') {
+            dispatch(actions.getExercises(user.trainerId,
+                () => { },
+                errors => setError(errors)));
+        } else {
+            dispatch(actions.getExercises(user.id,
+                () => { },
+                errors => setError(errors)));
+        }
+    }, [dispatch, role, user.trainerId, user.id]);
 
     return (
 
@@ -444,43 +451,49 @@ const ExercisesList = () => {
                                 <td className="customTable">{exercise.type}</td>
                                 <td className="customTable">{exercise.bodyPart}</td>
                                 <td className="customTable">{exercise.equipment}</td>
-                                <td className="customTable edit">
-                                    <Button className="primary edit" onClick={(event) => {
-                                        event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
-                                        openUpdateExerciseModal(exercise);
-                                    }}
-                                        title='Pulsa para editar ejercicio'>
-                                        <BsPencilSquare className="editIconStyle cycle" />
+                                {role === 'TRAINER' && (
+                                    <>
+                                        <td className="customTable edit">
+                                            <Button className="primary edit" onClick={(event) => {
+                                                event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
+                                                openUpdateExerciseModal(exercise);
+                                            }}
+                                                title='Pulsa para editar ejercicio'>
+                                                <BsPencilSquare className="editIconStyle cycle" />
+                                                <span>
+                                                    <FormattedMessage id="project.templates.updateCycle" />
+                                                </span>
+                                            </Button>
+                                        </td>
+                                        <td className="customTable delete">
+                                            <Button className="primary delete" onClick={(event) => {
+                                                event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
+                                                deleteExercise(exercise);
+                                            }}
+                                                title='Pulsa para eliminar ejercicio'>
+                                                <BsTrash className="deleteIconStyle cycle" />
+                                                <span>
+                                                    <FormattedMessage id="project.templates.deleteCycle" />
+                                                </span>
+                                            </Button>
+                                        </td>
+                                    </>
+                                )}
+                            </tr>
+                        ))}
+                        {role === 'TRAINER' && (
+                            <tr>
+                                <td className="customTable"></td>
+                                <td colSpan={6} className="customTable">
+                                    <Button className="primary exercise" onClick={() => setShowAddExerciseModal(true)} >
+                                        <BsFillPlusCircleFill className="plusIconStyle exercise" />
                                         <span>
-                                            <FormattedMessage id="project.templates.updateCycle" />
-                                        </span>
-                                    </Button>
-                                </td>
-                                <td className="customTable delete">
-                                    <Button className="primary delete" onClick={(event) => {
-                                        event.stopPropagation(); // Para que entre en updateCycle y no en cycleDetails
-                                        deleteExercise(exercise);
-                                    }}
-                                        title='Pulsa para eliminar ejercicio'>
-                                        <BsTrash className="deleteIconStyle cycle" />
-                                        <span>
-                                            <FormattedMessage id="project.templates.deleteCycle" />
+                                            <b><FormattedMessage id="project.templates.addExercise" /></b>
                                         </span>
                                     </Button>
                                 </td>
                             </tr>
-                        ))}
-                        <tr>
-                            <td className="customTable"></td>
-                            <td colSpan={6} className="customTable">
-                                <Button className="primary exercise" onClick={() => setShowAddExerciseModal(true)} >
-                                    <BsFillPlusCircleFill className="plusIconStyle exercise" />
-                                    <span>
-                                        <b><FormattedMessage id="project.templates.addExercise" /></b>
-                                    </span>
-                                </Button>
-                            </td>
-                        </tr>
+                        )}
                     </tbody>
                 </Table>
 

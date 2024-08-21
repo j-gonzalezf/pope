@@ -6,6 +6,9 @@ export const getUser = state =>
 export const isLoggedIn = state =>
     !!getUser(state);
 
+export const getUserRole = state =>
+    getUser(state) ? getUser(state).role : '';
+
 export const getIcon = state =>
     getUser(state) ? getUser(state).icon : '';
 
