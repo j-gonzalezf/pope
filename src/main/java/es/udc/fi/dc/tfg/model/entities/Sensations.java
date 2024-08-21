@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class Sensations {
 
     /**
-     * Identificador único autogenerado de la fila de una plantilla.
+     * Identificador único autogenerado del registro de sensaciones.
      */
     private Long id;
 
