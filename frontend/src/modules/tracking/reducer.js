@@ -3,8 +3,26 @@ import { combineReducers } from 'redux';
 import * as actionTypes from './actionTypes';
 
 const initialState = {
+    getWeights: [],
     getSensations: [],
     getSensation: null,
+}
+
+const getWeights = (state = initialState.getWeights, action) => {
+
+    switch (action.type) {
+
+        case actionTypes.GET_WEIGHTS_COMPLETED:
+            return action.getWeights;
+        
+        case actionTypes.CLEAR_SENSATIONS:
+            return [];
+
+        default:
+            return state;
+
+    }
+
 }
 
 const getSensations = (state = initialState.getSensations, action) => {
@@ -45,6 +63,7 @@ const getSensation = (state = initialState.getSensation, action) => {
 }
 
 const reducer = combineReducers({
+    getWeights,
     getSensations,
     getSensation
 });

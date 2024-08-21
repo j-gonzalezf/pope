@@ -24,9 +24,12 @@ const Graphs = () => {
 
     const handleButtonClick = (sensationKey) => {
         navigate(`/tracking/graph/${sensationKey}`);
-      };
+    };
 
     useEffect(() => {
+        dispatch(actions.getWeights(clientId,
+            () => { },
+            errors => setError(errors)));
         dispatch(actions.getSensations(clientId,
             () => { },
             errors => setError(errors)));
@@ -72,8 +75,8 @@ const Graphs = () => {
                         </span>
                     </button>
                 </Col>
-                <Col xs={12} sm={6} md={4} lg={3} className="listColStyle" onClick={() => handleButtonClick('sleep')}>
-                    <button className="listItemStyle clientDetails">
+                <Col xs={12} sm={6} md={4} lg={3} className="listColStyle">
+                    <button className="listItemStyle clientDetails" onClick={() => handleButtonClick('sleep')}>
                         <div>
                             <RiZzzFill className='plusIconStyle' size={60} color='#e6af2e' alt="Zzz Icon" />
                         </div>
@@ -83,7 +86,7 @@ const Graphs = () => {
                     </button>
                 </Col>
                 <Col xs={12} sm={6} md={4} lg={3} className="listColStyle">
-                    <button className="listItemStyle clientDetails">
+                    <button className="listItemStyle clientDetails" onClick={() => handleButtonClick('weight')}>
                         <div>
                             <GiWeight className='plusIconStyle' size={60} color='#e6af2e' alt="Weight Icon" />
                         </div>

@@ -4,6 +4,7 @@ import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toAuthenticatedUserDto;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUser;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUserDto;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUsersDto;
+import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toWeightsDto;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -45,6 +46,7 @@ import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
 import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
+import es.udc.fi.dc.tfg.rest.dtos.WeightDto;
 import java.time.LocalDateTime;
 
 /**
@@ -397,6 +399,31 @@ public class UserController {
         userService.validateUser(userId, id);
 
         return userService.deleteUser(id);
+
+    }
+
+    /**
+     * Devuelve la lista de registros de pesos de un cliente.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param clientId el ID del cliente
+     * @return una lista de registros
+     * @throws InstanceNotFoundException si no se encuentra un cliente con el ID
+     * proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador de los ciclos a obtener
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    @GetMapping("/weights/fromClient/{clientId}")
+    public List<WeightDto> getWeights(@RequestAttribute Long userId,
+            @PathVariable("clientId") Long clientId) throws InstanceNotFoundException,
+            PermissionException, InvalidRoleException {
+
+        userService.validateUser(userId, clientId);
+
+        List<Weights> weights = userExtraService.getWeights(clientId);
+
+        return toWeightsDto(weights);
 
     }
 

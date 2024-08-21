@@ -5,6 +5,11 @@
     width: auto;
 }
 
+.title.weight:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .GraphContainer {
     width: 80rem;
     height: 25rem;
@@ -31,7 +36,8 @@
 }
 
 .primary:active,
-.primary:focus {
+.primary:focus,
+.primary:hover {
     border: 1px solid #191716 !important;
     box-shadow: none !important;
     background-color: #e6af2e !important;
@@ -50,6 +56,7 @@
 .notSelected:hover {
     border: 1px solid #191716;
     background-color: white;
+    color: #191716;
 }
 
 .notSelected:active,
@@ -58,4 +65,58 @@
     box-shadow: none !important;
     background-color: #191716 !important;
     color: white !important;
+}
+
+.custom-tooltip {
+    position: absolute;
+    color: white;
+    background-color: #191716;
+    padding: 5px;
+    border: 2px solid white !important;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    box-shadow: none;
+    outline: none;
+    white-space: nowrap;
+    z-index: 1000;
+    pointer-events: none;
+    transform: translate(-73%, -120%);
+}
+
+.custom-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    /* Adjust this value to position the arrow */
+    left: 53%;
+    transform: translateX(-50%);
+    padding: 5px;
+    border: 2px solid #e6af2e !important;
+    border-radius: 7px !important;
+    border-color: white transparent transparent transparent;
+    /* Adjust the color to match the tooltip background */
+    background-color: #191716;
+    /* Set the background color to match the tooltip */
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.tooltip-wrap {
+    color: transparent;
+}
+
+.tooltip-wrap>div {
+    background-color: transparent !important;
+}
+
+.tooltip-wrap>div>div {
+    background-color: transparent !important;
+}
+
+.tooltip-wrap>div>div>div {
+    background-color: transparent !important;
+}
+
+.tooltip-wrap>div>div>div>div:not(.custom-tooltip) {
+    border-color: transparent !important;
 }

@@ -8,6 +8,14 @@ export const sensationsRegister = (sensations, onSuccess, onErrors) =>
         onErrors
     );
 
+export const getWeights = (clientId, onSuccess, onErrors) =>
+    appFetch(
+        `/users/weights/fromClient/${clientId}`,
+        fetchConfig("GET"),
+        onSuccess,
+        onErrors
+    );
+
 export const getSensations = (clientId, onSuccess, onErrors) =>
     appFetch(
         `/sensations/fromClient/${clientId}`,

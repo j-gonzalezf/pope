@@ -105,9 +105,9 @@ public class SensationController {
      * Devuelve la lista de registros de sensaciones de un cliente.
      *
      * @param userId el ID del usuario que realiza la petición
-     * @param clientId el ID del ciclo
+     * @param clientId el ID del cliente
      * @return una lista de registros
-     * @throws InstanceNotFoundException si no se encuentra un ciclo con el ID
+     * @throws InstanceNotFoundException si no se encuentra un cliente con el ID
      * proporcionado
      * @throws PermissionException si el ID del usuario que realiza la petición
      * no coincide con el ID del entrenador de los ciclos a obtener

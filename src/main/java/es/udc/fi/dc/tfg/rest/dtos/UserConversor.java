@@ -117,4 +117,29 @@ public class UserConversor {
 
     }
 
+    /**
+     * Convierte un objeto Weights a un objeto WeightDto
+     *
+     * @param weight el objeto Weights a convertir
+     * @return un nuevo objeto WeightDto que contiene los mismos datos que el
+     * objeto Weights proporcionado
+     */
+    public static final WeightDto toWeightDto(Weights weight) {
+        return new WeightDto(weight.getId(), weight.getWeight(),
+                weight.getWeightDate().toString(), weight.getClient().getId());
+    }
+
+    /**
+     * Convierte una lista de objetos Weights a objetos WeightDto.
+     *
+     * @param weights la lista de objetos Weights a convertir
+     * @return una nueva lista de objetos WeightDto que contiene los mismos
+     * datos que la lista de objetos Weights proporcionada
+     */
+    public static final List<WeightDto> toWeightsDto(List<Weights> weights) {
+        return weights.stream().map(weight -> {
+            return toWeightDto(weight);
+        }).collect(Collectors.toList());
+    }
+
 }

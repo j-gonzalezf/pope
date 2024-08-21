@@ -1,5 +1,6 @@
 package es.udc.fi.dc.tfg.rest;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,10 +31,6 @@ import es.udc.fi.dc.tfg.rest.dtos.SensationDto;
 import es.udc.fi.dc.tfg.rest.dtos.TemplateDto;
 import es.udc.fi.dc.tfg.rest.dtos.TrainingCycleDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
-import java.math.BigDecimal;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Clase SensationControllerTest.

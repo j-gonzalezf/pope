@@ -14,6 +14,20 @@ export const registerSensations = (sensations, onSuccess, onErrors) => dispatch 
         onErrors
     );
 
+const getWeightsCompleted = getWeights => ({
+    type: actionTypes.GET_WEIGHTS_COMPLETED,
+    getWeights
+});
+
+export const getWeights = (clientId, onSuccess, onErrors) => dispatch =>
+    backend.trackingService.getWeights(clientId,
+        getWeights => {
+            dispatch(getWeightsCompleted(getWeights));
+            onSuccess();
+        },
+        onErrors
+    );
+
 const getSensationsCompleted = getSensations => ({
     type: actionTypes.GET_SENSATIONS_COMPLETED,
     getSensations

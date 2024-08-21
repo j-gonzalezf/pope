@@ -1,5 +1,8 @@
 const getModuleState = state => state.tracking;
 
+export const getWeights = state =>
+    getModuleState(state).getWeights;
+
 export const getSensations = state =>
     getModuleState(state).getSensations;
 
