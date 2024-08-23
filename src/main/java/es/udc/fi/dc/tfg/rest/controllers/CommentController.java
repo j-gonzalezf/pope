@@ -1,6 +1,7 @@
 package es.udc.fi.dc.tfg.rest.controllers;
 
 import static es.udc.fi.dc.tfg.rest.dtos.CommentConversor.toCommentDto;
+import static es.udc.fi.dc.tfg.rest.dtos.CommentConversor.toCommentsDto;
 import static es.udc.fi.dc.tfg.rest.dtos.CommentConversor.toComments;
 
 import es.udc.fi.dc.tfg.model.common.exceptions.InstanceNotFoundException;
@@ -16,9 +17,12 @@ import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
 import es.udc.fi.dc.tfg.rest.dtos.CommentDto;
 import java.net.URI;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -99,6 +103,34 @@ public class CommentController {
                 .buildAndExpand(comment.getId()).toUri();
 
         return ResponseEntity.created(location).body(toCommentDto(comment));
+
+    }
+
+    /**
+     * Devuelve la lista de comentarios de una plantilla.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param templateId el ID de la plantilla
+     * @return una lista de comentarios
+     * @throws InstanceNotFoundException si no se encuentra una plantilla con el
+     * ID proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador de los ciclos a obtener
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    @GetMapping("/fromTemplate/{templateId}")
+    public List<CommentDto> getTemplateComments(@RequestAttribute Long userId,
+            @PathVariable("templateId") Long templateId)
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        Templates template = templateService.getTemplateInfo(templateId);
+        TrainingCycles cycle = cycleService.getCycleInfo(template.getCycle().getId());
+
+        userService.validateUser(userId, cycle.getClient().getId());
+
+        List<Comments> comments = commentService.getTemplateComments(templateId);
+
+        return toCommentsDto(comments);
 
     }
 

@@ -23,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.transaction.annotation.Transactional;
@@ -229,6 +230,106 @@ public class CommentControllerTest {
         mockMvc.perform(post("/api/comments/write")
                 .header("Authorization", "Bearer " + authClient2.getServiceToken())
                 .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(commentDto)))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para obtener los comentarios de una plantilla.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTemplateComments() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        TemplateDto templateDto = new TemplateDto(null, "templateName",
+                "2001-09-25T10:15:30", createdCycle.getId());
+
+        MvcResult result3 = mockMvc.perform(post("/api/templates/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content3 = result3.getResponse().getContentAsString();
+        TemplateDto createdTemplate = new ObjectMapper().readValue(content3, TemplateDto.class);
+
+        // Obtener comentarios como entrenador
+        mockMvc.perform(get("/api/comments/fromTemplate/" + createdTemplate.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
+
+        // Obtener comentarios como cliente
+        mockMvc.perform(get("/api/comments/fromTemplate/" + createdTemplate.getId())
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para obtener los comentarios de una plantilla inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTemplateComments_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectId = -1L;
+
+        mockMvc.perform(get("/api/comments/fromTemplate/" + incorrectId)
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para obtener los comentarios de una plantilla sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTemplateComments_PermissionException() throws Exception {
+
+        UserDto trainerDto = authTrainer.getUserDto();
+        UserDto clientDto = authClient.getUserDto();
+
+        TrainingCycleDto cycleDto = new TrainingCycleDto(null, "cycleName", null,
+                "2001-09-25", "2002-09-25", trainerDto.getId(), clientDto.getId());
+
+        MvcResult result = mockMvc.perform(post("/api/templates/cycle/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(cycleDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        TrainingCycleDto createdCycle = new ObjectMapper().readValue(content, TrainingCycleDto.class);
+
+        TemplateDto templateDto = new TemplateDto(null, "templateName",
+                "2001-09-25T10:15:30", createdCycle.getId());
+
+        MvcResult result3 = mockMvc.perform(post("/api/templates/create")
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(templateDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content3 = result3.getResponse().getContentAsString();
+        TemplateDto createdTemplate = new ObjectMapper().readValue(content3, TemplateDto.class);
+
+        mockMvc.perform(get("/api/comments/fromTemplate/" + createdTemplate.getId())
+                .header("Authorization", "Bearer " + authClient2.getServiceToken()))
                 .andExpect(status().isForbidden());
 
     }
