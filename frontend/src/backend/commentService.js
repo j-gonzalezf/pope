@@ -7,3 +7,11 @@ export const addComment = (comment, onSuccess, onErrors) =>
         onSuccess,
         onErrors
     );
+
+export const getTemplateComments = (id, onSuccess, onErrors) =>
+    appFetch(
+        `/comments/fromTemplate/${id}`,
+        fetchConfig("GET"),
+        onSuccess,
+        onErrors
+    );
