@@ -5,7 +5,8 @@ import * as actionTypes from './actionTypes';
 const initialState = {
     user: null,
     getClients: [],
-    getClientInfo: null
+    getClientInfo: null,
+    successMessage: null
 }
 
 const user = (state = initialState.user, action) => {
@@ -62,10 +63,22 @@ const getClientInfo = (state = initialState.getClientInfo, action) => {
 
 }
 
+const successMessage = (state = initialState.successMessage, action) => {
+    switch (action.type) {
+        case actionTypes.SHOW_SUCCESS_MESSAGE:
+            return action.payload;
+        case actionTypes.HIDE_SUCCESS_MESSAGE:
+            return null;
+        default:
+            return state;
+    }
+};
+
 const reducer = combineReducers({
     user,
     getClients,
-    getClientInfo
+    getClientInfo,
+    successMessage
 });
 
 export default reducer;

@@ -36,6 +36,7 @@ const Header = () => {
 
         const urlsToHideCycleName = [
             `/users/clientDetails/${clientId ? clientId : ''}`,
+            `/users/updateClient/${clientId ? clientId : ''}`,
             `/templates/trainingCycles/${clientId ? clientId : ''}`,
             `/tracking/graphs/${clientId ? clientId : ''}`,
             '/tracking/graph/fatigue',
@@ -105,7 +106,7 @@ const Header = () => {
                         </>
                     ) : (
                         user && (
-                            <Navbar.Brand as={Link} to={`/templates/trainingCycles/${user.id}`} title="Clientes" onClick={clearCycle}>
+                            <Navbar.Brand as={Link} to={`/templates/trainingCycles/${user.id}`} title="Ciclos" onClick={clearCycle}>
                                 <Image className="anchor-icon" src={AnchorIcon} alt="Logo" />
                             </Navbar.Brand>
                         )
@@ -113,8 +114,8 @@ const Header = () => {
 
                 </div>
 
-                <Link className="dumbbells-link" to="/templates/exercises" title="Lista de ejercicios">
-                    <CgGym className="dumbbells-icon" size={55} src={Dumbbells} alt="Lista de ejercicios" />
+                <Link className="dumbbells-link" to="/templates/exercises" title="Biblioteca de ejercicios">
+                    <CgGym className="dumbbells-icon" size={55} src={Dumbbells} alt="Biblioteca de ejercicios" />
                 </Link>
 
                 <div className="header-right">

@@ -45,13 +45,14 @@
     height: 300px;
     margin: 20px;
     padding: 10px;
-    border: 2px solid #191716;
+    border: 2px solid white;
     border-radius: 5px;
-    background-color: white;
+    background-color: #191716;
     overflow-y: auto;
 }
 
 .comment {
+    margin-bottom: 5px;
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
@@ -59,6 +60,7 @@
 .user-comment {
     align-self: flex-end;
     background-color: #faf7c9;
+    border-radius: 15px 15px 0 15px;
 }
 
 .user-comment small {
@@ -68,6 +70,7 @@
 .other-comment {
     align-self: flex-start;
     background-color: white;
+    border-radius: 15px 15px 15px 0;
 }
 
 .comment:last-child {
