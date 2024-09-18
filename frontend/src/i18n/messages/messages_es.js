@@ -24,9 +24,10 @@ export default {
     'project.users.confirmPassword': 'Confirmar contraseña',
     'project.users.confirmPasswordPattern': 'Las contraseñas no coinciden',
     'project.users.phone': 'Número de teléfono',
+    'project.users.phoneContact': 'Teléfono de contacto',
     'project.users.phonePattern': 'Formato de número incorrecto',
     'project.users.icon': 'Foto de perfil',
-    'project.users.socialLinks': 'Enlaces sociales',
+    'project.users.socialLinks': 'Enlace de interés',
     'project.users.socialLinksPattern': 'Formato de enlace incorrecto',
     'project.users.birthdate': 'Fecha de nacimiento',
     'project.users.birthdatePattern': 'Fecha incorrecta',
@@ -74,6 +75,7 @@ export default {
     'project.users.templates': 'Plantillas',
     'project.users.tracking': 'Seguimiento',
     'project.users.clientDetails': 'Datos del cliente',
+    'project.users.trainerProfile': 'Perfil del entrenador',
 
 
     // Templates Module

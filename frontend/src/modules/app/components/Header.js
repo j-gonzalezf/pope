@@ -13,6 +13,7 @@ import { Link, useLocation } from 'react-router-dom';
 import AnchorIcon from '../../common/images/anchor-logo.webp';
 import Dumbbells from '../../common/images/dumbbells.webp';
 import TrainerIcon from '../../common/images/trainer-logo.webp';
+import ClientIcon from '../../common/images/client-logo.webp';
 import templates from '../../templates';
 import users from '../../users';
 
@@ -126,11 +127,17 @@ const Header = () => {
                                 <Image className="icon-image-large" src={"data:image/png;base64," + icon.base64} alt={icon.name} />
                             </div>
                             :
-                            <div className="icon-container">
-                                <Image className="icon-image-large" src={TrainerIcon} alt="Trainer icon" />
-                            </div>
+                            role === 'TRAINER' ? (
+                                <div className="icon-container">
+                                    <Image className="icon-image-large" src={TrainerIcon} alt="Trainer icon" />
+                                </div>
+                            ) : (
+                                <div className="icon-container">
+                                    <Image className="icon-image-large" src={ClientIcon} alt="Client icon" />
+                                </div>
+                            )
                         }>
-                            {role === 'TRAINER' && (
+                            {role === 'TRAINER' ? (
                                 <>
                                     <NavDropdown.Item as={Link} to="/users/updateProfile">
                                         <FormattedMessage id="project.users.viewProfile" />
@@ -140,6 +147,15 @@ const Header = () => {
                                     </NavDropdown.Item>
                                     <NavDropdown.Divider style={{ backgroundColor: '#191716' }} />
                                 </>
+                            ) : (
+                                user && (
+                                    <>
+                                        <NavDropdown.Item as={Link} to={`/users/trainer/${user.trainerId}`}>
+                                            <FormattedMessage id="project.users.trainerProfile" />
+                                        </NavDropdown.Item>
+                                        <NavDropdown.Divider style={{ backgroundColor: '#191716' }} />
+                                    </>
+                                )
                             )}
                             <NavDropdown.Item as={Link} to="/users/logout">
                                 <FormattedMessage id="project.users.logout" />

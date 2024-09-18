@@ -24,6 +24,7 @@ export default {
     'project.users.confirmPassword': 'Confirmar contrasinal',
     'project.users.confirmPasswordPattern': 'Os contrasinais non coinciden',
     'project.users.phone': 'Número de teléfono',
+    'project.users.phoneContact': 'Teléfono de contacto',
     'project.users.phonePattern': 'Formato de número incorrecto',
     'project.users.icon': 'Imaxe de perfil',
     'project.users.socialLinks': 'Enlaces sociais',
@@ -74,6 +75,7 @@ export default {
     'project.users.templates': 'Modelos',
     'project.users.tracking': 'Seguimiento',
     'project.users.clientDetails': 'Datos do cliente',
+    'project.users.trainerProfile': 'Perfil do adestrador',
 
 
     // Templates Module

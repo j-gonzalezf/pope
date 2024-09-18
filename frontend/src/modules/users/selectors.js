@@ -20,3 +20,6 @@ export const getClients = state =>
 
 export const getClientInfo = state =>
     getModuleState(state).getClientInfo;
+
+export const getTrainerInfo = state =>
+    getModuleState(state).getTrainerInfo;

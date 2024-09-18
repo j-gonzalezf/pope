@@ -95,6 +95,19 @@ export const getClientInfo = (clientId, onSuccess, onErrors) => dispatch =>
         }, onErrors
     );
 
+const getTrainerInfoCompleted = getTrainerInfo => ({
+    type: actionTypes.GET_TRAINER_INFO_COMPLETED,
+    getTrainerInfo
+});
+
+export const getTrainerInfo = (trainerId, onSuccess, onErrors) => dispatch =>
+    backend.userService.getTrainerInfo(trainerId,
+        getTrainerInfo => {
+            dispatch(getTrainerInfoCompleted(getTrainerInfo));
+            onSuccess();
+        }, onErrors
+    );
+
 export const updateProfileCompleted = user => ({
     type: actionTypes.UPDATE_PROFILE_COMPLETED,
     user

@@ -6,6 +6,7 @@ const initialState = {
     user: null,
     getClients: [],
     getClientInfo: null,
+    getTrainerInfo: null,
     successMessage: null
 }
 
@@ -63,6 +64,20 @@ const getClientInfo = (state = initialState.getClientInfo, action) => {
 
 }
 
+const getTrainerInfo = (state = initialState.getTrainerInfo, action) => {
+
+    switch (action.type) {
+
+        case actionTypes.GET_TRAINER_INFO_COMPLETED:
+            return action.getTrainerInfo;
+
+        default:
+            return state;
+
+    }
+
+}
+
 const successMessage = (state = initialState.successMessage, action) => {
     switch (action.type) {
         case actionTypes.SHOW_SUCCESS_MESSAGE:
@@ -78,6 +93,7 @@ const reducer = combineReducers({
     user,
     getClients,
     getClientInfo,
+    getTrainerInfo,
     successMessage
 });
 

@@ -10,3 +10,4 @@ export const CHANGE_PASSWORD_COMPLETED = "project/users/changePasswordCompleted"
 export const DELETE_USER_COMPLETED = "project/users/deleteUserCompleted";
 export const GET_CLIENTS_COMPLETED = "project/users/getClientsCompleted";
 export const GET_CLIENT_INFO_COMPLETED = "project/users/getClientInfoCompleted";
+export const GET_TRAINER_INFO_COMPLETED = "project/users/getTrainerInfoCompleted";

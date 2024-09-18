@@ -24,6 +24,7 @@ export default {
     'project.users.confirmPassword': 'Confirm password',
     'project.users.confirmPasswordPattern': 'Passwords do not match',
     'project.users.phone': 'Phone number',
+    'project.users.phoneContact': 'Phone contact',
     'project.users.phonePattern': 'Invalid phone number',
     'project.users.icon': 'Profile picture',
     'project.users.socialLinks': 'Social links',
@@ -74,6 +75,7 @@ export default {
     'project.users.templates': 'Templates',
     'project.users.tracking': 'Tracking',
     'project.users.clientDetails': 'Client details',
+    'project.users.trainerProfile': 'Trainer profile',
 
 
     // Templates Module
