@@ -284,6 +284,32 @@ public class UserController {
         return toUserDto(client, weight);
 
     }
+    
+    /**
+     * Devuelve el entrenador de un cliente a partir de su ID.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param trainerId el ID del entrenador
+     * @return un cliente
+     * @throws InstanceNotFoundException si no se encuentra ningún entrenador
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el trainer ID del cliente que se solicita
+     * @throws InvalidRoleException si el cliente no tiene rol
+     */
+    @GetMapping("/trainer/{trainerId}")
+    public UserDto getTrainerInfo(@RequestAttribute Long userId,
+            @PathVariable("trainerId") Long trainerId)
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        Users user = userService.loginFromId(userId);
+        
+        userService.validateUser(user.getTrainer().getId(), trainerId);
+
+        Users trainer = userService.loginFromId(trainerId);
+
+        return toUserDto(trainer, null);
+
+    }
 
     /**
      * Actualizar perfil.

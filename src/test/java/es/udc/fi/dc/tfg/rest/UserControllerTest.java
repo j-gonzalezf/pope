@@ -677,6 +677,36 @@ public class UserControllerTest {
                 .andExpect(status().isForbidden());
 
     }
+    
+    /**
+     * Test para obtener los datos de un entrenador inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTrainerInfo_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+
+        mockMvc.perform(get("/api/users/trainer/" + incorrectUserId)
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para obtener los datos de un entrenador sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTrainerInfo_PermissionException() throws Exception {
+
+        mockMvc.perform(get("/api/users/trainer/" + authTrainer2.getUserDto().getId())
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
 
     /**
      * Test para actualizar usuario.
