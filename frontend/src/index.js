@@ -22,15 +22,13 @@ const { locale, messages } = initReactIntl();
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <IntlProvider locale={locale} messages={messages}>
-                    <HashRouter>
-                        <App />
-                    </HashRouter>
-                </IntlProvider>
-            </PersistGate>
-        </Provider>
-    </React.StrictMode>
+    <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+            <IntlProvider locale={locale} messages={messages}>
+                <HashRouter>
+                    <App />
+                </HashRouter>
+            </IntlProvider>
+        </PersistGate>
+    </Provider>
 );

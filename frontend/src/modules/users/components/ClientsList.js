@@ -70,7 +70,7 @@ const ClientsList = () => {
                             <div className="image-container">
                                 {client.icon ? (
                                     <Image
-                                        src={client.iconImagePath}
+                                        src={`/user-icons/${client.icon}`}
                                         alt="Client Icon"
                                         className="smallImageStyle"
                                     />

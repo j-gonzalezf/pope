@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import users, {
   AddClient, ChangePassword, ClientDetails, ClientsList,
@@ -8,6 +8,7 @@ import users, {
 } from "../../users";
 import { CyclesList, ExercisesList, TemplatesList, TemplateView } from "../../templates";
 import Home from "./Home";
+import RedirectHandler from "./RedirectHandler";
 import NotFoundPage from "./NotFoundPage";
 
 const Body = () => {
@@ -23,11 +24,12 @@ const Body = () => {
 
     <div data-testid="body" className="container" >
       <Routes>
-        <Route path="/" element={<Home />} />
+        {console.log(window.location.pathname)}
+        {!loggedIn && <Route path="/*" element={<Home />} />}
         {!loggedIn && <Route path="/users/login/:userType" element={<Login />} />}
         {!loggedIn && <Route path="/users/signUp" element={<SignUp />} />}
         {loggedIn && <Route path="/users/logout" element={<Logout />} />}
-        {loggedIn && userRole === 'TRAINER' && <Route path="/users/clients" element={<ClientsList />} />}
+        {loggedIn && userRole === 'TRAINER' && <Route exact path="/users/clients" element={<ClientsList />} />}
         {loggedIn && userRole === 'TRAINER' && <Route path="/users/addClient" element={<AddClient />} />}
         {loggedIn && userRole === 'TRAINER' && <Route path="/users/updateProfile" element={<UpdateProfile />} />}
         {loggedIn && userRole === 'TRAINER' && <Route path="/users/changePassword" element={<ChangePassword />} />}
@@ -37,8 +39,8 @@ const Body = () => {
         {loggedIn && <Route path="/templates/:clientId/trainingCycle/:cycleId" element={<TemplatesList />} />}
         {loggedIn && <Route path="/templates/:clientId/trainingCycle/:cycleId/template/:templateId" element={<TemplateView />} />}
         {loggedIn && <Route path="/templates/exercises" element={<ExercisesList />} />}
-        <Route path="/notFound" element={<NotFoundPage />} />
-        <Route path="/*" element={<Navigate to="/notFound" />} />
+        {loggedIn && <Route path="/notFound" element={<NotFoundPage />} />}
+        {loggedIn && <Route path="/*" element={<RedirectHandler />} />}
       </Routes>
     </div >
 

@@ -117,7 +117,7 @@ const Header = () => {
                             <div className="icon-container">
                                 <Image
                                     className="icon-image-large"
-                                    src={user.iconImagePath}
+                                    src={`/user-icons/${icon}`}
                                     alt="User icon" />
                             </div>
                             :
