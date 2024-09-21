@@ -1,12 +1,8 @@
-DROP TABLE IF EXISTS Feedbacks;
 DROP TABLE IF EXISTS Sensations;
-DROP TABLE IF EXISTS Coments;
+DROP TABLE IF EXISTS Comments;
 DROP TABLE IF EXISTS TemplateRows;
 DROP TABLE IF EXISTS Templates;
 DROP TABLE IF EXISTS TrainingCycles;
-DROP TABLE IF EXISTS ClientServices;
-DROP TABLE IF EXISTS Services;
-DROP TABLE IF EXISTS PersonalBests;
 DROP TABLE IF EXISTS Weights;
 DROP TABLE IF EXISTS Exercises;
 DROP TABLE IF EXISTS Users;
@@ -27,22 +23,6 @@ CREATE TABLE Users (
     height NUMERIC(5,2),
     trainerId BIGINT,
     CONSTRAINT trainerClientsIdFK FOREIGN KEY(trainerId) REFERENCES Users(id) ON DELETE CASCADE
-);
-
-CREATE TABLE Services (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    service VARCHAR(255) NOT NULL,
-    price NUMERIC(5,2),
-    trainerId BIGINT NOT NULL,
-    CONSTRAINT trainerServicesIdFK FOREIGN KEY(trainerId) REFERENCES Users(id) ON DELETE CASCADE
-);
-
-CREATE TABLE ClientServices (
-    clientId BIGINT NOT NULL,
-    serviceId BIGINT NOT NULL,
-    PRIMARY KEY (clientId, serviceId),
-    CONSTRAINT clientServicesIdFK FOREIGN KEY(clientId) REFERENCES Users(id) ON DELETE CASCADE,
-    CONSTRAINT serviceClientsIdFK FOREIGN KEY(serviceId) REFERENCES Services(id) ON DELETE CASCADE
 );
 
 CREATE TABLE TrainingCycles (
@@ -88,20 +68,20 @@ CREATE TABLE TemplateRows (
     CONSTRAINT templateRowsIdFK FOREIGN KEY(templateId) REFERENCES Templates(id) ON DELETE CASCADE
 );
 
-CREATE TABLE Coments (
+CREATE TABLE Comments (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     text VARCHAR(1000) NOT NULL,
-    comentDate TIMESTAMP NOT NULL,
+    commentDate TIMESTAMP NOT NULL,
     templateId BIGINT,
     userId BIGINT NOT NULL,
     CONSTRAINT templateComentsIdFK FOREIGN KEY(templateId) REFERENCES Templates(id) ON DELETE CASCADE,
-    CONSTRAINT userComentsIdFK FOREIGN KEY(userId) REFERENCES Users(id) ON DELETE CASCADE
+    CONSTRAINT userCommentsIdFK FOREIGN KEY(userId) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Sensations (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     fatigue TINYINT,
-    soreness TINYINT,
+    stiffness TINYINT,
     motivation TINYINT,
     sleep TINYINT,
     sensationDate TIMESTAMP NOT NULL,
@@ -117,24 +97,4 @@ CREATE TABLE Weights (
     weightDate TIMESTAMP NOT NULL,
     clientId BIGINT NOT NULL,
     CONSTRAINT clientWeightsIdFK FOREIGN KEY(clientId) REFERENCES Users(id) ON DELETE CASCADE
-);
-
-CREATE TABLE PersonalBests (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    weight NUMERIC(5,2) NOT NULL,
-    bestDate TIMESTAMP NOT NULL,
-    exerciseId BIGINT NOT NULL,
-    clientId BIGINT NOT NULL,
-    CONSTRAINT exerciseBestsIdFK FOREIGN KEY(exerciseId) REFERENCES Exercises(id) ON DELETE CASCADE,
-    CONSTRAINT clientBestsIdFK FOREIGN KEY(clientId) REFERENCES Users(id) ON DELETE CASCADE
-);
-
-CREATE TABLE Feedbacks (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    feedbackFile VARCHAR(255) NOT NULL,
-    feedbackDate TIMESTAMP NOT NULL,
-    templateId BIGINT NOT NULL,
-    clientId BIGINT NOT NULL,
-    CONSTRAINT templateFeedbacksIdFK FOREIGN KEY(templateId) REFERENCES Templates(id) ON DELETE CASCADE,
-    CONSTRAINT clientFeedbacksIdFK FOREIGN KEY(clientId) REFERENCES Users(id) ON DELETE CASCADE
 );
