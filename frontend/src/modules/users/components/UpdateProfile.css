@@ -27,9 +27,15 @@
     padding-top: 5%;
 }
 
+.btn.danger {
+    background-color: #ff4646;
+    border-color: #ff4646;
+    color: #191716;
+}
+
 .modal-header.deleteProfile {
     justify-content: start;
-    color: red;
+    color: #ff4646;
 }
 
 .nav-link.updateProfile {
@@ -46,21 +52,25 @@
   color: #e6af2e !important;
 }
 
-.bg-danger.nav-link.deleteProfile {
+.btn.danger.nav-link.deleteProfile {
     color: #191716;
     font-weight: bold;
 }
 
-.bg-danger.nav-link.deleteProfile:active,
-.bg-danger.nav-link.deleteProfile:focus,
+.btn.danger:active,
+.btn.danger:focus,
+.btn.danger.nav-link.deleteProfile:active,
+.btn.danger.nav-link.deleteProfile:focus,
 .btn.btn-danger:focus {
   border-color: #191716 !important;
   box-shadow: 0 0 0 0.2rem white !important;
+  background-color: #191716 !important;
   color: white !important;
 }
 
+.btn.danger:hover,
 .nav-link.updateProfile:hover,
-.bg-danger.nav-link.deleteProfile:hover {
+.btn.danger.nav-link.deleteProfile:hover {
     color: white;
 }
 
@@ -73,7 +83,7 @@
 /* Media query para dispositivos móviles */
 @media (max-width: 767px) {
 
-    .bg-danger.nav-link.deleteProfile {
+    .btn.danger.nav-link.deleteProfile {
       margin-top: 20px;
     }
   

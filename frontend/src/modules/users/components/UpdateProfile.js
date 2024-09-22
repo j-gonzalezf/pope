@@ -128,7 +128,7 @@ const UpdateProfile = () => {
                         <Button className="btn" variant="secondary" onClick={() => setShowDeleteModal(false)}>
                             <FormattedMessage id="project.global.button.cancel" />
                         </Button>
-                        <Button className="btn" variant="danger" onClick={handleDelete}>
+                        <Button className="btn danger" onClick={handleDelete}>
                             <FormattedMessage id="project.users.deleteAccount.button" />
                         </Button>
                     </Modal.Footer>
@@ -286,7 +286,7 @@ const UpdateProfile = () => {
                             </Nav.Item>
                         )}
                         <Nav.Item>
-                            <Nav.Link className="bg-danger nav-link deleteProfile" onClick={() => setShowDeleteModal(true)}>
+                            <Nav.Link className="btn danger nav-link deleteProfile" onClick={() => setShowDeleteModal(true)}>
                                 <BsTrashFill style={{ marginRight: '10px' }} />
                                 <FormattedMessage id="project.users.deleteAccount" />
                             </Nav.Link>
