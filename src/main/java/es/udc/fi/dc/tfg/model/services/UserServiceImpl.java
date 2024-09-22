@@ -161,17 +161,17 @@ public class UserServiceImpl implements UserService {
         String fileName = null;
         if (file != null && !file.isEmpty()) {
             validateFileSize(file);
-            fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            fileName = user.getEmail() + "-" + StringUtils.cleanPath(file.getOriginalFilename());
             user.setIcon(fileName);
         } else {
             user.setIcon(null);
         }
-
-        Users trainer = userDao.save(user);
-
-        String uploadDir = "src/main/resources/user-icons/" + trainer.getId();
+        
+        String uploadDir = "src/main/resources/user-icons/";
 
         uploadFile(uploadDir, fileName, file);
+
+        userDao.save(user);
 
     }
 
@@ -274,7 +274,7 @@ public class UserServiceImpl implements UserService {
 
         user.setSocialLinks(socialLinks);
 
-        String uploadDir = "src/main/resources/user-icons/" + id;
+        String uploadDir = "src/main/resources/user-icons/";
 
         uploadFile(uploadDir, fileName, file);
 

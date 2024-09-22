@@ -1,39 +1,24 @@
 package es.udc.fi.dc.tfg.rest.common;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.EncodedResourceResolver;
+import org.springframework.web.servlet.resource.PathResourceResolver;
 
 @Configuration
+@EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer {
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-    }
-
-    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        exposeDirectory("user-icons", registry);
+        registry.addResourceHandler("/user-icons/**")
+                .addResourceLocations("file:/C:/Users/mcjor/Desktop/TFG/Trabajo_de_Fin_de_Grado/pope/src/main/resources/user-icons/")
+                .setCachePeriod(3600)
+                .resourceChain(true)
+                .addResolver(new EncodedResourceResolver())
+                .addResolver(new PathResourceResolver());
     }
 
-    private void exposeDirectory(String dirName, ResourceHandlerRegistry registry) {
-        Path uploadDir = Paths.get("src/main/resources/" + dirName);
-        String uploadPath = uploadDir.toFile().getAbsolutePath();
-
-        if (dirName.startsWith("../")) {
-            dirName = dirName.replace("../", "");
-        }
-
-        registry.addResourceHandler("/" + dirName + "/**")
-                .addResourceLocations("file:/" + uploadPath + "/");
-    }
 }
