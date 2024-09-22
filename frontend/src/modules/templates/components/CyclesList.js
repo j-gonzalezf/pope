@@ -2,10 +2,11 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table';
-import { BsChevronRight, BsFillPlusCircleFill, BsPencilSquare, BsTrash } from "react-icons/bs";
+import { BsChevronRight, BsFillPlusCircleFill, BsPencilSquare, BsQuestionCircle, BsTrash } from "react-icons/bs";
 import './CyclesList.css';
 
 import { useEffect, useState } from 'react';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -158,12 +159,27 @@ const CyclesList = () => {
         }
     }, [dispatch, role, user.trainerId, user.id, clientId]);
 
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            <FormattedMessage id="project.tooltips.cyclesList" />
+        </Tooltip>
+    );
+
     return (
 
         <div fluid="true" className='CyclesList'>
 
             <h3 className="title">
                 <FormattedMessage id="project.templates.cycles.title" />
+                <OverlayTrigger
+                    placement="right"
+                    delay={{ show: 200, hide: 400 }}
+                    overlay={renderTooltip}
+                >
+                    <span className="d-inline-block" style={{ marginLeft: '10px' }}>
+                        <BsQuestionCircle className="checkIconStyle" color='#e6af2e' size={20} />
+                    </span>
+                </OverlayTrigger>
             </h3>
 
             <Modal show={showAddCycleModal} onHide={closeModal} className='modal'>

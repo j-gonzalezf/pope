@@ -782,6 +782,36 @@ public class UserControllerTest {
                 .andExpect(status().isForbidden());
 
     }
+    
+    /**
+     * Test para obtener los datos de un entrenador inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTrainerInfo_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectUserId = -1L;
+
+        mockMvc.perform(get("/api/users/trainer/" + incorrectUserId)
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para obtener los datos de un entrenador sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetTrainerInfo_PermissionException() throws Exception {
+
+        mockMvc.perform(get("/api/users/trainer/" + authTrainer2.getUserDto().getId())
+                .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
 
     /**
      * Test para actualizar usuario.
@@ -1297,6 +1327,66 @@ public class UserControllerTest {
 
         mockMvc.perform(delete("/api/users/" + clientDto.getId() + "/delete")
                 .header("Authorization", "Bearer " + authClient.getServiceToken()))
+                .andExpect(status().isForbidden());
+
+    }
+
+    /**
+     * Test para obtener los registros de pesos de un cliente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetWeights() throws Exception {
+
+        UserDto clientDto = authClient.getUserDto();
+
+        mockMvc.perform(get("/api/users/weights/fromClient/" + clientDto.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isOk());
+
+    }
+
+    /**
+     * Test para obtener los registros de sensaciones de un cliente inexistente.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetWeights_InstanceNotFoundExeption() throws Exception {
+
+        Long incorrectId = -1L;
+
+        mockMvc.perform(get("/api/users/weights/fromClient/" + incorrectId)
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+                .andExpect(status().isNotFound());
+
+    }
+
+    /**
+     * Test para obtener los registros de sensaciones de un cliente sin permiso.
+     *
+     * @throws Exception la excepción
+     */
+    @Test
+    public void testGetWeights_PermissionException() throws Exception {
+
+        UserDto clientDto = new UserDto(null, "client@client.com", "client",
+                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
+                "Objetivo", null, null, authTrainer2.getUserDto().getId());
+
+        clientDto.setPassword(PASSWORD);
+
+        MvcResult result = mockMvc.perform(post("/api/users/addClient")
+                .header("Authorization", "Bearer " + authTrainer2.getServiceToken())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
+                .andExpect(status().isCreated()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        UserDto createdClient = new ObjectMapper().readValue(content, UserDto.class);
+
+        mockMvc.perform(get("/api/users/weights/fromClient/" + createdClient.getId())
+                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
                 .andExpect(status().isForbidden());
 
     }

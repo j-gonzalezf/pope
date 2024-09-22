@@ -3,31 +3,36 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
-import { BsCheckSquareFill, BsFillPlusCircleFill, BsPencilSquare, BsTrash, BsXSquareFill } from "react-icons/bs";
+import { BsCameraFill, BsCheckSquareFill, BsFillPlusCircleFill, BsPencilSquare, BsTrash, BsXSquareFill } from "react-icons/bs";
 import './TemplateView.css';
 
 import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import domtoimage from 'dom-to-image';
 
 import { Errors } from '../../common';
 import * as actions from '../actions';
+import * as trackingActions from '../../tracking/actions';
 import * as selectors from '../selectors';
+import * as trackingSelectors from '../../tracking/selectors';
 import * as userSelectors from '../../users/selectors';
 import AddTemplateRow from './AddTemplateRow';
 import EditTemplateRow from './EditTemplateRow';
+import SensationModal from '../../tracking/components/SensationsModal';
+import SensationUpdateModal from '../../tracking/components/SensationsUpdateModal';
+import AddComment from '../../comments/components/AddComment';
 
 const TemplateView = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { clientId } = useParams();
-    const { cycleId } = useParams();
-    const { templateId } = useParams();
+    const { clientId, cycleId, templateId } = useParams();
 
     const role = useSelector(userSelectors.getUserRole);
+    const getSensation = useSelector(trackingSelectors.getSensation);
     const getTemplate = useSelector(selectors.getTemplate);
     const getTemplateRows = useSelector(selectors.getTemplateRows);
 
@@ -35,7 +40,10 @@ const TemplateView = () => {
     const [error, setError] = useState(null);
     const [showAddInput, setShowAddInput] = useState(false);
     const [showUpdateInput, setShowUpdateInput] = useState(false);
+    const [showSensationModal, setShowSensationModal] = useState(false);
+    const [showUpdateSensationModal, setShowUpdateSensationModal] = useState(false);
     const [editingRowId, setEditingRowId] = useState(null);
+    const [captureWithoutButton, setCaptureWithoutButton] = useState(false);
 
     let form1;
 
@@ -82,15 +90,47 @@ const TemplateView = () => {
         ));
     }
 
+    const handleCapture = () => {
+        // Oculta el div que no quieres mostrar
+        setCaptureWithoutButton(true);
+
+        const node = document.getElementById('table-to-capture');
+
+        domtoimage.toPng(node)
+            .then((dataUrl) => {
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = `${getTemplate.name}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // Muestra el div nuevamente
+                setCaptureWithoutButton(false);
+                setShowAddInput(false);
+            })
+            .catch((error) => {
+                console.error('Algo ha salido mal...', error);
+                setCaptureWithoutButton(false);
+                setShowAddInput(false);
+            });
+    };
+
     useEffect(() => {
         dispatch(actions.getTemplate(templateId,
             () => {
                 dispatch(actions.getTemplateRows(templateId,
                     () => { },
                     errors => setError(errors)));
+                if (role === 'CLIENT') {
+                    dispatch(trackingActions.clearSensation());
+                    dispatch(trackingActions.getSensation(templateId,
+                        () => { },
+                        errors => setError(errors)));
+                }
             },
             errors => setError(errors)));
-    }, [dispatch, templateId]);
+    }, [dispatch, role, templateId]);
 
     return (
 
@@ -155,18 +195,21 @@ const TemplateView = () => {
                                                         </Button>
                                                     </>
                                                 )}
+                                                <Button className="primary template name" title='Convertir tabla a imagen' onClick={handleCapture}>
+                                                    <BsCameraFill className="checkIconStyle" color='#e6af2e' size={20} />
+                                                </Button>
                                             </div>
                                         )}
                                     </th>
                                 </tr>
+                            </thead>
+                            <tbody id="table-to-capture">
                                 <tr>
                                     <th className="customTable underline"><FormattedMessage id="project.templates.templateView.exercise" /></th>
                                     <th className="customTable underline"><FormattedMessage id="project.templates.templateView.series" /></th>
                                     <th className="customTable underline"><FormattedMessage id="project.templates.templateView.reps" /></th>
                                     <th className="customTable underline"><FormattedMessage id="project.templates.templateView.weight" /></th>
                                 </tr>
-                            </thead>
-                            <tbody>
                                 {getTemplateRows.map((row) => (
                                     <tr key={row.id}>
                                         {editingRowId === row.id ? (
@@ -183,52 +226,65 @@ const TemplateView = () => {
                                                 <td className="customTable">{row.series}</td>
                                                 <td className="customTable">{row.repetitions}</td>
                                                 <td className="customTable">{row.weight}</td>
-                                                <td className="customTable edit">
-                                                    {role === 'TRAINER' && (
-                                                        <div className="form-buttons">
-                                                            <Button className="primary template" title='Pulsa para editar fila' onClick={() => setEditingRowId(row.id)}>
-                                                                <BsPencilSquare className="checkIconStyle" color='#e6af2e' size={20} />
-                                                            </Button>
-                                                            <Button className="primary template delete"
-                                                                title='Pulsa para eliminar fila' onClick={() => handleDeleteRow(row)} >
-                                                                <BsTrash className="crossIconStyle" color='#ff4646' size={20} />
-                                                            </Button>
-                                                        </div>
-                                                    )}
-                                                </td>
+                                                {!captureWithoutButton && (
+                                                    <td className="customTable edit">
+                                                        {role === 'TRAINER' && (
+                                                            <div className="form-buttons">
+                                                                <Button className="primary template" title='Pulsa para editar fila' onClick={() => setEditingRowId(row.id)}>
+                                                                    <BsPencilSquare className="checkIconStyle" color='#e6af2e' size={20} />
+                                                                </Button>
+                                                                <Button className="primary template delete"
+                                                                    title='Pulsa para eliminar fila' onClick={() => handleDeleteRow(row)} >
+                                                                    <BsTrash className="crossIconStyle" color='#ff4646' size={20} />
+                                                                </Button>
+                                                            </div>
+                                                        )}
+                                                    </td>
+
+                                                )}
                                             </>
                                         )}
                                     </tr>
                                 ))}
-                                <tr>
-                                    <td colSpan={5} className="customTable">
-                                        {showAddInput ? (
-                                            role === 'TRAINER' ? (
-                                                <AddTemplateRow />
+                                {!captureWithoutButton && (
+                                    <tr>
+                                        <td colSpan={5} className="customTable">
+                                            {role === 'TRAINER' ? (
+                                                showAddInput ? (
+                                                    <AddTemplateRow />
+                                                ) : (
+                                                    <Button className="primary cycle" onClick={() => setShowAddInput(true)}>
+                                                        <BsFillPlusCircleFill className="plusIconStyle cycle" />
+                                                        <span>
+                                                            <b><FormattedMessage id="project.templates.addTemplateRow" /></b>
+                                                        </span>
+                                                    </Button>
+                                                )
                                             ) : (
-                                                <Button className="primary cycle" onClick={() => setShowAddInput(false)}>
-                                                    Terminada
-                                                </Button>
-                                            )
-                                        ) : (
-                                            role === 'TRAINER' ? (
-                                                <Button className="primary cycle" onClick={() => setShowAddInput(true)}>
-                                                    <BsFillPlusCircleFill className="plusIconStyle cycle" />
-                                                    <span>
-                                                        <b><FormattedMessage id="project.templates.addTemplateRow" /></b>
-                                                    </span>
-                                                </Button>
-                                            ) : (
-                                                <Button className="primary cycle" onClick={() => setShowAddInput(true)}>
-                                                    Terminar
-                                                </Button>
-                                            )
-                                        )}
-                                    </td>
-                                </tr>
+                                                getSensation && Object.keys(getSensation).length > 0 ? (
+                                                    <Button className="primary cycle" onClick={() => setShowUpdateSensationModal(true)}>
+                                                        <FormattedMessage id="project.tracking.sensations.update" />
+                                                    </Button>
+                                                ) : (
+                                                    <Button className="primary cycle" onClick={() => setShowSensationModal(true)}>
+                                                        <FormattedMessage id="project.tracking.sensations.end" />
+                                                    </Button>
+                                                )
+                                            )}
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </Table>
                     </div>
+
+                    {showSensationModal && role === 'CLIENT' && (
+                        <SensationModal showModal={showSensationModal} setShowModal={setShowSensationModal} />
+                    )}
+
+                    {showUpdateSensationModal && role === 'CLIENT' && (
+                        <SensationUpdateModal showModal={showUpdateSensationModal} setShowModal={setShowUpdateSensationModal} getSensation={getSensation} />
+                    )}
 
                     <Errors errors={error} onClose={() => setError(null)} />
 
@@ -236,8 +292,11 @@ const TemplateView = () => {
 
                 <Col xs={12} sm={12} md={3} className='comment'>
                     <h3 className="title comments">
-                        Comentarios
+                        <FormattedMessage id="project.comments.title" />
                     </h3>
+
+                    <AddComment />
+
                 </Col>
 
             </Row>

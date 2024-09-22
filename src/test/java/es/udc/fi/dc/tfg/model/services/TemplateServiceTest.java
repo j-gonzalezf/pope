@@ -101,9 +101,6 @@ public class TemplateServiceTest {
         TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
                 LocalDate.of(2001, 1, 1), trainer, client);
 
-        cycle.setTrainer(trainer);
-        cycle.setClient(client);
-
         cycleService.createCycle(cycle);
 
         template.setCycle(cycle);
@@ -139,13 +136,10 @@ public class TemplateServiceTest {
 
         TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
                 LocalDate.of(2001, 1, 1), trainer, client);
-        cycle.setTrainer(trainer);
-        cycle.setClient(client);
         cycleService.createCycle(cycle);
 
         Exercises exercise = new Exercises("exerciseName", "description", "exerciseType",
-                null, null, null, null);
-        exercise.setTrainer(trainer);
+                null, null, null, trainer);
         exerciseService.addExercise(exercise);
 
         Templates template = createTemplate();
@@ -179,9 +173,6 @@ public class TemplateServiceTest {
 
         TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
                 LocalDate.of(2001, 1, 1), trainer, client);
-
-        cycle.setTrainer(trainer);
-        cycle.setClient(client);
 
         cycleService.createCycle(cycle);
 
@@ -220,13 +211,10 @@ public class TemplateServiceTest {
 
         TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
                 LocalDate.of(2001, 1, 1), trainer, client);
-        cycle.setTrainer(trainer);
-        cycle.setClient(client);
         cycleService.createCycle(cycle);
 
         Exercises exercise = new Exercises("exerciseName", "description", "exerciseType",
-                null, null, null, null);
-        exercise.setTrainer(trainer);
+                null, null, null, trainer);
         exerciseService.addExercise(exercise);
 
         Templates template = createTemplate();
@@ -283,9 +271,6 @@ public class TemplateServiceTest {
         TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
                 LocalDate.of(2001, 1, 1), trainer, client);
 
-        cycle.setTrainer(trainer);
-        cycle.setClient(client);
-
         cycleService.createCycle(cycle);
 
         template.setCycle(cycle);
@@ -332,18 +317,14 @@ public class TemplateServiceTest {
 
         TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
                 LocalDate.of(2001, 1, 1), trainer, client);
-        cycle.setTrainer(trainer);
-        cycle.setClient(client);
         cycleService.createCycle(cycle);
 
         Exercises exercise1 = new Exercises("exerciseName", "description", "exerciseType",
-                null, null, null, null);
-        exercise1.setTrainer(trainer);
+                null, null, null, trainer);
         exerciseService.addExercise(exercise1);
 
         Exercises exercise2 = new Exercises("exerciseName2", "description", "exerciseType",
-                null, null, null, null);
-        exercise2.setTrainer(trainer);
+                null, null, null, trainer);
         exerciseService.addExercise(exercise2);
 
         Templates template = createTemplate();
@@ -382,8 +363,7 @@ public class TemplateServiceTest {
         userService.signUp(trainer, null);
 
         Exercises exercise1 = new Exercises("exerciseName", "description", "exerciseType",
-                null, null, null, null);
-        exercise1.setTrainer(trainer);
+                null, null, null, trainer);
         exerciseService.addExercise(exercise1);
 
         assertThrows(InstanceNotFoundException.class,
@@ -415,9 +395,6 @@ public class TemplateServiceTest {
 
         TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
                 LocalDate.of(2001, 1, 1), trainer, client);
-
-        cycle.setTrainer(trainer);
-        cycle.setClient(client);
 
         cycleService.createCycle(cycle);
 
@@ -467,13 +444,10 @@ public class TemplateServiceTest {
 
         TrainingCycles cycle = new TrainingCycles("cycleName", "description", LocalDate.of(2000, 1, 1),
                 LocalDate.of(2001, 1, 1), trainer, client);
-        cycle.setTrainer(trainer);
-        cycle.setClient(client);
         cycleService.createCycle(cycle);
 
         Exercises exercise = new Exercises("exerciseName", "description", "exerciseType",
-                null, null, null, null);
-        exercise.setTrainer(trainer);
+                null, null, null, trainer);
         exerciseService.addExercise(exercise);
 
         Templates template = createTemplate();

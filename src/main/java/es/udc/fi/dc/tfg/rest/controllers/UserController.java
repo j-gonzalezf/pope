@@ -4,6 +4,7 @@ import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toAuthenticatedUserDto;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUser;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUserDto;
 import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toUsersDto;
+import static es.udc.fi.dc.tfg.rest.dtos.UserConversor.toWeightsDto;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -45,6 +46,7 @@ import es.udc.fi.dc.tfg.rest.dtos.AuthenticatedUserDto;
 import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
+import es.udc.fi.dc.tfg.rest.dtos.WeightDto;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -292,6 +294,32 @@ public class UserController {
         return toUserDto(client, weight);
 
     }
+    
+    /**
+     * Devuelve el entrenador de un cliente a partir de su ID.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param trainerId el ID del entrenador
+     * @return un cliente
+     * @throws InstanceNotFoundException si no se encuentra ningún entrenador
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el trainer ID del cliente que se solicita
+     * @throws InvalidRoleException si el cliente no tiene rol
+     */
+    @GetMapping("/trainer/{trainerId}")
+    public UserDto getTrainerInfo(@RequestAttribute Long userId,
+            @PathVariable("trainerId") Long trainerId)
+            throws InstanceNotFoundException, PermissionException, InvalidRoleException {
+
+        Users user = userService.loginFromId(userId);
+        
+        userService.validateUser(user.getTrainer().getId(), trainerId);
+
+        Users trainer = userService.loginFromId(trainerId);
+
+        return toUserDto(trainer, null);
+
+    }
 
     /**
      * Actualizar perfil.
@@ -410,6 +438,31 @@ public class UserController {
         userService.validateUser(userId, id);
 
         return userService.deleteUser(id);
+
+    }
+
+    /**
+     * Devuelve la lista de registros de pesos de un cliente.
+     *
+     * @param userId el ID del usuario que realiza la petición
+     * @param clientId el ID del cliente
+     * @return una lista de registros
+     * @throws InstanceNotFoundException si no se encuentra un cliente con el ID
+     * proporcionado
+     * @throws PermissionException si el ID del usuario que realiza la petición
+     * no coincide con el ID del entrenador de los ciclos a obtener
+     * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     */
+    @GetMapping("/weights/fromClient/{clientId}")
+    public List<WeightDto> getWeights(@RequestAttribute Long userId,
+            @PathVariable("clientId") Long clientId) throws InstanceNotFoundException,
+            PermissionException, InvalidRoleException {
+
+        userService.validateUser(userId, clientId);
+
+        List<Weights> weights = userExtraService.getWeights(clientId);
+
+        return toWeightsDto(weights);
 
     }
 

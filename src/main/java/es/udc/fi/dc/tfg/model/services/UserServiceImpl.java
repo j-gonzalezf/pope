@@ -87,21 +87,26 @@ public class UserServiceImpl implements UserService {
 
         permissionChecker.checkUserExists(id);
 
+        Users authUser = loginFromId(userId);
         Users user = loginFromId(id);
         String role = user.getUserRole().toString();
 
-        switch (role) {
-            // En caso de CRUD a un trainer, comprobamos que el que realiza la
-            // petición y el trainer a actualizar son el mismo user
-            case "TRAINER" ->
-                validateForTrainer(userId, id);
-            // En caso de CRUD a un client, comprobamos si el que realiza la
-            // petición y el trainer del client a actualizar son el mismo user
-            case "CLIENT" ->
-                validateForClient(userId, user);
+        if (!"CLIENT".equals(authUser.getUserRole().toString())) {
+            switch (role) {
+                // En caso de CRUD a un trainer, comprobamos que el que realiza la
+                // petición y el trainer a actualizar son el mismo user
+                case "TRAINER" ->
+                    validateForTrainer(userId, id);
+                // En caso de CRUD a un client, comprobamos si el que realiza la
+                // petición y el trainer del client a actualizar son el mismo user
+                case "CLIENT" ->
+                    validateForClient(userId, user);
 
-            default ->
-                throw new InvalidRoleException();
+                default ->
+                    throw new InvalidRoleException();
+            }
+        } else {
+            validateForTrainer(userId, id);
         }
     }
 

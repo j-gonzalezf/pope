@@ -1,6 +1,15 @@
 import backend from '../../backend';
 import * as actionTypes from './actionTypes';
 
+export const showSuccessMessage = (message) => ({
+    type: actionTypes.SHOW_SUCCESS_MESSAGE,
+    payload: message,
+});
+
+export const hideSuccessMessage = () => ({
+    type: actionTypes.HIDE_SUCCESS_MESSAGE,
+});
+
 const loginCompleted = authenticatedUser => ({
     type: actionTypes.LOGIN_COMPLETED,
     authenticatedUser
@@ -10,6 +19,7 @@ export const login = (email, password, onSuccess, onErrors, reauthenticationCall
     backend.userService.login(email, password,
         authenticatedUser => {
             dispatch(loginCompleted(authenticatedUser));
+            dispatch(showSuccessMessage('¡Bienvenido a Pope! ¿Listo para empezar?'));
             onSuccess();
         },
         onErrors,
@@ -40,6 +50,7 @@ export const signUp = (formData, onSuccess, onErrors, reauthenticationCallback) 
     backend.userService.signUp(formData,
         authenticatedUser => {
             dispatch(signUpCompleted(authenticatedUser));
+            dispatch(showSuccessMessage('¡Bienvenido a Pope! ¿Listo para empezar?'));
             onSuccess();
         },
         onErrors,
@@ -88,6 +99,19 @@ export const clearClientInfo = () => ({
     type: actionTypes.CLEAR_CLIENT_INFO
 });
 
+const getTrainerInfoCompleted = getTrainerInfo => ({
+    type: actionTypes.GET_TRAINER_INFO_COMPLETED,
+    getTrainerInfo
+});
+
+export const getTrainerInfo = (trainerId, onSuccess, onErrors) => dispatch =>
+    backend.userService.getTrainerInfo(trainerId,
+        getTrainerInfo => {
+            dispatch(getTrainerInfoCompleted(getTrainerInfo));
+            onSuccess();
+        }, onErrors
+    );
+
 export const updateProfileCompleted = user => ({
     type: actionTypes.UPDATE_PROFILE_COMPLETED,
     user
@@ -97,6 +121,7 @@ export const updateProfile = (user, onSuccess, onErrors) => dispatch =>
     backend.userService.updateProfile(user,
         user => {
             dispatch(updateProfileCompleted(user));
+            dispatch(showSuccessMessage('Tu perfil se ha actualizado con éxito'));
             onSuccess();
         },
         onErrors
@@ -111,6 +136,7 @@ export const updateClient = (client, onSuccess, onErrors) => dispatch =>
     backend.userService.updateProfile(client,
         client => {
             dispatch(updateClientCompleted(client));
+            dispatch(showSuccessMessage('El cliente se ha actualizado con éxito'));
             onSuccess();
         },
         onErrors
@@ -124,6 +150,7 @@ export const changePassword = (id, oldPassword, newPassword, onSuccess, onErrors
     backend.userService.changePassword(id, oldPassword, newPassword,
         () => {
             dispatch(changePasswordCompleted());
+            dispatch(showSuccessMessage('La contraseña se ha cambiado con éxito'));
             onSuccess();
         },
         onErrors

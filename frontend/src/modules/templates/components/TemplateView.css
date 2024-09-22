@@ -95,6 +95,10 @@ input#weight.form-control {
     color: white;
 }
 
+.hidden {
+    display: none;
+}
+
 /* Media query para dispositivos móviles */
 @media (max-width: 767px) {
 

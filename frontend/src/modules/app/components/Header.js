@@ -13,6 +13,7 @@ import { Link, useLocation } from 'react-router-dom';
 import AnchorIcon from '../../common/images/anchor-logo.webp';
 import Dumbbells from '../../common/images/dumbbells.webp';
 import TrainerIcon from '../../common/images/trainer-logo.webp';
+import ClientIcon from '../../common/images/client-logo.webp';
 import templates from '../../templates';
 import users from '../../users';
 
@@ -35,11 +36,18 @@ const Header = () => {
     const displayReference = useCallback(() => {
 
         const urlsToHideCycleName = [
-            '/users/clientDetails/' + clientId,
-            '/templates/trainingCycles/' + clientId
+            `/users/clientDetails/${clientId ? clientId : ''}`,
+            `/users/updateClient/${clientId ? clientId : ''}`,
+            `/templates/trainingCycles/${clientId ? clientId : ''}`,
+            `/tracking/graphs/${clientId ? clientId : ''}`,
+            '/tracking/graph/fatigue',
+            '/tracking/graph/stiffness',
+            '/tracking/graph/motivation',
+            '/tracking/graph/sleep',
+            '/tracking/graph/weight',
         ];
 
-        if (clientName && cycleName && !urlsToHideCycleName.includes(location.pathname)) {
+        if (clientId && clientName && cycleName && !urlsToHideCycleName.includes(location.pathname)) {
             return (
                 <>
                     <Link to={`/users/clientDetails/${clientId}`} className='link h'>{clientName}</Link>
@@ -47,7 +55,7 @@ const Header = () => {
                     <Link to={`/templates/trainingCycles/${clientId}`} className='link h'>{cycleName}</Link>
                 </>
             );
-        } else if (clientName) {
+        } else if (clientId && clientName) {
             return <Link to={`/users/clientDetails/${clientId}`} className='link h'>{clientName}</Link>;
         }
         return '';
@@ -63,7 +71,6 @@ const Header = () => {
     }, [location, isLoggedIn]);
 
     useEffect(() => {
-        displayReference();
         // URLs to hide the header reference
         const urlsToHide = [
             '/users/clients',
@@ -71,8 +78,10 @@ const Header = () => {
             '/users/updateProfile',
             '/users/changePassword',
             '/templates/exercises',
+            '/notFound'
         ];
         if (!urlsToHide.includes(location.pathname)) {
+            displayReference();
             setShowReference(true);
         } else {
             setShowReference(false);
@@ -99,15 +108,17 @@ const Header = () => {
                             }
                         </>
                     ) : (
-                        <Navbar.Brand as={Link} to={`/templates/trainingCycles/${user.id}`} title="Clientes" onClick={clearCycle}>
-                            <Image className="anchor-icon" src={AnchorIcon} alt="Logo" />
-                        </Navbar.Brand>
+                        user && (
+                            <Navbar.Brand as={Link} to={`/templates/trainingCycles/${user.id}`} title="Ciclos" onClick={clearCycle}>
+                                <Image className="anchor-icon" src={AnchorIcon} alt="Logo" />
+                            </Navbar.Brand>
+                        )
                     )}
 
                 </div>
 
-                <Link className="dumbbells-link" to="/templates/exercises" title="Lista de ejercicios">
-                    <CgGym className="dumbbells-icon" size={55} src={Dumbbells} alt="Lista de ejercicios" />
+                <Link className="dumbbells-link" to="/templates/exercises" title="Biblioteca de ejercicios">
+                    <CgGym className="dumbbells-icon" size={55} src={Dumbbells} alt="Biblioteca de ejercicios" />
                 </Link>
 
                 <div className="header-right">
@@ -121,14 +132,23 @@ const Header = () => {
                                     alt="User icon" />
                             </div>
                             :
-                            <div className="icon-container">
-                                <Image
-                                    className="icon-image-large"
-                                    src={TrainerIcon}
-                                    alt="Trainer icon" />
-                            </div>
+                            role === 'TRAINER' ? (
+                                <div className="icon-container">
+                                    <Image 
+                                        className="icon-image-large" 
+                                        src={TrainerIcon} 
+                                        alt="Trainer icon" />
+                                </div>
+                            ) : (
+                                <div className="icon-container">
+                                    <Image 
+                                        className="icon-image-large" 
+                                        src={ClientIcon} 
+                                        alt="Client icon" />
+                                </div>
+                            )
                         }>
-                            {role === 'TRAINER' && (
+                            {role === 'TRAINER' ? (
                                 <>
                                     <NavDropdown.Item as={Link} to="/users/updateProfile">
                                         <FormattedMessage id="project.users.viewProfile" />
@@ -138,6 +158,15 @@ const Header = () => {
                                     </NavDropdown.Item>
                                     <NavDropdown.Divider style={{ backgroundColor: '#191716' }} />
                                 </>
+                            ) : (
+                                user && (
+                                    <>
+                                        <NavDropdown.Item as={Link} to={`/users/trainer/${user.trainerId}`}>
+                                            <FormattedMessage id="project.users.trainerProfile" />
+                                        </NavDropdown.Item>
+                                        <NavDropdown.Divider style={{ backgroundColor: '#191716' }} />
+                                    </>
+                                )
                             )}
                             <NavDropdown.Item as={Link} to="/users/logout">
                                 <FormattedMessage id="project.users.logout" />

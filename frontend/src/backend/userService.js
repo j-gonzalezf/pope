@@ -77,6 +77,14 @@ export const getClientInfo = (clientId, onSuccess, onErrors) =>
     onErrors
   );
 
+export const getTrainerInfo = (trainerId, onSuccess, onErrors) =>
+  appFetch(
+    `/users/trainer/${trainerId}`,
+    fetchConfig("GET"),
+    onSuccess,
+    onErrors
+  );
+
 export const updateProfile = (user, onSuccess, onErrors) =>
   appFetch(
     `/users/${user.id}`,

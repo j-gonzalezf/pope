@@ -24,9 +24,10 @@ export default {
     'project.users.confirmPassword': 'Confirmar contraseña',
     'project.users.confirmPasswordPattern': 'Las contraseñas no coinciden',
     'project.users.phone': 'Número de teléfono',
+    'project.users.phoneContact': 'Teléfono de contacto',
     'project.users.phonePattern': 'Formato de número incorrecto',
     'project.users.icon': 'Foto de perfil',
-    'project.users.socialLinks': 'Enlaces sociales',
+    'project.users.socialLinks': 'Enlace de interés',
     'project.users.socialLinksPattern': 'Formato de enlace incorrecto',
     'project.users.birthdate': 'Fecha de nacimiento',
     'project.users.birthdatePattern': 'Fecha incorrecta',
@@ -36,7 +37,7 @@ export default {
     'project.users.heightPattern': 'Formato de altura incorrecto',
     'project.users.weight': 'Peso',
     'project.users.weightPattern': 'Formato de peso incorrecto',
-    
+
     // Actions
     'project.users.clients.title': 'Clientes',
     'project.users.clientDetails.title': 'Gestión del cliente',
@@ -74,6 +75,7 @@ export default {
     'project.users.templates': 'Plantillas',
     'project.users.tracking': 'Seguimiento',
     'project.users.clientDetails': 'Datos del cliente',
+    'project.users.trainerProfile': 'Perfil del entrenador',
 
 
     // Templates Module
@@ -122,5 +124,47 @@ export default {
     'project.templates.templateView.title': 'Vista de plantilla',
     'project.templates.addTemplate': 'Crear plantilla',
     'project.templates.addTemplateRow': 'Añadir fila',
+
+
+    // Tracking Module
+    // Attributes
+    'project.tracking.fatigue': 'Fatiga',
+    'project.tracking.stiffness': 'Agujetas',
+    'project.tracking.motivation': 'Motivación',
+    'project.tracking.sleep': 'Sueño',
+    'project.tracking.week': 'Semana',
+    'project.tracking.month': 'Mes',
+    'project.tracking.year': 'Año',
+
+    // Actions
+    'project.tracking.sensations.title': 'Evaluación del entrenamiento',
+    'project.tracking.sensations.button': 'Enviar',
+    'project.tracking.sensations.end': 'Terminar',
+    'project.tracking.sensations.cancel': 'Terminar más tarde',
+    'project.tracking.sensations.titleUpdate': 'Editar evaluación del entrenamiento',
+    'project.tracking.sensations.update': 'Editar evaluación',
+
+
+    // Comments Module
+    // Attributes
+
+
+    // Actions
+    'project.comments.title': 'Comentarios',
+    'project.comments.add': 'Enviar',
+
+
+    // Tooltips
+    'project.tooltips.clientsList.p1': 'En esta vista se muestran los clientes que has creado.',
+    'project.tooltips.clientsList.p2': 'Clica en un cliente para más detalles.',
+    'project.tooltips.clientDetails': 'Esta vista te permite acceder a la gestión de entrenamientos, gráficas de evolución o perfil del cliente.',
+    'project.tooltips.cyclesList': 'Los ciclos de entrenamiento organizan plantillas en un rango de fechas. Clica en un ciclo para ver sus plantillas.',
+    'project.tooltips.templatesList': 'En esta vista se muestran las plantillas que has creado. Clica en una plantilla para ver su contenido.',
+    'project.tooltips.graphsList': 'El seguimiento muestra la evolución de varios indicadores. Clica en una sección para ver su gráfico correspondiente.',
+    'project.tooltips.graphsPage.fatigue': 'Esta gráfica muestra el nivel de cansancio acumulado del cliente en un periodo de tiempo.',
+    'project.tooltips.graphsPage.stiffness': 'Esta gráfica muestra la sensación de dolor muscular del cliente en un periodo de tiempo.',
+    'project.tooltips.graphsPage.motivation': 'Esta gráfica muestra el grado de motivación del cliente en un periodo de tiempo.',
+    'project.tooltips.graphsPage.sleep': 'Esta gráfica muestra la calidad del sueño del cliente en un periodo de tiempo.',
+    'project.tooltips.graphsPage.weight': 'Esta gráfica muestra el peso corporal del cliente en un periodo de tiempo.',
 
 }

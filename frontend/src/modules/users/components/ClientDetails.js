@@ -1,16 +1,19 @@
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import { BsQuestionCircle } from "react-icons/bs";
 import { GiCannedFish, GiFishingNet } from "react-icons/gi";
 import { LiaDharmachakraSolid } from "react-icons/lia";
 import './ClientDetails.css';
 
 import { useEffect, useState } from 'react';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Errors } from '../../common';
-import * as actions from '../../users/actions';
+import * as actions from '../actions';
+import * as trackingActions from '../../tracking/actions';
 
 const ClientDetails = () => {
 
@@ -22,18 +25,32 @@ const ClientDetails = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+
+        dispatch(trackingActions.clearSensations());
+
         dispatch(actions.getClientInfo(clientId,
             () => { },
             errors => setError(errors)));
+
     }, [dispatch, clientId]);
 
     const redirectToCyclesList = (clientId) => {
         navigate('/templates/trainingCycles/' + clientId);
     }
 
+    const redirectToGraphs = (clientId) => {
+        navigate('/tracking/graphs/' + clientId);
+    }
+
     const redirectToUpdateClient = (clientId) => {
         navigate('/users/updateClient/' + clientId);
     }
+
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            <FormattedMessage id="project.tooltips.clientDetails" />
+        </Tooltip>
+    );
 
     return (
 
@@ -41,6 +58,15 @@ const ClientDetails = () => {
 
             <h3 className="title">
                 <FormattedMessage id="project.users.clientDetails.title" />
+                <OverlayTrigger
+                    placement="right"
+                    delay={{ show: 200, hide: 400 }}
+                    overlay={renderTooltip}
+                >
+                    <span className="d-inline-block" style={{ marginLeft: '10px' }}>
+                        <BsQuestionCircle className="checkIconStyle" color='#e6af2e' size={20} />
+                    </span>
+                </OverlayTrigger>
             </h3>
 
             <Row className="listStyle clientDetails">
@@ -56,7 +82,7 @@ const ClientDetails = () => {
                     </button>
                 </Col>
                 <Col xs={12} sm={6} md={4} lg={3} className="listColStyle">
-                    <button className="listItemStyle clientDetails">
+                    <button className="listItemStyle clientDetails" onClick={() => redirectToGraphs(clientId)}>
                         <div>
                             <LiaDharmachakraSolid className='plusIconStyle' size={60} color='#e6af2e' alt="Dharmachakra Icon" />
                         </div>

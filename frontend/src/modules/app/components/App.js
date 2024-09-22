@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import users from "../../users";
 import Header from "./Header";
 import Body from "./Body";
+import SuccessMessage from '../../common/components/SuccessMessage';
 
 const App = () => {
 
@@ -22,6 +23,7 @@ const App = () => {
     <div>
       <Header />
       <Body />
+      <SuccessMessage />
     </div>
   );
 

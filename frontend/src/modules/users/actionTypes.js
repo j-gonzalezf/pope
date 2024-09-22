@@ -1,3 +1,5 @@
+export const SHOW_SUCCESS_MESSAGE = "project/users/showSuccessMessage";
+export const HIDE_SUCCESS_MESSAGE = "project/users/hideSuccessMessage";
 export const LOGIN_COMPLETED = "project/users/loginCompleted";
 export const LOGOUT = "project/users/logout";
 export const SIGN_UP_COMPLETED = "project/users/signUpCompleted";
@@ -9,3 +11,4 @@ export const DELETE_USER_COMPLETED = "project/users/deleteUserCompleted";
 export const GET_CLIENTS_COMPLETED = "project/users/getClientsCompleted";
 export const GET_CLIENT_INFO_COMPLETED = "project/users/getClientInfoCompleted";
 export const CLEAR_CLIENT_INFO = "project/users/clearClientInfo";
+export const GET_TRAINER_INFO_COMPLETED = "project/users/getTrainerInfoCompleted";
