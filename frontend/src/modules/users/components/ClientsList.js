@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import { BsFillPlusCircleFill, BsQuestionCircle } from "react-icons/bs";
 import './ClientsList.css';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,13 +26,14 @@ const ClientsList = () => {
     const user = useSelector(selectors.getUser);
     const getClients = useSelector(selectors.getClients);
 
-    const redirectToCreateClient = () => {
+    const redirectToCreateClient = useCallback(() => {
         navigate('/users/addClient');
-    };
+    }, [navigate]);
 
-    const redirectToClientDetails = (clientId) => {
+    const redirectToClientDetails = useCallback((clientId) => {
         navigate(`/users/clientDetails/${clientId}`);
-    };
+    }, [navigate]);
+
 
     useEffect(() => {
 
@@ -88,21 +89,19 @@ const ClientsList = () => {
 
                         <button className="listItemStyle" onClick={() => redirectToClientDetails(client.id)}>
                             <div className="image-container">
-                                {client.icon ? (client.icon.map((icon, index) => (
+                                {client.icon ? (
                                     <Image
-                                        key={index}
-                                        src={"data:image/png;base64," + icon.base64}
-                                        alt={icon.name}
+                                        src={`/user-icons/${client.icon}`}
+                                        alt="Client Icon"
                                         className="smallImageStyle"
                                     />
-                                )))
-                                    : (
-                                        <Image
-                                            src={DefaultIcon}
-                                            alt="Default Icon"
-                                            className="smallImageStyle"
-                                        />
-                                    )}
+                                ) : (
+                                    <Image
+                                        src={DefaultIcon}
+                                        alt="Default Icon"
+                                        className="smallImageStyle"
+                                    />
+                                )}
                             </div>
 
                             <span className='textoDifuminado' data-text={client.fullName} >

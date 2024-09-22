@@ -57,6 +57,9 @@ const getClientInfo = (state = initialState.getClientInfo, action) => {
         case actionTypes.UPDATE_CLIENT_COMPLETED:
             return action.getClientInfo;
 
+        case actionTypes.CLEAR_CLIENT_INFO:
+            return {};
+
         default:
             return state;
 

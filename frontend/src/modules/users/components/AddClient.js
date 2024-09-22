@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { BsXLg } from "react-icons/bs";
 import './AddClient.css';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +30,8 @@ const AddClient = () => {
     const [weight, setWeight] = useState('');
     const [error, setError] = useState(null);
 
+    const fileInputRef = useRef(null);
+
     const user = useSelector(selectors.getUser);
     let form;
 
@@ -38,19 +40,8 @@ const AddClient = () => {
         let file = input.target.files[0];
 
         if (file) {
-            const fileReader = new FileReader()
-
-            fileReader.readAsDataURL(file)
-            fileReader.addEventListener("load", function () {
-                let base64DataIndex = fileReader.result.indexOf(',') + 1;
-                let base64Data = fileReader.result.substring(base64DataIndex);
-                const newIcon = {
-                    name: file.name,
-                    base64: base64Data
-                }
-                setIcon(newIcon)
-            })
-
+            setIcon(file)
+            file = null;
         } else {
             // Resetea el valor del input de archivo al pulsar cancel
             input.target.value = "";
@@ -62,36 +53,46 @@ const AddClient = () => {
     function clearImage() {
         setIcon(null);
         document.getElementById('icon').value = "";
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
     }
 
     const handleSubmit = event => {
-
         event.preventDefault();
 
         if (form.checkValidity()) {
-
             const heightValue = height === '0' ? null : height;
             const weightValue = weight === '0' ? null : weight;
 
+            const userDto = {
+                email: email.trim(),
+                password: password,
+                fullName: fullName.trim(),
+                phone: phone ? phone.trim() : null,
+                role: 'CLIENT',
+                birthdate: birthdate || null,
+                injuries: injuries ? injuries.trim() : null,
+                goals: goals ? goals.trim() : null,
+                height: heightValue || null,
+                weight: weightValue || null,
+                trainerId: user.id
+            };
+
+            const formData = new FormData();
+            formData.append('user', new Blob([JSON.stringify(userDto)], { type: 'application/json' }));
+
+            if (icon) {
+                formData.append('file', icon);
+            }
+
             dispatch(actions.addClient(
-                {
-                    email: email.trim(),
-                    password: password,
-                    fullName: fullName.trim(),
-                    phone: phone ? phone.trim() : null,
-                    role: 'CLIENT',
-                    icon: icon,
-                    birthdate: birthdate || null,
-                    injuries: injuries ? injuries.trim() : null,
-                    goals: goals ? goals.trim() : null,
-                    height: heightValue || null,
-                    weight: weightValue || null,
-                    trainerId: user.id
+                formData,
+                () => {
+                    navigate('/users/clients');
                 },
-                () => navigate('/users/clients'),
                 errors => setError(errors)
             ));
-
         } else {
             setError(null);
             form.classList.add('was-validated');

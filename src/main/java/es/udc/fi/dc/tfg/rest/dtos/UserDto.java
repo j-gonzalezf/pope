@@ -137,7 +137,7 @@ public class UserDto {
         this.trainerId = trainerId;
 
     }
-    
+
     /**
      * Constructor para usuarios de la clase UserDto con weight.
      *
@@ -297,6 +297,7 @@ public class UserDto {
      *
      * @return the icon
      */
+    @Size(max = 255, groups = {AllValidations.class, UpdateValidations.class})
     public String getIcon() {
         return icon;
     }
@@ -308,6 +309,14 @@ public class UserDto {
      */
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public String getIconImagePath() {
+        if (icon == null || id == null) {
+            return null;
+        }
+
+        return "/user-icons/" + id + "/" + icon;
     }
 
     /**
@@ -359,7 +368,6 @@ public class UserDto {
      *
      * @return the birthdate
      */
-    //@Past(groups = {AllValidations.class, UpdateValidations.class})
     public String getBirthdate() {
         return birthdate;
     }

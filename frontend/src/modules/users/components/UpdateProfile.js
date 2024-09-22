@@ -6,7 +6,7 @@ import Nav from 'react-bootstrap/Nav';
 import { BsInfoSquare, BsPencilSquare, BsTrashFill, BsXLg } from "react-icons/bs";
 import './UpdateProfile.css';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +30,8 @@ const UpdateProfile = () => {
     const [activeTab, setActiveTab] = useState('profile');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+    const fileInputRef = useRef(null);
+
     let form;
 
     function readImage(input) {
@@ -37,19 +39,8 @@ const UpdateProfile = () => {
         let file = input.target.files[0];
 
         if (file) {
-            const fileReader = new FileReader()
-
-            fileReader.readAsDataURL(file)
-            fileReader.addEventListener("load", function () {
-                let base64DataIndex = fileReader.result.indexOf(',') + 1;
-                let base64Data = fileReader.result.substring(base64DataIndex);
-                const newIcon = {
-                    name: file.name,
-                    base64: base64Data
-                }
-                setIcon(newIcon)
-            })
-
+            setIcon(file)
+            file = null;
         } else {
             // Resetea el valor del input de archivo al pulsar cancel
             input.target.value = "";
@@ -60,7 +51,9 @@ const UpdateProfile = () => {
 
     function clearImage() {
         setIcon(null);
-        document.getElementById('icon').value = "";
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
     }
 
     const handleSubmit = event => {
@@ -135,7 +128,7 @@ const UpdateProfile = () => {
                         <Button className="btn" variant="secondary" onClick={() => setShowDeleteModal(false)}>
                             <FormattedMessage id="project.global.button.cancel" />
                         </Button>
-                        <Button className="btn" variant="danger" onClick={handleDelete}>
+                        <Button className="btn danger" onClick={handleDelete}>
                             <FormattedMessage id="project.users.deleteAccount.button" />
                         </Button>
                     </Modal.Footer>
@@ -293,7 +286,7 @@ const UpdateProfile = () => {
                             </Nav.Item>
                         )}
                         <Nav.Item>
-                            <Nav.Link className="bg-danger nav-link deleteProfile" onClick={() => setShowDeleteModal(true)}>
+                            <Nav.Link className="btn danger nav-link deleteProfile" onClick={() => setShowDeleteModal(true)}>
                                 <BsTrashFill style={{ marginRight: '10px' }} />
                                 <FormattedMessage id="project.users.deleteAccount" />
                             </Nav.Link>

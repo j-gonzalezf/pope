@@ -46,8 +46,8 @@ const signUpCompleted = authenticatedUser => ({
     authenticatedUser
 });
 
-export const signUp = (user, onSuccess, onErrors, reauthenticationCallback) => dispatch =>
-    backend.userService.signUp(user,
+export const signUp = (formData, onSuccess, onErrors, reauthenticationCallback) => dispatch =>
+    backend.userService.signUp(formData,
         authenticatedUser => {
             dispatch(signUpCompleted(authenticatedUser));
             dispatch(showSuccessMessage('¡Bienvenido a Pope! ¿Listo para empezar?'));
@@ -60,8 +60,8 @@ const addClientCompleted = () => ({
     type: actionTypes.ADD_CLIENT_COMPLETED,
 });
 
-export const addClient = (newclient, onSuccess, onErrors) => dispatch =>
-    backend.userService.addClient(newclient,
+export const addClient = (formData, onSuccess, onErrors) => dispatch =>
+    backend.userService.addClient(formData,
         () => {
             dispatch(addClientCompleted());
             onSuccess();
@@ -94,6 +94,10 @@ export const getClientInfo = (clientId, onSuccess, onErrors) => dispatch =>
             onSuccess();
         }, onErrors
     );
+
+export const clearClientInfo = () => ({
+    type: actionTypes.CLEAR_CLIENT_INFO
+});
 
 const getTrainerInfoCompleted = getTrainerInfo => ({
     type: actionTypes.GET_TRAINER_INFO_COMPLETED,

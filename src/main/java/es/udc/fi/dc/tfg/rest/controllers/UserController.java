@@ -47,7 +47,10 @@ import es.udc.fi.dc.tfg.rest.dtos.ChangePasswordParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.LoginParamsDto;
 import es.udc.fi.dc.tfg.rest.dtos.UserDto;
 import es.udc.fi.dc.tfg.rest.dtos.WeightDto;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Clase UserController.
@@ -129,12 +132,12 @@ public class UserController {
     }
 
     // Método común para registrar un usuario
-    private Users createUser(UserDto userDto, Users trainer)
-            throws DuplicateInstanceException {
+    private Users createUser(UserDto userDto, Users trainer, MultipartFile file)
+            throws DuplicateInstanceException, IOException {
 
         Users user = toUser(userDto, trainer);
 
-        userService.signUp(user);
+        userService.signUp(user, file);
 
         return user;
 
@@ -144,15 +147,19 @@ public class UserController {
      * Registrar un nuevo entrenador.
      *
      * @param userDto el DTO del usuario
+     * @param file el icono del usuario
      * @return una ResponseEntity que contiene un AuthenticatedUserDto
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @PostMapping("/signUp")
-    public ResponseEntity<AuthenticatedUserDto> signUp(@Validated({UserDto.AllValidations.class})
-            @RequestBody UserDto userDto) throws DuplicateInstanceException {
+    public ResponseEntity<AuthenticatedUserDto> signUp(@RequestPart("user")
+            @Validated({UserDto.AllValidations.class}) UserDto userDto,
+            @RequestPart(value = "file", required = false) MultipartFile file)
+            throws DuplicateInstanceException, IOException {
 
-        Users user = createUser(userDto, null);
+        Users user = createUser(userDto, null, file);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(user.getId()).toUri();
@@ -166,6 +173,7 @@ public class UserController {
      *
      * @param userId el ID del usuario que realiza la petición
      * @param userDto el DTO del usuario
+     * @param file el icono del usuario
      * @return una ResponseEntity que contiene un UserDto
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
@@ -174,18 +182,20 @@ public class UserController {
      * @throws PermissionException si el ID del usuario que realiza la petición
      * no coincide con el ID del entrenador del cliente que se va a crear.
      * @throws InvalidRoleException si el cliente que se va a crear no tiene rol
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @PostMapping("/addClient")
     public ResponseEntity<UserDto> addClient(@RequestAttribute Long userId,
-            @Validated({UserDto.AllValidations.class}) @RequestBody UserDto userDto)
+            @RequestPart("user") @Validated({UserDto.AllValidations.class}) UserDto userDto,
+            @RequestPart(value = "file", required = false) MultipartFile file)
             throws DuplicateInstanceException, InstanceNotFoundException,
-            PermissionException, InvalidRoleException {
+            PermissionException, InvalidRoleException, IOException {
 
         Users trainer = userService.loginFromId(userDto.getTrainerId());
 
         userService.validateUser(userId, trainer.getId());
 
-        Users user = createUser(userDto, trainer);
+        Users user = createUser(userDto, trainer, file);
 
         Weights weight = null;
         if (userDto.getWeight() != null) {
@@ -317,6 +327,7 @@ public class UserController {
      * @param userId el ID del usuario que realiza la petición
      * @param id el ID del usuario al que se le va a actualizar el perfil
      * @param userDto el user dto
+     * @param file el icono del usuario
      * @return el user dto
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email
@@ -325,12 +336,14 @@ public class UserController {
      * @throws PermissionException si el ID del usuario que realiza la petición
      * no coincide con el ID del usuario al que se le va a actualizar el perfil
      * @throws InvalidRoleException si el usuario no tiene rol
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @PutMapping("/{id}")
     public UserDto updateProfile(@RequestAttribute Long userId, @PathVariable("id") Long id,
-            @Validated({UserDto.UpdateValidations.class}) @RequestBody UserDto userDto)
+            @RequestPart("user") @Validated({UserDto.UpdateValidations.class}) UserDto userDto,
+            @RequestPart(value = "file", required = false) MultipartFile file)
             throws DuplicateInstanceException, InstanceNotFoundException,
-            PermissionException, InvalidRoleException {
+            PermissionException, InvalidRoleException, IOException {
 
         userService.validateUser(userId, id);
 
@@ -342,7 +355,7 @@ public class UserController {
             case "TRAINER" -> {
                 return toUserDto(userService.updateProfile(id, userDto.getEmail(),
                         userDto.getFullName(), userDto.getPhone(),
-                        userDto.getIcon(), userDto.getSocialLinks()), null);
+                        file, userDto.getSocialLinks()), null);
             }
 
             case "CLIENT" -> {
@@ -363,7 +376,7 @@ public class UserController {
                 }
 
                 Users updatedClient = userService.updateClient(id, userDto.getEmail(),
-                        userDto.getFullName(), userDto.getPhone(), userDto.getIcon(),
+                        userDto.getFullName(), userDto.getPhone(), file,
                         birthdate, userDto.getInjuries(), userDto.getGoals(),
                         userDto.getHeight());
 

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import users, {
   AddClient, ChangePassword, ClientDetails, ClientsList,
@@ -9,6 +9,7 @@ import users, {
 import { CyclesList, ExercisesList, TemplatesList, TemplateView } from "../../templates";
 import { GraphsList, GraphPage } from "../../tracking";
 import Home from "./Home";
+import RedirectHandler from "./RedirectHandler";
 import NotFoundPage from "./NotFoundPage";
 
 const Body = () => {
@@ -16,15 +17,19 @@ const Body = () => {
   const loggedIn = useSelector(users.selectors.isLoggedIn);
   const userRole = useSelector(users.selectors.getUserRole);
 
+  useEffect(() => {
+
+  }, [loggedIn]);
+
   return (
 
     <div data-testid="body" className="container" >
       <Routes>
-        {!loggedIn && <Route path="/" element={<Home />} />}
+        {!loggedIn && <Route path="/*" element={<Home />} />}
         {!loggedIn && <Route path="/users/login/:userType" element={<Login />} />}
         {!loggedIn && <Route path="/users/signUp" element={<SignUp />} />}
         {loggedIn && <Route path="/users/logout" element={<Logout />} />}
-        {loggedIn && userRole === 'TRAINER' && <Route path="/users/clients" element={<ClientsList />} />}
+        {loggedIn && userRole === 'TRAINER' && <Route exact path="/users/clients" element={<ClientsList />} />}
         {loggedIn && userRole === 'TRAINER' && <Route path="/users/addClient" element={<AddClient />} />}
         {loggedIn && userRole === 'TRAINER' && <Route path="/users/updateProfile" element={<UpdateProfile />} />}
         {loggedIn && userRole === 'TRAINER' && <Route path="/users/changePassword" element={<ChangePassword />} />}
@@ -37,8 +42,8 @@ const Body = () => {
         {loggedIn && <Route path="/templates/:clientId/trainingCycle/:cycleId/template/:templateId" element={<TemplateView />} />}
         {loggedIn && <Route path="/templates/exercises" element={<ExercisesList />} />}
         {loggedIn && <Route path="/users/trainer/:trainerId" element={<TrainerProfile />} />}
-        <Route path="/notFound" element={<NotFoundPage />} />
-        <Route path="/*" element={<Navigate to="/notFound" />} />
+        {loggedIn && <Route path="/notFound" element={<NotFoundPage />} />}
+        {loggedIn && <Route path="/*" element={<RedirectHandler />} />}
       </Routes>
     </div >
 

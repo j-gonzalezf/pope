@@ -21,6 +21,7 @@ import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
 import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -81,17 +82,19 @@ public class UserServiceTest {
      * @throws PermissionException si el usuario que realiza la petición no
      * tiene permiso para realizar la acción.
      * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testValidateUser() throws DuplicateInstanceException,
-            InstanceNotFoundException, PermissionException, InvalidRoleException {
+            InstanceNotFoundException, PermissionException, InvalidRoleException,
+            IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
         Users client = createClient("client@client.com");
         client.setTrainer(trainer);
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         // Test para validar un entrenador
         userService.validateUser(trainer.getId(), trainer.getId());
@@ -111,13 +114,15 @@ public class UserServiceTest {
      * @throws PermissionException si el usuario que realiza la petición no
      * tiene permiso para realizar la acción.
      * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testValidateUserNonExistentId() throws DuplicateInstanceException,
-            InstanceNotFoundException, PermissionException, InvalidRoleException {
+            InstanceNotFoundException, PermissionException, InvalidRoleException,
+            IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
-        userService.signUp(trainer);
+        userService.signUp(trainer, null);
 
         assertThrows(InstanceNotFoundException.class, () -> {
             userService.validateUser(trainer.getId(), NON_EXISTENT_ID);
@@ -135,18 +140,20 @@ public class UserServiceTest {
      * @throws PermissionException si el usuario que realiza la petición no
      * tiene permiso para realizar la acción.
      * @throws InvalidRoleException si el usuario que se va validar no tiene rol
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testValidateUserNonPermission() throws DuplicateInstanceException,
-            InstanceNotFoundException, PermissionException, InvalidRoleException {
+            InstanceNotFoundException, PermissionException, InvalidRoleException,
+            IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
-        userService.signUp(trainer);
+        userService.signUp(trainer, null);
 
         // Un entrenador intenta validar a otro entrenador
         // (userId != id)
         Users anotherTrainer = createTrainer("anotherTrainer@trainer.com");
-        userService.signUp(anotherTrainer);
+        userService.signUp(anotherTrainer, null);
 
         assertThrows(PermissionException.class, () -> {
             userService.validateUser(trainer.getId(), anotherTrainer.getId());
@@ -156,7 +163,7 @@ public class UserServiceTest {
         // (userId != id.trainerId)
         Users anotherClient = createClient("anotherClient@client.com");
         anotherClient.setTrainer(anotherTrainer);
-        userService.signUp(anotherClient);
+        userService.signUp(anotherClient, null);
 
         assertThrows(PermissionException.class, () -> {
             userService.validateUser(trainer.getId(), anotherClient.getId());
@@ -171,16 +178,17 @@ public class UserServiceTest {
      * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testSignUpAndLoginFromId()
-            throws DuplicateInstanceException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
         Users client = createClient("client@client.com");
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         Users loggedInTrainer = userService.loginFromId(trainer.getId());
         Users loggedInClient = userService.loginFromId(client.getId());
@@ -197,18 +205,20 @@ public class UserServiceTest {
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
-    public void testSignUpDuplicatedEmail() throws DuplicateInstanceException {
+    public void testSignUpDuplicatedEmail()
+            throws DuplicateInstanceException, IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
         Users client = createClient("client@client.com");
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
-        assertThrows(DuplicateInstanceException.class, () -> userService.signUp(trainer));
-        assertThrows(DuplicateInstanceException.class, () -> userService.signUp(client));
+        assertThrows(DuplicateInstanceException.class, () -> userService.signUp(trainer, null));
+        assertThrows(DuplicateInstanceException.class, () -> userService.signUp(client, null));
 
     }
 
@@ -231,9 +241,11 @@ public class UserServiceTest {
      * email.
      * @throws IncorrectLoginException si el email o la contraseña son
      * incorrectos.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
-    public void testLogin() throws DuplicateInstanceException, IncorrectLoginException {
+    public void testLogin()
+            throws DuplicateInstanceException, IncorrectLoginException, IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
         Users client = createClient("client@client.com");
@@ -241,8 +253,8 @@ public class UserServiceTest {
         String clearPassword = trainer.getPassword();
         String clearClientPassword = client.getPassword();
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         Users loggedInTrainer = userService.login(trainer.getEmail(), clearPassword);
         Users loggedInClient = userService.login(client.getEmail(), clearClientPassword);
@@ -271,10 +283,11 @@ public class UserServiceTest {
      * incorrectos.
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testLoginWithIncorrectPassword()
-            throws DuplicateInstanceException, IncorrectLoginException {
+            throws DuplicateInstanceException, IncorrectLoginException, IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
         Users client = createClient("client@client.com");
@@ -282,8 +295,8 @@ public class UserServiceTest {
         String clearPassword = trainer.getPassword();
         String clearClientPassword = client.getPassword();
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         assertThrows(IncorrectLoginException.class,
                 () -> userService.login(trainer.getEmail(), 'X' + clearPassword));
@@ -298,21 +311,23 @@ public class UserServiceTest {
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
      * @throws InstanceNotFoundException si no se encuentra ningún cliente.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
-    public void testGetClients() throws DuplicateInstanceException, InstanceNotFoundException {
+    public void testGetClients()
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
 
-        userService.signUp(trainer);
+        userService.signUp(trainer, null);
 
         Users client1 = createClient("client1@client.com");
         client1.setTrainer(trainer);
-        userService.signUp(client1);
+        userService.signUp(client1, null);
 
         Users client2 = createClient("client2@client.com");
         client2.setTrainer(trainer);
-        userService.signUp(client2);
+        userService.signUp(client2, null);
 
         List<Users> clients = userService.getClients(trainer.getId());
 
@@ -329,13 +344,15 @@ public class UserServiceTest {
      * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
-    public void testUpdateProfile() throws DuplicateInstanceException, InstanceNotFoundException {
+    public void testUpdateProfile()
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
 
-        userService.signUp(trainer);
+        userService.signUp(trainer, null);
 
         Users updatedTrainer = userService.updateProfile(trainer.getId(), "new@new.com",
                 "newFullName1", "192837465", null, "https://linktr.ee");
@@ -371,16 +388,17 @@ public class UserServiceTest {
      * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testUpdateProfileDuplicatedEmail()
-            throws DuplicateInstanceException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
         Users client = createClient("client@client.com");
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         assertThrows(DuplicateInstanceException.class,
                 () -> userService.updateProfile(trainer.getId(),
@@ -395,13 +413,15 @@ public class UserServiceTest {
      * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
-    public void testUpdateClient() throws DuplicateInstanceException, InstanceNotFoundException {
+    public void testUpdateClient()
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Users client = createClient("client@client.com");
 
-        userService.signUp(client);
+        userService.signUp(client, null);
 
         Users updatedClient = userService.updateClient(client.getId(),
                 "new@new.es", "newFullName2", "192837460", null,
@@ -442,16 +462,17 @@ public class UserServiceTest {
      * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testUpdateClientDuplicatedEmail()
-            throws DuplicateInstanceException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
         Users client = createClient("client@client.com");
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         assertThrows(DuplicateInstanceException.class,
                 () -> userService.updateClient(client.getId(),
@@ -469,10 +490,11 @@ public class UserServiceTest {
      * proporcionado.
      * @throws IncorrectPasswordException si la contraseña antigua proporcionada
      * no coincide con la contraseña actual del usuario.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testChangePassword() throws DuplicateInstanceException,
-            InstanceNotFoundException, IncorrectPasswordException {
+            InstanceNotFoundException, IncorrectPasswordException, IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
         Users client = createClient("client@client.com");
@@ -480,8 +502,8 @@ public class UserServiceTest {
         String clearPassword = trainer.getPassword();
         String clearClientPassword = client.getPassword();
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         assertEquals("password1", clearPassword);
         assertEquals("password2", clearClientPassword);
@@ -519,10 +541,11 @@ public class UserServiceTest {
      * proporcionado.
      * @throws IncorrectPasswordException si la contraseña antigua proporcionada
      * no coincide con la contraseña actual del usuario.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
     public void testChangePasswordWithIncorrectPassword() throws DuplicateInstanceException,
-            InstanceNotFoundException, IncorrectPasswordException {
+            InstanceNotFoundException, IncorrectPasswordException, IOException {
 
         Users trainer = createTrainer("trainer@trainer.com");
         Users client = createClient("client@client.com");
@@ -530,8 +553,8 @@ public class UserServiceTest {
         String clearPassword = trainer.getPassword();
         String clearClientPassword = client.getPassword();
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         assertThrows(IncorrectPasswordException.class,
                 () -> userService.changePassword(trainer.getId(), 'Y' + clearPassword, "newPassword1"));
@@ -545,13 +568,15 @@ public class UserServiceTest {
      * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
+     * @throws IOException si hay algún error a la hora de guardar la imagen
      */
     @Test
-    public void testDeleteUser() throws DuplicateInstanceException, InstanceNotFoundException {
+    public void testDeleteUser()
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Users user = createTrainer("user@user.com");
 
-        userService.signUp(user);
+        userService.signUp(user, null);
 
         Long deletedUserId = userService.deleteUser(user.getId());
 

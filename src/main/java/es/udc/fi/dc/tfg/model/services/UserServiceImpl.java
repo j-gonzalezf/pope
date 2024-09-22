@@ -13,10 +13,18 @@ import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectLoginException;
 import es.udc.fi.dc.tfg.model.services.exceptions.IncorrectPasswordException;
 import es.udc.fi.dc.tfg.model.services.exceptions.InvalidRoleException;
 import es.udc.fi.dc.tfg.model.services.exceptions.PermissionException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Clase UserServiceImpl.
@@ -42,6 +50,11 @@ public class UserServiceImpl implements UserService {
      */
     @Autowired
     private UserDao userDao;
+
+    /**
+     * El tamaño máximo de un icono
+     */
+    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
     // Método para validar un entrenador cuando id es un TRAINER
     private void validateForTrainer(Long userId, Long id) throws PermissionException {
@@ -97,21 +110,71 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    // Método para validar el tamaño de un icono
+    private void validateFileSize(MultipartFile file) throws IOException {
+        if (file.getSize() > MAX_FILE_SIZE) {
+            throw new IOException("File size exceeds the maximum limit of 5 MB");
+        }
+    }
+
+    // Método para guardar un icono
+    private static void uploadFile(String uploadDir, String fileName, MultipartFile file)
+            throws IOException {
+
+        if (file != null && !file.isEmpty()) {
+            // Se define el directorio donde se guardará el archivo
+            Path uploadPath = Paths.get(uploadDir);
+
+            // Si el directorio no existe, se crea
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // Se intenta obtener un InputStream del file para leer sus bytes
+            try (InputStream inputStream = file.getInputStream()) {
+                // Se copian los datos del archivo a la ruta destino
+                Path filePath = uploadPath.resolve(fileName);
+                // Si el archivo ya existe en la ruta destino se reemplaza
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                throw new IOException("Could not save image file: " + fileName, e);
+            }
+
+        }
+
+    }
+
     /**
      * Crea un nuevo usuario.
      *
      * @param user el objeto Users que representa al usuario a crear.
+     * @param file la foto de perfil del usuario.
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws IOException si hay algún error a la hora de guardar la imagen.
      */
     @Override
-    public void signUp(Users user) throws DuplicateInstanceException {
+    public void signUp(Users user, MultipartFile file)
+            throws DuplicateInstanceException, IOException {
 
         if (userDao.existsByEmail(user.getEmail())) {
             throw new DuplicateInstanceException("project.entities.user", user.getEmail());
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        String fileName = null;
+        if (file != null && !file.isEmpty()) {
+            validateFileSize(file);
+            fileName = user.getEmail() + "-" + StringUtils.cleanPath(file.getOriginalFilename());
+            user.setIcon(fileName);
+        } else {
+            user.setIcon(null);
+        }
+        
+        String uploadDir = "src/main/resources/user-icons/";
+
+        uploadFile(uploadDir, fileName, file);
 
         userDao.save(user);
 
@@ -180,7 +243,7 @@ public class UserServiceImpl implements UserService {
      * @param email El nuevo correo electrónico del entrenador.
      * @param fullName El nuevo nombre completo del entrenador.
      * @param phone El nuevo número de teléfono del entrenador.
-     * @param icon La foto de perfil del entrenador.
+     * @param file La foto de perfil del entrenador.
      * @param socialLinks El enlace a las redes sociales del entrenador.
      * @return El objeto Users que representa al usuario con el perfil
      * actualizado.
@@ -188,10 +251,12 @@ public class UserServiceImpl implements UserService {
      * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
+     * @throws IOException si hay algún error a la hora de guardar la imagen.
      */
     @Override
     public Users updateProfile(Long id, String email, String fullName, String phone,
-            String icon, String socialLinks) throws DuplicateInstanceException, InstanceNotFoundException {
+            MultipartFile file, String socialLinks)
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Users user = permissionChecker.checkUser(id);
 
@@ -202,8 +267,21 @@ public class UserServiceImpl implements UserService {
         user.setEmail(email);
         user.setFullName(fullName);
         user.setPhone(phone);
-        user.setIcon(icon);
+
+        String fileName = null;
+        if (file != null && !file.isEmpty()) {
+            validateFileSize(file);
+            fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            user.setIcon(fileName);
+        } else {
+            user.setIcon(null);
+        }
+
         user.setSocialLinks(socialLinks);
+
+        String uploadDir = "src/main/resources/user-icons/";
+
+        uploadFile(uploadDir, fileName, file);
 
         return user;
 
@@ -216,7 +294,7 @@ public class UserServiceImpl implements UserService {
      * @param email El nuevo correo electrónico del cliente.
      * @param fullName El nuevo nombre completo del cliente.
      * @param phone El nuevo número de teléfono del cliente.
-     * @param icon La foto de perfil del cliente.
+     * @param file La foto de perfil del cliente.
      * @param birthdate La fecha de nacimiento del cliente.
      * @param injuries Las lesiones del cliente.
      * @param goals Los objetivos del cliente.
@@ -227,11 +305,12 @@ public class UserServiceImpl implements UserService {
      * email.
      * @throws InstanceNotFoundException si no se encuentra un usuario con el ID
      * proporcionado.
+     * @throws IOException si hay algún error a la hora de guardar la imagen.
      */
     @Override
-    public Users updateClient(Long id, String email, String fullName, String phone, String icon,
+    public Users updateClient(Long id, String email, String fullName, String phone, MultipartFile file,
             LocalDate birthdate, String injuries, String goals, BigDecimal height)
-            throws DuplicateInstanceException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Users user = permissionChecker.checkUser(id);
 
@@ -242,11 +321,24 @@ public class UserServiceImpl implements UserService {
         user.setEmail(email);
         user.setFullName(fullName);
         user.setPhone(phone);
-        user.setIcon(icon);
+
+        String fileName = null;
+        if (file != null && !file.isEmpty()) {
+            validateFileSize(file);
+            fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            user.setIcon(fileName);
+        } else {
+            user.setIcon(null);
+        }
+
         user.setBirthdate(birthdate);
         user.setInjuries(injuries);
         user.setGoals(goals);
         user.setHeight(height);
+
+        String uploadDir = "src/main/resources/user-icons/" + id;
+
+        uploadFile(uploadDir, fileName, file);
 
         return user;
 

@@ -191,7 +191,7 @@ const TemplateView = () => {
                                                             <BsPencilSquare className="checkIconStyle" color='#e6af2e' size={20} />
                                                         </Button>
                                                         <Button className="primary template delete name" title='Eliminar plantilla' onClick={handleDeleteTemplate} >
-                                                            <BsTrash className="crossIconStyle" color='red' size={20} />
+                                                            <BsTrash className="crossIconStyle" color='#ff4646' size={20} />
                                                         </Button>
                                                     </>
                                                 )}
@@ -235,7 +235,7 @@ const TemplateView = () => {
                                                                 </Button>
                                                                 <Button className="primary template delete"
                                                                     title='Pulsa para eliminar fila' onClick={() => handleDeleteRow(row)} >
-                                                                    <BsTrash className="crossIconStyle" color='red' size={20} />
+                                                                    <BsTrash className="crossIconStyle" color='#ff4646' size={20} />
                                                                 </Button>
                                                             </div>
                                                         )}

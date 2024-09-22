@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .requestMatchers(antMatcher("/*")).permitAll()
                 .requestMatchers(antMatcher("/static/**")).permitAll()
                 .requestMatchers(antMatcher("/assets/**")).permitAll()
+                .requestMatchers(antMatcher("/user-icons/**")).permitAll()
                 .requestMatchers(antMatcher("/api/hello")).permitAll()
                 .requestMatchers(antMatcher("/api/users/signUp")).permitAll()
                 .requestMatchers(antMatcher("/api/users/login")).permitAll()

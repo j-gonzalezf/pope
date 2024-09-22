@@ -3,7 +3,7 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import './ChangePassword.css';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -33,6 +33,8 @@ const ChangePassword = () => {
         event.preventDefault();
 
         if (form.checkValidity()) {
+            form.classList.remove('was-validated');
+            form.classList.add('was-validated');
 
             dispatch(actions.changePassword(user.id, oldPassword, newPassword,
                 () => navigate('/users/clients'),
@@ -42,16 +44,23 @@ const ChangePassword = () => {
             setError(null);
             form.classList.add('was-validated');
         }
-
     }
 
     const handleConfirmPasswordChange = value => {
-
         confirmPasswordInput.setCustomValidity('');
         setConfirmNewPassword(value);
         setPasswordsDoNotMatch(false);
-
     }
+
+    useEffect(() => {
+        return () => {
+            setOldPassword('');
+            setNewPassword('');
+            setConfirmNewPassword('');
+            setError(null);
+            setPasswordsDoNotMatch(false);
+        };
+    }, []);
 
     return (
 
