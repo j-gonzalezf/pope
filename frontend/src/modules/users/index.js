@@ -12,6 +12,7 @@ export { default as UpdateProfile } from './components/UpdateProfile';
 export { default as ChangePassword } from './components/ChangePassword';
 export { default as UpdateClient } from './components/UpdateClient';
 export { default as ClientDetails } from './components/ClientDetails';
+export { default as TrainerProfile } from './components/TrainerProfile';
 
 // eslint-disable-next-line
 export default { actions, actionTypes, reducer, selectors };

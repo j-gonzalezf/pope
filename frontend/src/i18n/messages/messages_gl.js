@@ -24,6 +24,7 @@ export default {
     'project.users.confirmPassword': 'Confirmar contrasinal',
     'project.users.confirmPasswordPattern': 'Os contrasinais non coinciden',
     'project.users.phone': 'Número de teléfono',
+    'project.users.phoneContact': 'Teléfono de contacto',
     'project.users.phonePattern': 'Formato de número incorrecto',
     'project.users.icon': 'Imaxe de perfil',
     'project.users.socialLinks': 'Enlaces sociais',
@@ -74,6 +75,7 @@ export default {
     'project.users.templates': 'Modelos',
     'project.users.tracking': 'Seguimiento',
     'project.users.clientDetails': 'Datos do cliente',
+    'project.users.trainerProfile': 'Perfil do adestrador',
 
 
     // Templates Module
@@ -141,5 +143,28 @@ export default {
     'project.tracking.sensations.cancel': 'Rematar máis tarde',
     'project.tracking.sensations.titleUpdate': 'Editar avaliación do adestramento',
     'project.tracking.sensations.update': 'Actualizar avaliación',
+
+
+    // Comments Module
+    // Attributes
+
+
+    // Actions
+    'project.comments.title': 'Comentarios',
+    'project.comments.add': 'Enviar',
+
+
+    // Tooltips
+    'project.tooltips.clientsList.p1': 'Nesta vista móstranse os clientes que creaches.',
+    'project.tooltips.clientsList.p2': 'Fai clic nun cliente para máis detalles.',
+    'project.tooltips.clientDetails': 'Esta vista permíteche acceder á xestión de adestramentos, gráficas de evolución ou perfil do cliente.',
+    'project.tooltips.cyclesList': 'Os ciclos de adestramento organizan plantillas por datas. Fai clic nun ciclo para ver as súas plantillas.',
+    'project.tooltips.templatesList': 'Nesta vista móstranse as plantillas que creaches. Fai clic nunha plantilla para ver o seu contido.',
+    'project.tooltips.graphsList': 'O seguimento mostra a evolución de varios indicadores. Fai clic nunha sección para ver o seu gráfico correspondente.',
+    'project.tooltips.graphsPage.fatigue': 'Esta gráfica mostra o nivel de cansazo acumulado do cliente nun periodo de tempo.',
+    'project.tooltips.graphsPage.stiffness': 'Esta gráfica mostra a sensación de dor muscular do cliente nun periodo de tempo.',
+    'project.tooltips.graphsPage.motivation': 'Esta gráfica mostra o grao de motivación do cliente nun periodo de tempo.',
+    'project.tooltips.graphsPage.sleep': 'Esta gráfica mostra a calidade do sono do cliente nun periodo de tempo.',
+    'project.tooltips.graphsPage.weight': 'Esta gráfica mostra o peso corporal do cliente nun periodo de tempo.',
 
 }

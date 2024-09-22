@@ -24,6 +24,7 @@ export default {
     'project.users.confirmPassword': 'Confirm password',
     'project.users.confirmPasswordPattern': 'Passwords do not match',
     'project.users.phone': 'Phone number',
+    'project.users.phoneContact': 'Phone contact',
     'project.users.phonePattern': 'Invalid phone number',
     'project.users.icon': 'Profile picture',
     'project.users.socialLinks': 'Social links',
@@ -74,6 +75,7 @@ export default {
     'project.users.templates': 'Templates',
     'project.users.tracking': 'Tracking',
     'project.users.clientDetails': 'Client details',
+    'project.users.trainerProfile': 'Trainer profile',
 
 
     // Templates Module
@@ -134,7 +136,6 @@ export default {
     'project.tracking.month': 'Month',
     'project.tracking.year': 'Year',
 
-
     // Actions
     'project.tracking.sensations.title': 'Training evaluation',
     'project.tracking.sensations.button': 'Send',
@@ -142,5 +143,28 @@ export default {
     'project.tracking.sensations.cancel': 'Finish later',
     'project.tracking.sensations.titleUpdate': 'Training evaluation update',
     'project.tracking.sensations.update': 'Update evaluation',
+
+
+    // Comments Module
+    // Attributes
+
+
+    // Actions
+    'project.comments.title': 'Comments',
+    'project.comments.add': 'Add',
+
+
+    // Tooltips
+    'project.tooltips.clientsList.p1': 'In this view, you can see the clients you have created.',
+    'project.tooltips.clientsList.p2': 'Click on a client for more details.',
+    'project.tooltips.clientDetails': 'This view allows you to access training sessions, evolution charts, or the client’s profile.',
+    'project.tooltips.cyclesList': 'Training cycles organize templates by dates. Click on a cycle to see its templates.',
+    'project.tooltips.templatesList': 'This view shows the templates you have created. Click on a template to see its content.',
+    'project.tooltips.graphsList': 'The tracking shows the evolution of various indicators. Click on a section to see its corresponding graph.',
+    'project.tooltips.graphsPage.fatigue': 'This graph shows the client’s accumulated fatigue level in a period of time.',
+    'project.tooltips.graphsPage.stiffness': 'This graph shows the client’s muscle soreness in a period of time.',
+    'project.tooltips.graphsPage.motivation': 'This graph shows the client’s motivation level in a period of time.',
+    'project.tooltips.graphsPage.sleep': 'This graph shows the client’s sleep quality in a period of time.',
+    'project.tooltips.graphsPage.weight': 'This graph shows the client’s body weight in a period of time.',
 
 }

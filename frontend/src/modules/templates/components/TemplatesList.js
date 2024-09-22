@@ -1,8 +1,10 @@
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import { BsQuestionCircle } from "react-icons/bs";
 import './TemplatesList.css';
 
 import { useEffect, useState } from 'react';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -39,6 +41,11 @@ const TemplatesList = () => {
             errors => setError(errors)));
     }, [dispatch, cycleId]);
 
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            <FormattedMessage id="project.tooltips.templatesList" />
+        </Tooltip>
+    );
 
     return (
 
@@ -46,6 +53,15 @@ const TemplatesList = () => {
 
             <h3 className="title">
                 <FormattedMessage id="project.templates.templatesList.title" />
+                <OverlayTrigger
+                    placement="right"
+                    delay={{ show: 200, hide: 400 }}
+                    overlay={renderTooltip}
+                >
+                    <span className="d-inline-block" style={{ marginLeft: '10px' }}>
+                        <BsQuestionCircle className="checkIconStyle" color='#e6af2e' size={20} />
+                    </span>
+                </OverlayTrigger>
             </h3>
 
             {getTemplates && getTemplates.length > 0 ? (

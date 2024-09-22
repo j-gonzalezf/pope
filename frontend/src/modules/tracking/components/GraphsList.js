@@ -1,11 +1,13 @@
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import { BsQuestionCircle } from "react-icons/bs";
 import { GiFishing, GiSadCrab, GiWeight } from "react-icons/gi";
 import { RiZzzFill } from "react-icons/ri";
 import { TbFishBone } from "react-icons/tb";
 import '../../users/components/ClientDetails.css';
 
 import { useEffect, useState } from 'react';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -35,12 +37,27 @@ const Graphs = () => {
             errors => setError(errors)));
     }, [dispatch, clientId]);
 
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            <FormattedMessage id="project.tooltips.graphsList" />
+        </Tooltip>
+    );
+
     return (
 
         <div fluid="true" className='ClientDetails'>
 
             <h3 className="title">
                 <FormattedMessage id="project.users.tracking" />
+                <OverlayTrigger
+                    placement="right"
+                    delay={{ show: 200, hide: 400 }}
+                    overlay={renderTooltip}
+                >
+                    <span className="d-inline-block" style={{ marginLeft: '10px' }}>
+                        <BsQuestionCircle className="checkIconStyle" color='#e6af2e' size={20} />
+                    </span>
+                </OverlayTrigger>
             </h3>
 
             <Row className="listStyle clientDetails">
