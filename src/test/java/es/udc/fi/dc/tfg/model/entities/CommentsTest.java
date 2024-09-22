@@ -1,9 +1,10 @@
 package es.udc.fi.dc.tfg.model.entities;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,18 +13,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-public class SensationsTest {
+public class CommentsTest {
 
-    private Sensations voidSensations;
-    private Sensations sensations;
+    private Comments voidComments;
+    private Comments comments;
     private Templates template;
     private Templates newTemplate;
     private TrainingCycles trainingCycle;
@@ -33,7 +32,7 @@ public class SensationsTest {
 
     @Before
     public void setUp() {
-        voidSensations = new Sensations();
+        voidComments = new Comments();
         trainer = new Users("trainer@example.com", "password", "Test Trainer",
                 "1234567890", null, null);
         client = new Users("client@example.com", "password", "Test Client",
@@ -46,21 +45,21 @@ public class SensationsTest {
                 LocalDateTime.of(2001, 1, 1, 0, 0), trainingCycle);
         newTemplate = new Templates("templateName",
                 LocalDateTime.of(2001, 1, 1, 0, 0), trainingCycle);
-        sensations = new Sensations(2, 3, 4, 5,
-                LocalDateTime.of(2001, 1, 1, 0, 0), template, client);
+        comments = new Comments("comment", LocalDateTime.of(2001, 1, 1, 0, 0),
+                template, client);
     }
 
     @Test
-    public void testSensationsConstructors() {
+    public void testCommentsConstructors() {
 
-        // Test void sensations constructor
-        assertNotNull(voidSensations);
-        assertNull(voidSensations.getId());
+        // Test void comments constructor
+        assertNotNull(voidComments);
+        assertNull(voidComments.getId());
 
-        // Test sensations constructor
-        assertNotNull(sensations);
-        assertEquals(template, sensations.getTemplate());
-        assertEquals(client, sensations.getClient());
+        // Test comments constructor
+        assertNotNull(comments);
+        assertEquals(template, comments.getTemplate());
+        assertEquals(client, comments.getUser());
 
     }
 
@@ -68,24 +67,18 @@ public class SensationsTest {
     public void testSensationsGettersAndSetters() {
 
         // Test setters
-        sensations.setId(3L);
-        sensations.setFatigue(5);
-        sensations.setStiffness(4);
-        sensations.setMotivation(3);
-        sensations.setSleep(2);
-        sensations.setSensationDate(LocalDateTime.of(2002, 1, 1, 0, 0));
-        sensations.setTemplate(newTemplate);
-        sensations.setClient(newClient);
+        comments.setId(3L);
+        comments.setText("newComment");
+        comments.setCommentDate(LocalDateTime.of(2002, 1, 1, 0, 0));
+        comments.setTemplate(newTemplate);
+        comments.setUser(newClient);
 
         // Test getters
-        assertEquals(3L, sensations.getId().longValue());
-        assertEquals(5, sensations.getFatigue().intValue());
-        assertEquals(4, sensations.getStiffness().intValue());
-        assertEquals(3, sensations.getMotivation().intValue());
-        assertEquals(2, sensations.getSleep().intValue());
-        assertEquals(LocalDateTime.of(2002, 1, 1, 0, 0), sensations.getSensationDate());
-        assertEquals(newTemplate, sensations.getTemplate());
-        assertEquals(newClient, sensations.getClient());
+        assertEquals(3L, comments.getId().longValue());
+        assertEquals("newComment", comments.getText());
+        assertEquals(LocalDateTime.of(2002, 1, 1, 0, 0), comments.getCommentDate());
+        assertEquals(newTemplate, comments.getTemplate());
+        assertEquals(newClient, comments.getUser());
 
     }
 

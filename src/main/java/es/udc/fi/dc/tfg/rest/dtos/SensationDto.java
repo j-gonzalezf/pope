@@ -22,7 +22,7 @@ public class SensationDto {
     }
 
     /**
-     * Identificador de la plantilla de entrenamiento.
+     * Identificador del registro de sensaciones.
      */
     private Long id;
 

@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import users, {
   AddClient, ChangePassword, ClientDetails, ClientsList,
-  Login, Logout, SignUp, UpdateClient, UpdateProfile
+  Login, Logout, SignUp, UpdateClient, UpdateProfile, TrainerProfile
 } from "../../users";
 import { CyclesList, ExercisesList, TemplatesList, TemplateView } from "../../templates";
 import { GraphsList, GraphPage } from "../../tracking";
@@ -20,7 +20,7 @@ const Body = () => {
 
     <div data-testid="body" className="container" >
       <Routes>
-        <Route path="/" element={<Home />} />
+        {!loggedIn && <Route path="/" element={<Home />} />}
         {!loggedIn && <Route path="/users/login/:userType" element={<Login />} />}
         {!loggedIn && <Route path="/users/signUp" element={<SignUp />} />}
         {loggedIn && <Route path="/users/logout" element={<Logout />} />}
@@ -36,6 +36,7 @@ const Body = () => {
         {loggedIn && <Route path="/templates/:clientId/trainingCycle/:cycleId" element={<TemplatesList />} />}
         {loggedIn && <Route path="/templates/:clientId/trainingCycle/:cycleId/template/:templateId" element={<TemplateView />} />}
         {loggedIn && <Route path="/templates/exercises" element={<ExercisesList />} />}
+        {loggedIn && <Route path="/users/trainer/:trainerId" element={<TrainerProfile />} />}
         <Route path="/notFound" element={<NotFoundPage />} />
         <Route path="/*" element={<Navigate to="/notFound" />} />
       </Routes>

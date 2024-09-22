@@ -1,10 +1,12 @@
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import { BsQuestionCircle } from "react-icons/bs";
 import { GiCannedFish, GiFishingNet } from "react-icons/gi";
 import { LiaDharmachakraSolid } from "react-icons/lia";
 import './ClientDetails.css';
 
 import { useEffect, useState } from 'react';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -44,12 +46,27 @@ const ClientDetails = () => {
         navigate('/users/updateClient/' + clientId);
     }
 
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            <FormattedMessage id="project.tooltips.clientDetails" />
+        </Tooltip>
+    );
+
     return (
 
         <div fluid="true" className='ClientDetails'>
 
             <h3 className="title">
                 <FormattedMessage id="project.users.clientDetails.title" />
+                <OverlayTrigger
+                    placement="right"
+                    delay={{ show: 200, hide: 400 }}
+                    overlay={renderTooltip}
+                >
+                    <span className="d-inline-block" style={{ marginLeft: '10px' }}>
+                        <BsQuestionCircle className="checkIconStyle" color='#e6af2e' size={20} />
+                    </span>
+                </OverlayTrigger>
             </h3>
 
             <Row className="listStyle clientDetails">

@@ -1,10 +1,11 @@
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
-import { BsFillPlusCircleFill } from "react-icons/bs";
+import { BsFillPlusCircleFill, BsQuestionCircle } from "react-icons/bs";
 import './ClientsList.css';
 
 import { useEffect, useState } from 'react';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -54,12 +55,29 @@ const ClientsList = () => {
         });
     }, [getClients]); // Se ejecuta cada vez que getClients se actualice
 
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            <FormattedMessage id="project.tooltips.clientsList.p1" />
+            <br />
+            <FormattedMessage id="project.tooltips.clientsList.p2" />
+        </Tooltip>
+    );
+
     return (
 
         <div fluid="true" className='ClientsList'>
 
             <h3 className="title">
                 <FormattedMessage id="project.users.clients.title" />
+                <OverlayTrigger
+                    placement="right"
+                    delay={{ show: 200, hide: 400 }}
+                    overlay={renderTooltip}
+                >
+                    <span className="d-inline-block" style={{ marginLeft: '10px' }}>
+                        <BsQuestionCircle className="checkIconStyle" color='#e6af2e' size={20} />
+                    </span>
+                </OverlayTrigger>
             </h3>
 
             <Row className="listStyle">

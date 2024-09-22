@@ -3,6 +3,8 @@ package es.udc.fi.dc.tfg.model.entities;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * Interfaz SensationDao
@@ -24,6 +26,7 @@ public interface SensationDao extends JpaRepository<Sensations, Long> {
      * @param clientId El ID del cliente.
      * @return La lista de objetos Sensations que representa las sensaciones.
      */
-    List<Sensations> findByClientId(Long clientId);
+    @Query("SELECT s FROM Sensations s WHERE s.client.id = :clientId ORDER BY s.sensationDate DESC")
+    List<Sensations> findByClientId(@Param("clientId") Long clientId);
 
 }
