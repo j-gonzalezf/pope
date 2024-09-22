@@ -124,7 +124,7 @@ const Header = () => {
                 <div className="header-right">
 
                     <Nav className="header-nav">
-                        <NavDropdown title={icon !== undefined ?
+                        <NavDropdown title={icon !== undefined && icon ?
                             <div className="icon-container">
                                 <Image
                                     className="icon-image-large"
@@ -134,16 +134,16 @@ const Header = () => {
                             :
                             role === 'TRAINER' ? (
                                 <div className="icon-container">
-                                    <Image 
-                                        className="icon-image-large" 
-                                        src={TrainerIcon} 
+                                    <Image
+                                        className="icon-image-large"
+                                        src={TrainerIcon}
                                         alt="Trainer icon" />
                                 </div>
                             ) : (
                                 <div className="icon-container">
-                                    <Image 
-                                        className="icon-image-large" 
-                                        src={ClientIcon} 
+                                    <Image
+                                        className="icon-image-large"
+                                        src={ClientIcon}
                                         alt="Client icon" />
                                 </div>
                             )

@@ -94,8 +94,12 @@ body {
 }
 
 .was-validated .form-control:invalid {
-  border-color: red;
-  box-shadow: 0 0 0 0.2rem red;
+  border-color: #ff4646 !important;
+  box-shadow: 0 0 0 0.2rem #ff4646 !important;
+}
+
+.invalid-feedback {
+  color: #ff4646 !important;
 }
 
 .form-range {

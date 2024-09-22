@@ -58,7 +58,7 @@ public class UserExtraServiceTest {
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
      * @throws InstanceNotFoundException si no se encuentra ninguna plantilla.
-     * @throws IOException si hay algún error a la hora de guardar la imagen
+     * @throws IOException si hay algún error a la hora de guardar la imagen.
      */
     @Test
     public void testWeightRegisterAndGetLastWeight()
@@ -95,9 +95,10 @@ public class UserExtraServiceTest {
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws IOException si hay algún error a la hora de guardar la imagen.
      */
     @Test
-    public void testGetSensations() throws DuplicateInstanceException {
+    public void testGetSensations() throws DuplicateInstanceException, IOException {
 
         Weights weight = createWeightRegister();
         Weights weight2 = createWeightRegister();
@@ -105,8 +106,8 @@ public class UserExtraServiceTest {
         Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
                 LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         weight.setClient(client);
         weight2.setClient(client);

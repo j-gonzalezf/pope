@@ -17,6 +17,7 @@ import es.udc.fi.dc.tfg.model.entities.Comments;
 import es.udc.fi.dc.tfg.model.entities.Templates;
 import es.udc.fi.dc.tfg.model.entities.TrainingCycles;
 import es.udc.fi.dc.tfg.model.entities.Users;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -70,18 +71,19 @@ public class CommentServiceTest {
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
      * @throws InstanceNotFoundException si no se encuentra ninguna plantilla.
+     * @throws IOException si hay algún error a la hora de guardar la imagen.
      */
     @Test
     public void testWriteComment()
-            throws DuplicateInstanceException, InstanceNotFoundException {
+            throws DuplicateInstanceException, InstanceNotFoundException, IOException {
 
         Comments comment = writeComment();
         Users trainer = new Users("t@t.com", "password1", "fullName1", "987654321", "", "");
         Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
                 LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         TrainingCycles cycle = new TrainingCycles("cycleName", "description",
                 LocalDate.of(2000, 1, 1), LocalDate.of(2001, 1, 1), trainer, client);
@@ -105,9 +107,10 @@ public class CommentServiceTest {
      *
      * @throws DuplicateInstanceException si ya existe un usuario con el mismo
      * email.
+     * @throws IOException si hay algún error a la hora de guardar la imagen.
      */
     @Test
-    public void testGetSensations() throws DuplicateInstanceException {
+    public void testGetSensations() throws DuplicateInstanceException, IOException {
 
         Comments comment1 = writeComment();
         Comments comment2 = writeComment();
@@ -115,8 +118,8 @@ public class CommentServiceTest {
         Users client = new Users("c@c.com", "password2", "fullName2", "123456789", "",
                 LocalDate.of(2000, 1, 1), "No", "Ninguno", new BigDecimal("170"), trainer);
 
-        userService.signUp(trainer);
-        userService.signUp(client);
+        userService.signUp(trainer, null);
+        userService.signUp(client, null);
 
         TrainingCycles cycle = new TrainingCycles("cycleName", "description",
                 LocalDate.of(2000, 1, 1), LocalDate.of(2001, 1, 1), trainer, client);

@@ -5,6 +5,14 @@
     width: auto;
 }
 
+.title.fatigue,
+.title.stiffness,
+.title.motivation,
+.title.sleep,
+.title.weight {
+    margin: 0;
+}
+
 .title.weight:hover {
     cursor: pointer;
     text-decoration: underline;
@@ -78,7 +86,7 @@
     box-shadow: none;
     outline: none;
     white-space: nowrap;
-    z-index: 1000;
+    z-index: 9999;
     pointer-events: none;
     transform: translate(-73%, -120%);
 }

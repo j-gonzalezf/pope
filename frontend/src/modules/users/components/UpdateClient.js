@@ -412,7 +412,7 @@ const UpdateClient = () => {
                             </Nav.Item>
                         )}
                         <Nav.Item>
-                            <Nav.Link className="bg-danger nav-link deleteProfile" onClick={() => setShowDeleteModal(true)}>
+                            <Nav.Link className="btn danger nav-link deleteProfile" onClick={() => setShowDeleteModal(true)}>
                                 <BsTrashFill style={{ marginRight: '10px' }} />
                                 <FormattedMessage id="project.users.deleteClient" />
                             </Nav.Link>

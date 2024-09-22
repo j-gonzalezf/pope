@@ -39,15 +39,22 @@ const TrainerProfile = () => {
             <br />
             <Row className='bigListStyle'>
                 <Col xs={12} md={6} className="bigImageStyle">
-                    {trainer?.icon !== undefined ?
+                    {trainer?.icon !== undefined && trainer?.icon ?
                         <div className="bigImageStyle">
-                            <Image roundedCircle fluid src={"data:image/png;base64," + trainer.icon.base64} alt={trainer.icon.name} />
+                            <Image roundedCircle fluid
+                                className="bigImageStyle"
+                                src={`/user-icons/${trainer?.icon}`}
+                                alt="User icon" />
                         </div>
                         : (
                             <div className="bigImageStyle">
-                                <Image roundedCircle fluid src={TrainerIcon} alt="Trainer icon" className="bigImageStyle" />
+                                <Image roundedCircle fluid
+                                    className="bigImageStyle"
+                                    src={TrainerIcon}
+                                    alt="Trainer icon" />
                             </div>
                         )}
+                        <br />
                 </Col>
                 <Col xs={12} md={6} className="text-left">
                     <h5 className="title text-left">
@@ -66,6 +73,10 @@ const TrainerProfile = () => {
                     <Link to={`${trainer?.socialLinks}`} className='title link text-left' target="_blank" rel="noopener noreferrer">
                         {trainer?.socialLinks}
                     </Link>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
                 </Col>
             </Row>
 

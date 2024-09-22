@@ -32,7 +32,7 @@ const Login = () => {
             dispatch(actions.login(
                 email.trim(),
                 password,
-                () => navigate(userType === 'client' ? '../../app/components/NotFoundPage' : '/users/clients'),
+                () => navigate(userType === 'client' ? '/templates/trainingCycles/' : '/users/clients'),
                 errors => setError(errors),
                 () => {
                     navigate('/users/login');
