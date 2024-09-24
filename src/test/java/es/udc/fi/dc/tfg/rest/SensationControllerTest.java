@@ -333,22 +333,10 @@ public class SensationControllerTest {
     @Test
     public void testGetSensations_PermissionException() throws Exception {
 
-        UserDto clientDto = new UserDto(null, "client@client.com", "client",
-                "987654321", null, "CLIENT", null, "2001-09-25", "Sin lesiones",
-                "Objetivo", null, null, authTrainer2.getUserDto().getId());
+        UserDto clientDto = authClient.getUserDto();
 
-        clientDto.setPassword(PASSWORD);
-
-        MvcResult result = mockMvc.perform(post("/api/users/addClient")
-                .header("Authorization", "Bearer " + authTrainer2.getServiceToken())
-                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(clientDto)))
-                .andExpect(status().isCreated()).andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        UserDto createdClient = new ObjectMapper().readValue(content, UserDto.class);
-
-        mockMvc.perform(get("/api/sensations/fromClient/" + createdClient.getId())
-                .header("Authorization", "Bearer " + authTrainer.getServiceToken()))
+        mockMvc.perform(get("/api/sensations/fromClient/" + clientDto.getId())
+                .header("Authorization", "Bearer " + authTrainer2.getServiceToken()))
                 .andExpect(status().isForbidden());
 
     }

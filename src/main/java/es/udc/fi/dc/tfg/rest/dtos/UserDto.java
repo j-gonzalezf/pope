@@ -311,14 +311,6 @@ public class UserDto {
         this.icon = icon;
     }
 
-    public String getIconImagePath() {
-        if (icon == null || id == null) {
-            return null;
-        }
-
-        return "/user-icons/" + id + "/" + icon;
-    }
-
     /**
      * Gets the role.
      *

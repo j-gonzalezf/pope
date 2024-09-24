@@ -34,16 +34,18 @@ public class Application {
     }
 
     /**
-     * Message source.
+     * Configura el MessageSource para la internacionalización de mensajes del
+     * lado del servidor (backend).
      *
-     * @return Un nuevo message source con la codificación por defecto en UTF-8.
+     * @return El MessageSource configurado con la codificación por defecto en
+     * UTF-8.
      */
     @Bean
     public MessageSource messageSource() {
 
         ReloadableResourceBundleMessageSource bean = new ReloadableResourceBundleMessageSource();
 
-        bean.setBasename("classpath:messages");
+        bean.setBasename("classpath:messages/messages");
         bean.setDefaultEncoding("UTF-8");
 
         return bean;
